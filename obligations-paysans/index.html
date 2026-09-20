@@ -1,1 +1,330 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Les obligations des paysans — Jeu CM1</title>
+<style>
+:root{
+  --ink:#3b2a18; --brown:#6e4623; --gold:#d3a326; --gold2:#f0cf68;
+  --paper:#fff8e8; --paper2:#f7e6be; --sky:#eaf4fb; --blue:#2e7ebc;
+  --green:#4d8c63; --red:#ba3a3a; --line:#d6bd84;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+  radial-gradient(circle at 15% 8%,rgba(255,255,255,.9),transparent 24rem),
+  linear-gradient(#eaf5fc 0,#f6fbff 42%,#e5f1f8 100%);
+  color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit}
+.app{max-width:1480px;margin:auto;padding:12px}
+.hero{
+  position:relative;overflow:hidden;border:2px solid #c89f3b;border-radius:22px;
+  background:linear-gradient(135deg,#fff6da,#f2d58a 55%,#e4b83f);
+  box-shadow:0 8px 24px rgba(60,42,20,.14);margin-bottom:12px
+}
+.hero:before,.hero:after{content:"";position:absolute;width:190px;height:190px;border:18px solid rgba(255,255,255,.24);border-radius:50%;top:-115px}
+.hero:before{left:-42px}.hero:after{right:-58px}
+.heroInner{display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:10px;padding:16px 22px;position:relative;z-index:1}
+.heroIcon{height:92px;object-fit:contain;justify-self:center;filter:drop-shadow(0 3px 2px rgba(0,0,0,.16))}
+.hero h1{margin:0;font:700 clamp(30px,4.2vw,58px)/1.02 Georgia,serif;text-align:center;color:#5a3517}
+.hero p{margin:7px 0 0;text-align:center;font-weight:800;font-size:clamp(14px,1.5vw,21px)}
+.progress{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 12px}
+.pill{background:white;border:2px solid #cfb77d;border-radius:999px;padding:7px 13px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.pill.active{background:#fff1b9;border-color:#b88714}.pill.done{background:#e7f6e9;border-color:#6aa976}
+.rule{max-width:1050px;margin:0 auto 14px;background:#fff7db;border:2px solid #d2af62;border-radius:14px;padding:10px 14px;text-align:center;font-weight:800}
+.stage{display:none}.stage.active{display:block}
+.board{background:rgba(255,251,239,.96);border:2px solid var(--line);border-radius:20px;box-shadow:0 10px 28px rgba(70,50,25,.12);padding:16px}
+.stageTitle{text-align:center;margin:2px 0 5px;font:700 clamp(25px,3vw,42px)/1.1 Georgia,serif;color:#633f1f}
+.instructions{text-align:center;margin:0 auto 14px;max-width:1050px;font-size:clamp(14px,1.3vw,19px);font-weight:700}
+.defGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.defCard{border:2px solid #c9a764;border-radius:17px;background:linear-gradient(#fffdf5,#f8ecd0);padding:12px;display:grid;grid-template-rows:auto 58px minmax(150px,1fr);gap:10px;min-height:390px}
+.defText{font-size:clamp(13px,1.15vw,18px);line-height:1.3;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center}
+.wordSlot,.imgSlot,.eventSlot,.blankSlot{border:3px dashed #c5a75f;border-radius:13px;background:rgba(255,255,255,.68);cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;transition:.15s}
+.wordSlot{min-height:58px;font-size:clamp(18px,1.7vw,25px)}
+.imgSlot{min-height:150px;overflow:hidden}
+.imgSlot img{width:100%;height:100%;max-height:190px;object-fit:contain;padding:4px}
+.wordSlot.wrong,.imgSlot.wrong,.eventSlot.wrong,.blankSlot.wrong{border-color:var(--red);background:#ffe9e9;box-shadow:0 0 0 2px rgba(186,58,58,.16) inset}
+.bankBox{margin-top:14px;border:2px solid #a9cce4;background:#edf7ff;border-radius:16px;padding:12px}
+.bankTitle{text-align:center;color:#245f88;font-weight:900;margin-bottom:9px}
+.wordBank,.imageBank,.roleBank,.traceBank{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.token{border:2px solid #b88d35;background:#fff6d5;border-radius:12px;padding:10px 16px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 rgba(79,52,15,.12);min-height:46px}
+.token.selected{outline:4px solid #3a8ee8;outline-offset:1px}
+.token.used{opacity:.28}
+.imageToken{width:150px;height:130px;padding:4px;background:white}
+.imageToken img{width:100%;height:100%;object-fit:contain}
+.controls{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:15px}
+.action{border:2px solid #754b1e;background:linear-gradient(#fff9e8,#f0d698);border-radius:12px;padding:10px 18px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 rgba(70,45,20,.18)}
+.action.primary{background:linear-gradient(#3d98df,#236da8);border-color:#1e608f;color:#fff;min-width:150px}
+.status{max-width:1000px;margin:12px auto 0;border:2px solid #d8b45d;background:#fff8df;border-radius:13px;padding:10px 14px;text-align:center;font-weight:800;min-height:48px}
+.status.good{border-color:#65a879;background:#eaf8ee;color:#275b36}
+.status.bad{border-color:#d16a6a;background:#fff0f0;color:#852929}
 
+/* Stage 2 */
+.yearTop{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:stretch;margin-bottom:14px}
+.storyBox{border:2px solid #c9a764;border-radius:17px;background:linear-gradient(#fffaf0,#f6e5bc);padding:16px}
+.storyBox h3{margin:0 0 8px;font:700 28px Georgia,serif;color:#633f1f}
+.storyBox p{margin:6px 0;line-height:1.35;font-weight:700}
+.purse{border:2px solid #ba9239;border-radius:17px;background:#fff4ce;padding:12px;text-align:center}
+.purse h3{margin:0 0 8px;font:700 22px Georgia,serif}.coins{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:95px;align-content:center}
+.coin{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}
+.events{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.event{border:2px solid #c7ad74;border-radius:16px;background:#fffdf7;padding:12px;display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:center}
+.eventNum{width:52px;height:52px;border-radius:50%;background:#e4bb43;border:3px solid #9d7120;display:flex;align-items:center;justify-content:center;font:700 25px Georgia,serif;color:white}
+.eventText{font-weight:800;line-height:1.25}
+.eventSlot{grid-column:1/-1;min-height:53px;margin-top:5px;font-size:18px}
+.yearResult{display:none;margin-top:14px;border:2px solid #62a477;background:#eaf8ef;border-radius:16px;padding:14px;text-align:center;font-weight:800;line-height:1.35}
+.yearResult.show{display:block}
+
+/* Stage 3 */
+.trace{max-width:1120px;margin:auto;border:2px solid #c9a764;border-radius:18px;background:linear-gradient(#fffdf5,#f8ecd0);padding:18px}
+.traceLead{text-align:center;font-weight:900;font-size:clamp(16px,1.5vw,22px);margin-bottom:14px}
+.traceCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.traceCard{border:2px solid #b99b5d;background:white;border-radius:15px;padding:10px;text-align:center;display:flex;flex-direction:column;gap:8px}
+.traceCard img{width:100%;height:170px;object-fit:contain}
+.traceSentence{font-size:clamp(15px,1.25vw,20px);line-height:1.35;font-weight:800}
+.blankSlot{display:inline-flex;vertical-align:middle;min-width:130px;min-height:42px;margin:3px 4px;padding:5px 10px}
+.bottomSentence{text-align:center;margin-top:14px;font-size:clamp(16px,1.35vw,21px);font-weight:900}
+.final{display:none;max-width:800px;margin:30px auto;background:#fff8df;border:3px solid #d2af62;border-radius:22px;padding:30px;text-align:center;box-shadow:0 10px 28px rgba(70,50,25,.15)}
+.final.show{display:block}.trophy{font-size:72px}.final h2{font:700 40px Georgia,serif;margin:4px 0 10px}
+
+@media(max-width:900px){
+  .heroInner{grid-template-columns:70px 1fr 70px;padding:12px}.heroIcon{height:65px}
+  .defGrid{grid-template-columns:1fr}.defCard{min-height:0;grid-template-rows:auto 54px 170px}
+  .yearTop{grid-template-columns:1fr}.events{grid-template-columns:1fr}.traceCards{grid-template-columns:1fr}
+  .imageToken{width:118px;height:105px}.board{padding:12px}
+}
+@media(max-width:560px){
+  .app{padding:7px}.heroInner{grid-template-columns:52px 1fr 52px;gap:4px}.heroIcon{height:50px}
+  .hero p{font-size:12px}.rule{font-size:13px}.pill{font-size:12px;padding:6px 9px}
+  .defCard{padding:9px}.imageToken{width:100px;height:92px}
+  .event{grid-template-columns:48px 1fr}.eventNum{width:44px;height:44px;font-size:21px}
+  .coin{width:34px;height:34px}.traceCard img{height:145px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <div class="heroInner">
+      <img src="bouclier.png" class="heroIcon" alt="">
+      <div><h1>Les obligations des paysans</h1><p>Une mission au cœur de la seigneurie médiévale</p></div>
+      <img src="bouclier.png" class="heroIcon" alt="">
+    </div>
+  </header>
+
+  <div class="progress">
+    <span class="pill active" id="p1">1 · Associer</span>
+    <span class="pill" id="p2">2 · Vivre une année</span>
+    <span class="pill" id="p3">3 · Compléter la leçon</span>
+  </div>
+  <div class="rule">🎯 Pour valider une étape, toutes les réponses doivent être justes lors d’une même tentative.</div>
+
+  <section class="stage active" id="stage1">
+    <div class="board">
+      <h2 class="stageTitle">Mission 1 — Quelle obligation ?</h2>
+      <p class="instructions">Choisis un mot ou une illustration, puis touche la case où tu veux le placer.</p>
+      <div class="defGrid">
+        <article class="defCard">
+          <div class="defText">Loyer que le paysan doit payer au seigneur pour avoir le droit de cultiver une terre. Il peut le payer en argent ou en nature (une partie de sa récolte).</div>
+          <button class="wordSlot s1word" data-i="0" aria-label="Mot pour la première définition"></button>
+          <button class="imgSlot s1img" data-i="0" aria-label="Illustration pour la première définition"></button>
+        </article>
+        <article class="defCard">
+          <div class="defText">Travail gratuit que le paysan doit effectuer pour le seigneur, plusieurs jours par semaine, sur les terres que le seigneur garde pour lui (la réserve). Pendant ce temps, le paysan ne peut pas s’occuper de ses propres champs.</div>
+          <button class="wordSlot s1word" data-i="1" aria-label="Mot pour la deuxième définition"></button>
+          <button class="imgSlot s1img" data-i="1" aria-label="Illustration pour la deuxième définition"></button>
+        </article>
+        <article class="defCard">
+          <div class="defText">Argent que le paysan doit payer pour avoir le droit d’utiliser les équipements du seigneur, comme le moulin, le four ou le pressoir. Le paysan n’a pas le droit d’en utiliser d’autres.</div>
+          <button class="wordSlot s1word" data-i="2" aria-label="Mot pour la troisième définition"></button>
+          <button class="imgSlot s1img" data-i="2" aria-label="Illustration pour la troisième définition"></button>
+        </article>
+      </div>
+
+      <div class="bankBox">
+        <div class="bankTitle">Mots à placer</div>
+        <div class="wordBank" id="wordBank1"></div>
+        <div class="bankTitle" style="margin-top:12px">Illustrations à placer</div>
+        <div class="imageBank" id="imageBank1"></div>
+      </div>
+      <div class="status" id="status1">Commence par placer les trois mots et les trois illustrations.</div>
+      <div class="controls">
+        <button class="action" id="reset1">↻ Recommencer</button>
+        <button class="action primary" id="check1">✔ Vérifier</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage" id="stage2">
+    <div class="board">
+      <h2 class="stageTitle">Mission 2 — Une année dans la peau d’un paysan</h2>
+      <p class="instructions">Associe chaque situation au bon mot. Les pièces représentent ce que tu as gagné dans l’année.</p>
+      <div class="yearTop">
+        <div class="storyBox">
+          <h3>Ton année commence…</h3>
+          <p>Ta récolte n’a pas été la même que celle de tes voisins : tu commences avec <strong id="startCoinsText"></strong> pièces.</p>
+          <p>Lis les quatre situations. Certaines te coûtent de l’argent, d’autres du temps ; en échange, le seigneur assure une protection.</p>
+        </div>
+        <div class="purse"><h3>Ta bourse</h3><div class="coins" id="coins"></div><div><strong id="coinCount"></strong> pièces</div></div>
+      </div>
+
+      <div class="events">
+        <article class="event"><div class="eventNum">1</div><div class="eventText">Tu vis sur les terres du seigneur. Il te demande <strong>2 pièces</strong> de loyer.</div><button class="eventSlot" data-i="0"></button></article>
+        <article class="event"><div class="eventNum">2</div><div class="eventText">Pendant <strong>3 jours</strong>, tu travailles gratuitement sur les terres que le seigneur garde pour lui.</div><button class="eventSlot" data-i="1"></button></article>
+        <article class="event"><div class="eventNum">3</div><div class="eventText">Tu dois utiliser le moulin, le four ou le pressoir du seigneur. Tu lui donnes <strong>1 pièce</strong>.</div><button class="eventSlot" data-i="2"></button></article>
+        <article class="event"><div class="eventNum">4</div><div class="eventText">En cas d’attaque, le seigneur peut t’accueillir au château et t’aider pour la justice.</div><button class="eventSlot" data-i="3"></button></article>
+      </div>
+      <div class="bankBox"><div class="bankTitle">Mots à placer</div><div class="roleBank" id="roleBank"></div></div>
+      <div class="yearResult" id="yearResult"></div>
+      <div class="status" id="status2">Place les quatre mots.</div>
+      <div class="controls">
+        <button class="action" id="reset2">↻ Recommencer</button>
+        <button class="action primary" id="check2">✔ Vérifier</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage" id="stage3">
+    <div class="board">
+      <h2 class="stageTitle">Mission 3 — Complète la trace écrite</h2>
+      <p class="instructions">Replace les quatre mots dans le texte.</p>
+      <div class="trace">
+        <div class="traceLead">Les paysans avaient de nombreuses obligations envers leur seigneur.</div>
+        <div class="traceCards">
+          <div class="traceCard"><img src="cens.png" alt=""><div class="traceSentence">Ils devaient payer le <button class="blankSlot" data-i="0"></button>, un loyer pour avoir le droit de cultiver leur terre.</div></div>
+          <div class="traceCard"><img src="corvee.png" alt=""><div class="traceSentence">Ils devaient aussi effectuer des <button class="blankSlot" data-i="1"></button>, des travaux gratuits sur les terres du seigneur.</div></div>
+          <div class="traceCard"><img src="banalite.png" alt=""><div class="traceSentence">Ils payaient des <button class="blankSlot" data-i="2"></button> pour utiliser le moulin, le four ou le pressoir du seigneur.</div></div>
+        </div>
+        <div class="bottomSentence">En échange de toutes ces obligations, le seigneur assurait leur <button class="blankSlot" data-i="3"></button>.</div>
+      </div>
+      <div class="bankBox"><div class="bankTitle">Mots à replacer</div><div class="traceBank" id="traceBank"></div></div>
+      <div class="status" id="status3">Place les quatre mots dans les bonnes cases.</div>
+      <div class="controls">
+        <button class="action" id="reset3">↻ Recommencer</button>
+        <button class="action primary" id="check3">✔ Vérifier</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="final">
+    <div class="trophy">🏆</div>
+    <h2>Mission accomplie !</h2>
+    <p>Tu connais le <strong>cens</strong>, les <strong>corvées</strong>, les <strong>banalités</strong> et ce que le seigneur donne en échange : sa <strong>protection</strong>.</p>
+    <button class="action primary" id="replay">Rejouer</button>
+  </section>
+</div>
+
+<script>
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const setStatus=(id,msg,type='')=>{const e=document.getElementById(id);e.className='status'+(type?' '+type:'');e.innerHTML=msg};
+function gotoStage(n){
+  document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));
+  document.getElementById('final').classList.remove('show');
+  if(n<=3) document.getElementById('stage'+n).classList.add('active');
+  ['p1','p2','p3'].forEach((id,i)=>{const p=document.getElementById(id);p.classList.toggle('active',i===n-1);p.classList.toggle('done',i<n-1)});
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+/* Stage 1 */
+const words1={cens:'cens',corvee:'corvée',banalite:'banalité'};
+const pics1={cens:'cens.png',corvee:'corvee.png',banalite:'banalite.png'};
+const answer1=['cens','corvee','banalite'];
+let s1sel=null,s1type=null,s1words=Array(3).fill(null),s1pics=Array(3).fill(null),s1HadError=false;
+function buildStage1(){
+  const wb=document.getElementById('wordBank1'),ib=document.getElementById('imageBank1'); wb.innerHTML='';ib.innerHTML='';
+  shuffle(Object.keys(words1)).forEach(k=>{const b=document.createElement('button');b.className='token';b.dataset.key=k;b.textContent=words1[k];b.onclick=()=>selectS1('word',k);wb.appendChild(b)});
+  shuffle(Object.keys(pics1)).forEach(k=>{const b=document.createElement('button');b.className='token imageToken';b.dataset.key=k;b.innerHTML='<img src="'+pics1[k]+'" alt="">';b.onclick=()=>selectS1('img',k);ib.appendChild(b)});
+}
+function selectS1(type,key){s1sel=key;s1type=type;render1()}
+document.querySelectorAll('.s1word').forEach(e=>e.onclick=()=>placeS1('word',+e.dataset.i));
+document.querySelectorAll('.s1img').forEach(e=>e.onclick=()=>placeS1('img',+e.dataset.i));
+function placeS1(type,i){
+  const arr=type==='word'?s1words:s1pics;
+  if(arr[i]){arr[i]=null;render1();return}
+  if(s1sel && s1type===type){const old=arr.indexOf(s1sel);if(old>=0)arr[old]=null;arr[i]=s1sel;s1sel=null;s1type=null;render1()}
+}
+function render1(){
+  document.querySelectorAll('#wordBank1 .token').forEach(b=>{b.classList.toggle('selected',s1type==='word'&&s1sel===b.dataset.key);b.classList.toggle('used',s1words.includes(b.dataset.key))});
+  document.querySelectorAll('#imageBank1 .token').forEach(b=>{b.classList.toggle('selected',s1type==='img'&&s1sel===b.dataset.key);b.classList.toggle('used',s1pics.includes(b.dataset.key))});
+  document.querySelectorAll('.s1word').forEach((e,i)=>{e.classList.remove('wrong');e.textContent=s1words[i]?words1[s1words[i]]:''});
+  document.querySelectorAll('.s1img').forEach((e,i)=>{e.classList.remove('wrong');e.innerHTML=s1pics[i]?'<img src="'+pics1[s1pics[i]]+'" alt="">':''});
+}
+function reset1(){
+  s1sel=null;s1type=null;s1words=Array(3).fill(null);s1pics=Array(3).fill(null);s1HadError=false;buildStage1();render1();
+  setStatus('status1','Commence par placer les trois mots et les trois illustrations.');
+}
+document.getElementById('reset1').onclick=reset1;
+document.getElementById('check1').onclick=()=>{
+  if(s1words.some(x=>!x)||s1pics.some(x=>!x)){setStatus('status1','Place d’abord les trois mots et les trois illustrations.','bad');return}
+  const wrong=[];
+  for(let i=0;i<3;i++) if(s1words[i]!==answer1[i]||s1pics[i]!==answer1[i]) wrong.push(i);
+  wrong.forEach(i=>{document.querySelector('.s1word[data-i="'+i+'"]').classList.add('wrong');document.querySelector('.s1img[data-i="'+i+'"]').classList.add('wrong')});
+  if(wrong.length){s1HadError=true;setStatus('status1','Il reste '+wrong.length+' ligne(s) incorrecte(s). Corrige pour comprendre, puis recommence toute l’étape sans faute pour la valider.','bad');return}
+  if(s1HadError){setStatus('status1','👍 Tout est maintenant juste. Comme il y a eu une erreur pendant cette tentative, recommence l’étape et réussis-la sans faute. <button class="action" id="redo1">Recommencer maintenant</button>','good');document.getElementById('redo1').onclick=reset1;return}
+  setStatus('status1','🏆 Étape 1 validée ! <button class="action" id="go2">Passer à l’étape 2 →</button>','good');
+  document.getElementById('go2').onclick=()=>{reset2();gotoStage(2)};
+};
+
+/* Stage 2 */
+const roleLabels={cens:'le cens',corvees:'les corvées',banalite:'la banalité',protection:'la protection'};
+const answer2=['cens','corvees','banalite','protection'];
+let s2sel=null,s2=Array(4).fill(null),s2HadError=false,startCoins=8;
+function drawCoins(n){const box=document.getElementById('coins');box.innerHTML='';for(let i=0;i<n;i++){const im=document.createElement('img');im.src='piece.png';im.className='coin';im.alt='pièce';box.appendChild(im)}document.getElementById('coinCount').textContent=n}
+function buildRoleBank(){
+  const b=document.getElementById('roleBank');b.innerHTML='';
+  shuffle(Object.keys(roleLabels)).forEach(k=>{const el=document.createElement('button');el.className='token';el.dataset.key=k;el.textContent=roleLabels[k];el.onclick=()=>{if(s2.includes(k))return;s2sel=k;render2()};b.appendChild(el)})
+}
+document.querySelectorAll('.eventSlot').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;if(s2[i]){s2sel=s2[i];s2[i]=null}else if(s2sel){const old=s2.indexOf(s2sel);if(old>=0)s2[old]=null;s2[i]=s2sel;s2sel=null}render2()});
+function render2(){
+  document.querySelectorAll('#roleBank .token').forEach(b=>{b.classList.toggle('selected',s2sel===b.dataset.key);b.classList.toggle('used',s2.includes(b.dataset.key))});
+  document.querySelectorAll('.eventSlot').forEach((e,i)=>{e.classList.remove('wrong');e.textContent=s2[i]?roleLabels[s2[i]]:''});
+}
+function reset2(){
+  s2sel=null;s2=Array(4).fill(null);s2HadError=false;startCoins=6+Math.floor(Math.random()*5);
+  document.getElementById('startCoinsText').textContent=startCoins;drawCoins(startCoins);buildRoleBank();render2();
+  document.getElementById('yearResult').classList.remove('show');document.getElementById('yearResult').innerHTML='';
+  setStatus('status2','Place les quatre mots.');
+}
+document.getElementById('reset2').onclick=reset2;
+document.getElementById('check2').onclick=()=>{
+  if(s2.some(x=>!x)){setStatus('status2','Place d’abord les quatre mots.','bad');return}
+  const wrong=[];for(let i=0;i<4;i++)if(s2[i]!==answer2[i])wrong.push(i);
+  wrong.forEach(i=>document.querySelector('.eventSlot[data-i="'+i+'"]').classList.add('wrong'));
+  if(wrong.length){s2HadError=true;setStatus('status2','Il y a '+wrong.length+' réponse(s) incorrecte(s). Corrige, puis recommence toute l’étape sans faute pour la valider.','bad');return}
+  if(s2HadError){setStatus('status2','👍 Tout est maintenant juste. Comme il y a eu une erreur pendant cette tentative, recommence toute l’étape sans faute. <button class="action" id="redo2">Recommencer maintenant</button>','good');document.getElementById('redo2').onclick=reset2;return}
+  const left=startCoins-3;drawCoins(left);
+  const yr=document.getElementById('yearResult');yr.innerHTML='🏆 <strong>Étape 2 validée !</strong><br>Tu avais '+startCoins+' pièces. Tu en as donné <strong>2 pour le cens</strong> et <strong>1 pour la banalité</strong> : il t’en reste <strong>'+left+'</strong>. Tu as aussi donné <strong>3 jours de travail gratuit</strong> pour les corvées. En échange, le seigneur assure ta <strong>protection</strong>.';yr.classList.add('show');
+  setStatus('status2','Observe ce qu’il te reste à la fin de l’année. <button class="action" id="go3">Passer à l’étape 3 →</button>','good');
+  document.getElementById('go3').onclick=()=>{reset3();gotoStage(3)};
+};
+
+/* Stage 3 */
+const traceLabels={cens:'cens',corvees:'corvées',banalites:'banalités',protection:'protection'};
+const answer3=['cens','corvees','banalites','protection'];
+let s3sel=null,s3=Array(4).fill(null),s3HadError=false;
+function buildTraceBank(){
+  const b=document.getElementById('traceBank');b.innerHTML='';
+  shuffle(Object.keys(traceLabels)).forEach(k=>{const el=document.createElement('button');el.className='token';el.dataset.key=k;el.textContent=traceLabels[k];el.onclick=()=>{if(s3.includes(k))return;s3sel=k;render3()};b.appendChild(el)})
+}
+document.querySelectorAll('.blankSlot').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;if(s3[i]){s3sel=s3[i];s3[i]=null}else if(s3sel){const old=s3.indexOf(s3sel);if(old>=0)s3[old]=null;s3[i]=s3sel;s3sel=null}render3()});
+function render3(){
+  document.querySelectorAll('#traceBank .token').forEach(b=>{b.classList.toggle('selected',s3sel===b.dataset.key);b.classList.toggle('used',s3.includes(b.dataset.key))});
+  document.querySelectorAll('.blankSlot').forEach((e,i)=>{e.classList.remove('wrong');e.textContent=s3[i]?traceLabels[s3[i]]:''});
+}
+function reset3(){s3sel=null;s3=Array(4).fill(null);s3HadError=false;buildTraceBank();render3();setStatus('status3','Place les quatre mots dans les bonnes cases.')}
+document.getElementById('reset3').onclick=reset3;
+document.getElementById('check3').onclick=()=>{
+  if(s3.some(x=>!x)){setStatus('status3','Place d’abord les quatre mots.','bad');return}
+  const wrong=[];for(let i=0;i<4;i++)if(s3[i]!==answer3[i])wrong.push(i);
+  wrong.forEach(i=>document.querySelector('.blankSlot[data-i="'+i+'"]').classList.add('wrong'));
+  if(wrong.length){s3HadError=true;setStatus('status3','Il y a '+wrong.length+' réponse(s) incorrecte(s). Corrige, puis recommence toute l’étape sans faute pour la valider.','bad');return}
+  if(s3HadError){setStatus('status3','👍 Tout est maintenant juste. Comme il y a eu une erreur pendant cette tentative, recommence toute l’étape sans faute. <button class="action" id="redo3">Recommencer maintenant</button>','good');document.getElementById('redo3').onclick=reset3;return}
+  document.getElementById('stage3').classList.remove('active');document.getElementById('p3').classList.remove('active');document.getElementById('p3').classList.add('done');document.getElementById('final').classList.add('show');scrollTo({top:0,behavior:'smooth'});
+};
+document.getElementById('replay').onclick=()=>{reset1();reset2();reset3();gotoStage(1)};
+
+reset1(); reset2(); reset3();
+</script>
+</body>
+</html>

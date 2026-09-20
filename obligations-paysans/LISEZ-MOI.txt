@@ -1,0 +1,16 @@
+JEU CM1 — LES OBLIGATIONS DES PAYSANS
+
+Dossier GitHub conseillé : obligations-paysans
+
+À déposer ensemble dans ce dossier :
+- index.html
+- cens.png
+- corvee.png
+- banalite.png
+- piece.png
+- bouclier.png
+
+Adresse prévue :
+https://burgunalain.github.io/histoire-cm1/obligations-paysans/
+
+Le .nojekyll placé à la racine du dépôt histoire-cm1 suffit.
