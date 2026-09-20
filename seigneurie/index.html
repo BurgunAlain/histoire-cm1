@@ -1,1 +1,112 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La seigneurie — Jeu CM1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf4fb;font-family:Arial,sans-serif;color:#2f2518}.wrap{max-width:1560px;margin:0 auto;padding:10px}.scene{position:relative;max-width:1536px;margin:0 auto}.bg{display:block;width:100%;height:auto}.overlay{position:absolute;inset:0}.hidden{display:none!important}.notice{max-width:1100px;margin:0 auto 10px;background:#fff7db;border:2px solid #d2af62;border-radius:12px;padding:10px 14px;font-weight:800;text-align:center}
+.cardsPanel{position:absolute;z-index:20;background:#fff4d8;border:2px solid #e0c47e;border-radius:12px;padding:8px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:8px;overflow:hidden}.card{border:2px solid #dfc27d;border-radius:10px;background:#fbf0d1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;cursor:pointer;padding:0}.card.selected{outline:4px solid #2e86ff}.card.used{opacity:.30}.cardArt{height:76%;width:100%;display:flex;align-items:flex-end;justify-content:center;padding:5px 5px 0}.cardArt img{max-width:88%;max-height:100%;object-fit:contain}.cardName{height:24%;width:100%;display:flex;align-items:center;justify-content:center;font-size:clamp(9px,1vw,17px);font-weight:700;text-align:center;line-height:1.02;padding:0 3px}
+.bandMask{position:absolute;z-index:8;background:#f6ddb0;border-radius:6px;pointer-events:none}.slot{position:absolute;z-index:12;border:none;background:transparent;padding:0;cursor:pointer;overflow:visible}.slot .imageArea{position:absolute;left:8%;right:8%;top:4%;height:69%;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}.slot .imageArea img{max-width:84%;max-height:96%;object-fit:contain;display:block}.slot .nameArea{position:absolute;left:6%;right:6%;bottom:3%;height:23%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(9px,.9vw,15px);font-weight:700;line-height:1.0;color:#3d2a16;pointer-events:none}.slot.wrong{box-shadow:0 0 0 4px rgba(190,43,51,.85) inset;border-radius:12px;background:rgba(255,220,220,.12)}
+.hintBox{position:absolute;z-index:21;background:#fff8df;border:2px solid #d8b45d;border-radius:10px;padding:10px 14px;font-weight:700;display:flex;align-items:center}.msgBox{position:absolute;z-index:22;background:#fff8e5;border:2px solid #d8b45d;border-radius:10px;padding:7px 10px;text-align:center;font-weight:800;display:none;align-items:center;justify-content:center;gap:8px}.msgBox button,.status2 button,.final button,.underBtns button{padding:8px 14px;border:2px solid #6f4b1f;border-radius:10px;background:#fff5df;font-weight:800;cursor:pointer}.ghost,.labelHot,.relHot{position:absolute;border:none;background:transparent;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.labelHot{z-index:4;border-radius:14px}.labelHot.selected{box-shadow:0 0 0 4px rgba(46,134,255,.95) inset,0 0 0 2px rgba(255,255,255,.7)}.labelHot.used{opacity:.35}.relHot{z-index:5;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:2px 8px;font-size:clamp(12px,1.18vw,18px);font-weight:800;line-height:1.1}.relHot.filled{background:rgba(255,255,255,.75)}.relHot.wrong{background:rgba(255,226,226,.95);color:#be2b33;border:2px solid rgba(190,43,51,.75)}.status2{max-width:1100px;margin:10px auto 0;background:#fff6e5;border:2px solid #d6b061;border-radius:12px;padding:10px 14px;font-weight:800;text-align:center;min-height:48px}.underBtns{text-align:center;margin-top:12px}.final{max-width:850px;margin:30px auto;background:#fff8df;border:2px solid #d2af62;border-radius:18px;padding:30px;text-align:center}.final .trophy{font-size:72px}.final h2{font-family:Georgia,serif;font-size:40px;margin:8px 0 12px}
 
+.scene2 .relHot,.scene2 .labelHot{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.scene2 .labelHot{padding:4px 8px;border-radius:14px;border:2px solid var(--bd,#999);background:var(--bg,#fff);box-shadow:0 2px 0 rgba(0,0,0,.10);font-size:clamp(11px,1.05vw,18px);font-weight:800;line-height:1.1;color:#222;z-index:4}
+.scene2 .labelHot.selected{box-shadow:0 0 0 4px rgba(46,134,255,.92) inset,0 0 0 2px rgba(255,255,255,.8),0 2px 0 rgba(0,0,0,.1)}
+.scene2 .labelHot.used{opacity:.38}
+.scene2 .relHot{padding:2px 10px;border-radius:14px;font-size:clamp(12px,1.08vw,18px);font-weight:800;line-height:1.1;color:#222;z-index:5;background:transparent}
+.scene2 .relHot.filled{background:rgba(255,255,255,.88)}
+.scene2 .relHot.wrong{background:rgba(255,230,230,.96);color:#b32c2c;border:2px solid rgba(179,44,44,.75)}
+.overlayCheck{position:absolute;display:flex;align-items:center;justify-content:center;padding:0;border-radius:18px;font-size:clamp(18px,1.5vw,28px)}
+
+
+/* --- Partie 2 : contrôles reconstruits hors de l'image pour éviter tout chevauchement --- */
+.scene2{overflow:visible}
+.scene2 .relHot{position:absolute;border:none;background:transparent;padding:0;cursor:pointer;z-index:6;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(11px,1.05vw,18px);font-weight:800;line-height:1.08;color:#222;-webkit-tap-highlight-color:transparent}
+.scene2 .relHot.filled{background:rgba(255,255,255,.82)}
+.scene2 .relHot.wrong{background:rgba(255,228,228,.96);color:#b12b2b;box-shadow:0 0 0 2px rgba(177,43,43,.75) inset}
+.answerPanel{max-width:1448px;margin:0 auto 8px;padding:12px 14px;background:#eaf4ff;border:2px solid #93c7ff;border-radius:16px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.answerTitle{font-size:clamp(16px,1.2vw,22px);font-weight:800;color:#195bbd;white-space:nowrap}
+.answerGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px}
+.answerPanel .labelHot{position:relative!important;inset:auto!important;width:auto!important;height:auto!important;min-height:48px;padding:8px 10px;border-radius:12px;background:#fff;border:2px solid #aaa;box-shadow:0 2px 0 rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(12px,1vw,17px);font-weight:800;line-height:1.08;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.answerPanel .labelHot.selected{box-shadow:0 0 0 4px rgba(46,134,255,.85) inset,0 2px 0 rgba(0,0,0,.08)}
+.answerPanel .labelHot.used{opacity:.35}
+.redLab{background:#fff2f2!important;border-color:#f05d69!important}
+.goldLab{background:#fff8dc!important;border-color:#d0a62a!important}
+.greenLab{background:#eefbea!important;border-color:#64b96a!important}
+.orangeLab{background:#fff0e3!important;border-color:#d49038!important}
+.blueLab{background:#eef5ff!important;border-color:#4f95ef!important}
+.purpleLab{background:#f7ebff!important;border-color:#c060df!important}
+.check2Btn{min-width:155px;min-height:74px;padding:10px 18px;border-radius:14px;border:2px solid #1258ba;background:linear-gradient(#2f8cf4,#0b60d2);color:white;font-size:clamp(18px,1.4vw,25px);font-weight:800;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.14)}
+@media(max-width:900px){.answerPanel{grid-template-columns:1fr}.answerTitle{text-align:center}.answerGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.check2Btn{justify-self:center;min-width:200px}}
+
+.scene2 .purpleUpper{font-size:clamp(11px,.98vw,17px);padding:2px 5px}
+</style></head><body><div class="wrap">
+<div id="stage1"><div class="notice">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative.</div><div class="scene"><img class="bg" src="asset_01.png"><div class="overlay">
+<div id="cardsPanel" class="cardsPanel" style="left:1.6276%;top:34.7656%;width:36.5885%;height:52.7344%"></div><div class="bandMask" data-band="0" style="left:65.3646%;top:27.3438%;width:6.7708%;height:2.8320%"></div>
+<div class="bandMask" data-band="1" style="left:73.6328%;top:27.3438%;width:6.7708%;height:2.8320%"></div>
+<div class="bandMask" data-band="2" style="left:62.8255%;top:44.8242%;width:8.0729%;height:2.9297%"></div>
+<div class="bandMask" data-band="3" style="left:73.8932%;top:44.8242%;width:8.0729%;height:2.9297%"></div>
+<div class="bandMask" data-band="4" style="left:57.0964%;top:62.1094%;width:7.7474%;height:2.8320%"></div>
+<div class="bandMask" data-band="5" style="left:67.8385%;top:62.1094%;width:7.7474%;height:2.8320%"></div>
+<div class="bandMask" data-band="6" style="left:78.7760%;top:62.1094%;width:7.7474%;height:2.8320%"></div>
+<div class="bandMask" data-band="7" style="left:51.9531%;top:79.2969%;width:7.8776%;height:2.7344%"></div>
+<div class="bandMask" data-band="8" style="left:62.6302%;top:79.2969%;width:7.8776%;height:2.7344%"></div>
+<div class="bandMask" data-band="9" style="left:73.3073%;top:79.2969%;width:7.8776%;height:2.7344%"></div>
+<div class="bandMask" data-band="10" style="left:84.0495%;top:79.2969%;width:7.8776%;height:2.7344%"></div><button class="slot" data-slot="0" style="left:64.9740%;top:16.5039%;width:7.5521%;height:14.7461%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="1" style="left:73.1771%;top:16.5039%;width:7.5521%;height:14.7461%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="2" style="left:62.1745%;top:33.3984%;width:9.5052%;height:15.4297%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="3" style="left:73.1120%;top:33.3984%;width:9.5052%;height:15.4297%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="4" style="left:56.3151%;top:50.8789%;width:9.3750%;height:15.4297%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="5" style="left:67.0573%;top:50.8789%;width:9.3750%;height:15.4297%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="6" style="left:77.9948%;top:50.8789%;width:9.3750%;height:15.4297%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="7" style="left:51.0417%;top:68.7500%;width:9.5703%;height:14.7461%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="8" style="left:61.7188%;top:68.7500%;width:9.5703%;height:14.7461%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="9" style="left:72.3958%;top:68.7500%;width:9.5703%;height:14.7461%"><span class="imageArea"></span><span class="nameArea"></span></button>
+<button class="slot" data-slot="10" style="left:83.1380%;top:68.7500%;width:9.5703%;height:14.7461%"><span class="imageArea"></span><span class="nameArea"></span></button><div id="hint1" class="hintBox" style="left:2.5391%;top:88.9648%;width:34.6354%;height:6.4453%">💡 Clique sur un personnage pour lire son indice.</div><div id="msg1" class="msgBox" style="left:52.0833%;top:83.3008%;width:37.1094%;height:4.6875%"></div><button id="reset1" class="ghost" style="left:51.6927%;top:88.6719%;width:16.4062%;height:7.0312%"></button><button id="check1" class="ghost" style="left:71.2891%;top:88.5742%;width:18.2943%;height:7.2266%"></button>
+</div></div></div>
+
+
+<div id="stage2" class="hidden">
+  <div class="notice">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative.</div>
+  <div class="scene scene2">
+    <img class="bg" src="asset_02.png">
+    <button class="relHot" data-idx="0" style="left:32.113%;top:39.551%;width:13.122%;height:6.180%"></button>
+<button class="relHot" data-idx="1" style="left:54.765%;top:39.551%;width:13.122%;height:6.180%"></button>
+<button class="relHot" data-idx="2" style="left:22.445%;top:54.607%;width:14.503%;height:5.843%"></button>
+<button class="relHot" data-idx="3" style="left:22.445%;top:62.022%;width:14.503%;height:5.843%"></button>
+<button class="relHot" data-idx="4" style="left:61.119%;top:54.607%;width:14.503%;height:5.843%"></button>
+<button class="relHot" data-idx="5" style="left:61.119%;top:62.022%;width:14.503%;height:5.843%"></button>
+<button class="relHot purpleUpper" data-idx="6" style="left:2.486%;top:75.843%;width:11.050%;height:5.618%"></button>
+<button class="relHot" data-idx="7" style="left:2.486%;top:82.584%;width:13.260%;height:5.618%"></button>
+  </div>
+
+  <div class="answerPanel">
+    <div class="answerTitle">Étiquettes à placer :</div>
+    <div class="answerGrid">
+      <button class="labelHot redLab" data-label="dirige">Ils dirigent et protègent</button>
+      <button class="labelHot goldLab" data-label="dirigejuge">Ils dirigent, jugent et protègent</button>
+      <button class="labelHot greenLab" data-label="protege">Ils protègent</button>
+      <button class="labelHot orangeLab" data-label="taxes">Ils obéissent et paient des taxes</button>
+      <button class="labelHot blueLab" data-label="fidelite1">Ils doivent fidélité</button>
+      <button class="labelHot blueLab" data-label="fidelite2">Il doit fidélité</button>
+      <button class="labelHot purpleLab" data-label="forme">Il forme</button>
+      <button class="labelHot purpleLab" data-label="sert">Il sert</button>
+    </div>
+    <button id="check2" class="check2Btn">✔ Vérifier</button>
+  </div>
+
+  <div id="status2" class="status2">Choisis une étiquette à placer.</div>
+  <div class="underBtns">
+    <button id="reset2" class="smallBtn">↻ Recommencer l’étape 2</button>
+    <button id="back1" class="smallBtn">← Retour à l’étape 1</button>
+  </div>
+</div>
+<div id="final" class="hidden"><div class="final"><div class="trophy">🏆</div><h2>Activité validée !</h2><p>Tu as réussi les deux étapes sans erreur dans la tentative de validation.</p><button id="replay">Rejouer</button></div></div>
+</div><script>
+const PEOPLE={"roi": {"name": "Le roi", "hint": "Il est tout en haut de la société : il dirige et protège le royaume.", "img": "asset_03.png"}, "reine": {"name": "La reine", "hint": "Elle vit au sommet de la pyramide avec le roi.", "img": "asset_04.png"}, "seigneur": {"name": "Le seigneur", "hint": "Il possède la seigneurie et commande sur ses terres.", "img": "asset_05.png"}, "chatelaine": {"name": "La châtelaine", "hint": "Elle vit au château avec le seigneur.", "img": "asset_06.png"}, "chevalier": {"name": "Le chevalier", "hint": "Il combat et protège le seigneur.", "img": "asset_07.png"}, "page": {"name": "Le page", "hint": "Il apprend son métier auprès du chevalier.", "img": "asset_08.png"}, "servante": {"name": "La servante", "hint": "Elle sert au château auprès du seigneur et de la châtelaine.", "img": "asset_09.png"}, "paysan": {"name": "Le paysan", "hint": "Il travaille la terre et fait partie des paysans.", "img": "asset_10.png"}, "paysanne": {"name": "La paysanne", "hint": "Elle fait partie des paysans.", "img": "asset_11.png"}, "garcon": {"name": "Le garçon", "hint": "Il fait partie des enfants paysans.", "img": "asset_12.png"}, "fille": {"name": "La fille", "hint": "Elle fait partie des enfants paysans.", "img": "asset_13.png"}};const IDS=Object.keys(PEOPLE);const GROUPS=[['roi','reine'],['seigneur','chatelaine'],['chevalier','page','servante'],['paysan','paysanne','garcon','fille']];
+const LABELS={dirige:'Ils dirigent et protègent',dirigejuge:'Ils dirigent, jugent et protègent',protege:'Ils protègent',taxes:'Ils obéissent et paient des taxes',fidelite1:'Ils doivent fidélité',fidelite2:'Il doit fidélité',forme:'Il forme',sert:'Il sert'};const ANSWERS=[['fidelite1'],['protege'],['fidelite2'],['dirige'],['dirigejuge'],['taxes'],['sert'],['forme']];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a}function row(i){if(i<2)return 0;if(i<4)return 1;if(i<7)return 2;return 3}function show(id,html){const e=document.getElementById(id);e.innerHTML=html||'';e.style.display=html?'flex':'none'}
+let selected=null,placed=Array(11).fill(null),hadErr=false;const cardsPanel=document.getElementById('cardsPanel'),slotEls=[...document.querySelectorAll('.slot')];
+function buildCards(){cardsPanel.innerHTML='';shuffle(IDS).forEach(id=>{const b=document.createElement('button');b.className='card';b.dataset.id=id;b.innerHTML='<div class="cardArt"><img src="'+PEOPLE[id].img+'"></div><div class="cardName">'+PEOPLE[id].name+'</div>';b.onclick=()=>{selected=id;document.getElementById('hint1').textContent='💡 '+PEOPLE[id].hint;render1()};cardsPanel.appendChild(b)})}
+function render1(){[...cardsPanel.children].forEach(b=>{const id=b.dataset.id;b.classList.toggle('selected',selected===id);b.classList.toggle('used',placed.includes(id))});slotEls.forEach((s,i)=>{s.classList.remove('wrong');const id=placed[i];s.querySelector('.imageArea').innerHTML=id?'<img src="'+PEOPLE[id].img+'">':'';s.querySelector('.nameArea').textContent=id?PEOPLE[id].name:''})}
+slotEls.forEach((s,i)=>s.onclick=()=>{if(placed[i]){selected=placed[i];placed[i]=null}else if(selected){const old=placed.indexOf(selected);if(old>=0)placed[old]=null;placed[i]=selected;selected=null}render1()});function reset1(){selected=null;placed=Array(11).fill(null);hadErr=false;document.getElementById('hint1').textContent='💡 Clique sur un personnage pour lire son indice.';show('msg1','');buildCards();render1()}document.getElementById('reset1').onclick=reset1;document.getElementById('check1').onclick=()=>{if(placed.some(v=>!v)){show('msg1','Place d’abord tous les personnages.');return}const wrong=[];for(let i=0;i<11;i++)if(!GROUPS[row(i)].includes(placed[i]))wrong.push(i);wrong.forEach(i=>slotEls[i].classList.add('wrong'));if(!wrong.length){if(!hadErr){show('msg1','🏆 Étape 1 validée ! <button id="go2">Passer à l’étape 2</button>');document.getElementById('go2').onclick=()=>{document.getElementById('stage1').classList.add('hidden');document.getElementById('stage2').classList.remove('hidden');scrollTo(0,0)}}else{show('msg1','👍 Tout est juste. Comme il y a eu une erreur pendant cette tentative, refais maintenant toute l’étape sans faute. <button id="redo1">Recommencer</button>');document.getElementById('redo1').onclick=reset1}}else{hadErr=true;show('msg1','Il y a '+wrong.length+' erreur(s). Corrige pour apprendre, puis recommence toute l’étape sans faute pour la valider.')}};
+let selLab=null,p2=Array(8).fill(null),hadErr2=false;const labEls=[...document.querySelectorAll('.labelHot')],relEls=[...document.querySelectorAll('.relHot')],status2=document.getElementById('status2');function render2(){labEls.forEach(e=>{const id=e.dataset.label;e.classList.toggle('selected',selLab===id);e.classList.toggle('used',p2.includes(id))});relEls.forEach((e,i)=>{e.classList.remove('wrong');const v=p2[i];e.classList.toggle('filled',!!v);e.textContent=v?LABELS[v]:''});status2.innerHTML=selLab?'Étiquette sélectionnée : <strong>'+LABELS[selLab]+'</strong>':'Choisis une étiquette à placer.'}labEls.forEach(e=>e.onclick=()=>{const id=e.dataset.label;if(p2.includes(id))return;selLab=id;render2()});relEls.forEach((e,i)=>e.onclick=()=>{if(p2[i]){selLab=p2[i];p2[i]=null}else if(selLab){const old=p2.indexOf(selLab);if(old>=0)p2[old]=null;p2[i]=selLab;selLab=null}render2()});function reset2(){selLab=null;p2=Array(8).fill(null);hadErr2=false;render2()}document.getElementById('reset2').onclick=reset2;document.getElementById('back1').onclick=()=>{document.getElementById('stage2').classList.add('hidden');document.getElementById('stage1').classList.remove('hidden');scrollTo(0,0)};document.getElementById('check2').onclick=()=>{if(p2.some(v=>!v)){status2.textContent='Place d’abord les 8 étiquettes.';return}const wrong=[];for(let i=0;i<8;i++)if(!ANSWERS[i].includes(p2[i]))wrong.push(i);wrong.forEach(i=>relEls[i].classList.add('wrong'));if(!wrong.length){if(!hadErr2){document.getElementById('stage2').classList.add('hidden');document.getElementById('final').classList.remove('hidden');scrollTo(0,0)}else{status2.innerHTML='👍 Tout est juste. Comme il y a eu une erreur pendant cette tentative, refais maintenant toute l’étape sans faute. <button id="redo2">Recommencer</button>';document.getElementById('redo2').onclick=reset2}}else{hadErr2=true;status2.textContent='Il y a '+wrong.length+' erreur(s). Corrige pour apprendre, puis recommence toute l’étape sans faute pour la valider.'}};document.getElementById('replay').onclick=()=>{reset1();reset2();document.getElementById('final').classList.add('hidden');document.getElementById('stage1').classList.remove('hidden');scrollTo(0,0)};reset1();reset2();
+</script></body></html>
