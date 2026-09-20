@@ -1,1 +1,270 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le château fort — Jeux CM1</title>
+<style>
+:root{--ink:#2f2318;--gold:#d4a514;--gold2:#f0c83a;--cream:#fff8df;--cream2:#f8e9bd;--blue:#2b75d8;--green:#32984f;--red:#c94548;--purple:#8c53c6;--shadow:0 8px 24px rgba(51,36,18,.14)}
+*{box-sizing:border-box}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(#eaf3fb,#f7f3e7);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(236,246,253,.90),rgba(247,243,231,.94)),url('castle_view.jpg') center/cover no-repeat;z-index:-1}
+button{font:inherit}
+.app{max-width:1240px;margin:auto;padding:14px}
+.rule{max-width:900px;margin:0 auto 12px;background:#fff4c9;border:2px solid #d8b45c;border-radius:14px;padding:10px 16px;text-align:center;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.parchment{position:relative;background:linear-gradient(#f8deb0,#f7c978 45%,#f5d99d);border:2px solid #9f6b27;border-radius:18px;box-shadow:var(--shadow);padding:14px 28px;text-align:center}
+.parchment:before,.parchment:after{content:"";position:absolute;top:8px;bottom:8px;width:18px;border:2px solid rgba(110,67,23,.4);border-radius:50%;opacity:.35}
+.parchment:before{left:8px} .parchment:after{right:8px}
+.parchment h1{font-family:Georgia,serif;margin:0;font-size:clamp(28px,4vw,48px)}
+.parchment p{margin:4px 0 0;font-family:Georgia,serif;font-weight:700;font-size:clamp(16px,2vw,23px)}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.homeBtn,.smallBtn,.primaryBtn{border:2px solid #7b5424;border-radius:12px;background:#fff8e9;color:#392716;font-weight:800;padding:10px 15px;cursor:pointer;box-shadow:0 2px 0 rgba(86,55,24,.18)}
+.primaryBtn{background:linear-gradient(#2f88f0,#1e65c3);border-color:#174f9d;color:#fff;padding:12px 24px;font-size:18px}
+.smallBtn:hover,.homeBtn:hover{background:#fff1c8}
+.primaryBtn:hover{filter:brightness(1.04)}
+.hidden{display:none!important}
+.homeHero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch;margin-top:16px}
+.heroPic{border:3px solid #d1a750;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+.heroPic img{display:block;width:100%;height:100%;object-fit:cover}
+.intro{background:rgba(255,248,223,.96);border:2px solid #d1a750;border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.intro h2{font-family:Georgia,serif;font-size:30px;margin:0 0 12px}
+.intro p{line-height:1.45}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.gameCard{position:relative;border:2px solid #d1a750;border-radius:18px;background:rgba(255,249,229,.98);padding:18px;cursor:pointer;box-shadow:var(--shadow);text-align:left;min-height:180px}
+.gameCard:hover{transform:translateY(-2px)}
+.gameCard .num{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#e9b619;border:2px solid #9f6b27;font-weight:900;font-size:22px;margin-bottom:8px}
+.gameCard h3{font-family:Georgia,serif;font-size:23px;margin:4px 0 8px}
+.gameCard p{margin:0;line-height:1.35}
+.badge{position:absolute;right:12px;top:12px;background:#e8f7e9;border:2px solid #52a05d;color:#276c31;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900;display:none}
+.gameCard.done .badge{display:block}
+.gameHeader{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin-bottom:12px}
+.gameHeader .parchment{box-shadow:none;padding:10px 24px}
+.gameHeader .parchment h1{font-size:clamp(24px,3vw,38px)}
+.gameHeader .parchment p{font-size:clamp(14px,1.5vw,18px)}
+.stepTag{background:#dceeff;border:2px solid #82b9f2;border-radius:12px;padding:9px 13px;font-weight:900;color:#16549b;text-align:center;min-width:112px}
+.panel{background:rgba(255,250,232,.97);border:2px solid #d2ac55;border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.instructions{display:flex;gap:10px;align-items:flex-start;background:#fff5cf;border:1px solid #e0bf6b;border-radius:12px;padding:11px 13px;margin-bottom:14px;font-weight:700;line-height:1.35}
+.instructions .dot{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#2d7dd2;color:#fff;font-weight:900}
+details.reading{background:#fffdfa;border:1px solid #d4bb83;border-radius:12px;padding:8px 12px;margin-bottom:14px}
+details.reading summary{cursor:pointer;font-weight:900;color:#684616}
+details.reading p{line-height:1.4;margin:9px 0}
+.sourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.sourceCard{border:3px solid #d4b269;border-radius:14px;background:#fffaf0;padding:8px;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.07);min-height:150px}
+.sourceCard img{width:100%;height:130px;object-fit:cover;border-radius:9px;display:block}
+.sourceCard.selected{outline:5px solid #2e86ff;outline-offset:1px}
+.sourceCard.used{opacity:.35}
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.periodSlot{border:3px dashed #b9892d;background:#fffdf5;border-radius:16px;min-height:220px;padding:10px;cursor:pointer;position:relative;overflow:hidden}
+.periodSlot .period{font-family:Georgia,serif;font-size:26px;font-weight:900;text-align:center;margin-bottom:7px;color:#6e4718}
+.periodSlot .drop{height:150px;border-radius:11px;display:grid;place-items:center;overflow:hidden;background:rgba(244,225,177,.45)}
+.periodSlot .drop img{width:100%;height:100%;object-fit:cover}
+.periodSlot.wrong{border-color:#c54242;background:#fff0f0}
+.periodSlot.correct{border-color:#3e9950}
+.controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.message{margin-top:12px;background:#fff5cf;border:2px solid #dbb75d;border-radius:12px;padding:10px 14px;font-weight:800;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;gap:10px}
+.visitTop{display:grid;grid-template-columns:.95fr 1.05fr;gap:14px;align-items:stretch;margin-bottom:14px}
+.planCard{border:2px solid #c99d48;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.planCard img{width:100%;height:100%;object-fit:cover;display:block}
+.visitText{background:#fff9e8;border:2px solid #d4b269;border-radius:16px;padding:14px;line-height:1.38}
+.visitText h3{font-family:Georgia,serif;margin:0 0 8px;font-size:24px}
+.visitLayout{display:grid;grid-template-columns:1fr 1.25fr;gap:14px;align-items:start}
+.imageBank{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.placeCard{border:3px solid #d4b269;border-radius:12px;background:#fffaf0;padding:6px;cursor:pointer;min-height:120px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.placeCard img{display:block;width:100%;height:110px;object-fit:cover;border-radius:8px}
+.placeCard.selected{outline:5px solid #2e86ff}
+.placeCard.used{opacity:.32}
+.clueGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.clueSlot{border:3px dashed #b9892d;border-radius:14px;background:#fffdf5;min-height:192px;padding:10px;cursor:pointer;display:flex;flex-direction:column;gap:7px}
+.clueSlot .n{width:34px;height:34px;border-radius:50%;background:#e8b419;border:2px solid #9f6b27;display:grid;place-items:center;font-weight:900;flex:0 0 auto}
+.clueSlot .clue{font-size:13px;line-height:1.28;font-weight:700;min-height:52px}
+.clueSlot .placed{height:92px;border-radius:9px;background:#f5ebcf;overflow:hidden;display:grid;place-items:center}
+.clueSlot .placed img{width:100%;height:100%;object-fit:cover}
+.clueSlot .revealName{display:none;text-align:center;font-weight:900;color:#674313}
+.clueSlot.revealed .revealName{display:block}
+.clueSlot.wrong{border-color:#c54242;background:#fff0f0}
+.textGame{display:grid;grid-template-columns:.7fr 1.3fr;gap:16px;align-items:start}
+.wordBank{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.wordBtn{border:2px solid #8bb6e5;background:#eef6ff;border-radius:12px;padding:12px 8px;font-weight:900;cursor:pointer;min-height:50px}
+.wordBtn.selected{outline:4px solid #2e86ff}
+.wordBtn.used{opacity:.35}
+.traceCard{background:#fffdfa;border:2px solid #d4b269;border-radius:16px;padding:18px;font-size:19px;line-height:2.15;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.blank{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:128px;height:39px;padding:0 9px;margin:0 3px;border:2px dashed #b9892d;background:#fff7dd;border-radius:9px;font-weight:900;cursor:pointer;line-height:1}
+.blank.wrong{border-color:#c54242;background:#fff0f0}
+.traceImage{margin-top:14px;border-radius:14px;overflow:hidden;border:2px solid #d1a750}
+.traceImage img{display:block;width:100%;height:auto}
+.finalCard{max-width:760px;margin:35px auto;background:#fff8df;border:2px solid #d1a750;border-radius:18px;padding:30px;text-align:center;box-shadow:var(--shadow)}
+.finalCard .trophy{font-size:70px}
+.finalCard h2{font-family:Georgia,serif;font-size:38px;margin:8px 0}
+@media(max-width:900px){
+ .homeHero,.visitTop,.visitLayout,.textGame{grid-template-columns:1fr}
+ .menu{grid-template-columns:1fr}
+ .gameHeader{grid-template-columns:1fr;}
+ .homeBtn{justify-self:start}
+ .stepTag{justify-self:start}
+ .sourceGrid,.timeline{grid-template-columns:1fr}
+ .sourceCard img{height:180px}
+ .imageBank{grid-template-columns:repeat(4,1fr)}
+ .placeCard img{height:90px}
+ .clueGrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:650px){
+ .app{padding:7px}
+ .imageBank,.clueGrid,.wordBank{grid-template-columns:1fr 1fr}
+ .placeCard img{height:105px}
+ .traceCard{font-size:16px;line-height:2.35}
+ .blank{min-width:100px;height:36px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="home">
+    <div class="parchment"><h1>Le château fort</h1><p>Séance 3 — Jeux CM1</p></div>
+    <div class="rule">🎯 Une activité n’est validée que si toutes les réponses sont justes lors d’une même tentative.</div>
+    <div class="homeHero">
+      <div class="heroPic"><img src="castle_view.jpg" alt="Château fort médiéval"></div>
+      <div class="intro"><h2>Explore le château 🏰</h2><p>Découvre comment les châteaux évoluent au fil du Moyen Âge, reconnais les lieux visités dans une forteresse et termine par le résumé de la séance.</p><p><strong>Important :</strong> tu peux corriger tes erreurs pour apprendre, mais pour valider une activité il faudra ensuite la recommencer et la réussir sans faute.</p></div>
+    </div>
+    <div class="menu">
+      <button class="gameCard" data-open="game1"><span class="badge">✓ Validé</span><span class="num">1</span><h3>L’évolution des châteaux</h3><p>Replace les trois châteaux dans l’ordre chronologique.</p></button>
+      <button class="gameCard" data-open="game2"><span class="badge">✓ Validé</span><span class="num">2</span><h3>La visite guidée</h3><p>Associe les huit images aux huit étapes de la visite.</p></button>
+      <button class="gameCard" data-open="game3"><span class="badge">✓ Validé</span><span class="num">3</span><h3>Le résumé</h3><p>Complète la trace écrite avec les six mots manquants.</p></button>
+    </div>
+  </div>
 
+  <section id="game1" class="hidden">
+    <div class="gameHeader">
+      <button class="homeBtn">⌂ Accueil</button>
+      <div class="parchment"><h1>Le château fort</h1><p>Jeu 1 — L’évolution des châteaux</p></div>
+      <div class="stepTag">Jeu 1 / 3</div>
+    </div>
+    <div class="rule">🎯 Pour valider : toutes les réponses doivent être justes dès la première vérification complète.</div>
+    <div class="panel">
+      <div class="instructions"><span class="dot">1</span><div>Choisis une image, puis clique sur la période où tu veux la placer. Quand les trois images sont posées, clique sur <strong>Vérifier</strong>.</div></div>
+      <details class="reading"><summary>📖 Relire le texte de l’atelier</summary>
+        <p>Les premiers châteaux, les <strong>mottes castrales</strong>, sont construits au Xème siècle. Ce sont des structures en bois perchées sur des buttes de terre. Mais le bois brûle facilement et pourrit : les seigneurs commencent donc à construire leurs châteaux en pierre.</p>
+        <p>Aux XIIème et XIIIème siècles apparaissent des châteaux forts plus classiques : de véritables forteresses militaires en pierre.</p>
+        <p>Aux XIVème et XVème siècles, les techniques de guerre évoluent et les seigneurs recherchent davantage de confort : les châteaux forts se transforment en résidences alliant défense et confort.</p>
+      </details>
+      <div id="g1Bank" class="sourceGrid"></div>
+      <div class="timeline">
+        <button class="periodSlot" data-slot="0"><div class="period">Xème – XIème</div><div class="drop"></div></button>
+        <button class="periodSlot" data-slot="1"><div class="period">XIIème – XIIIème</div><div class="drop"></div></button>
+        <button class="periodSlot" data-slot="2"><div class="period">XIVème – XVème</div><div class="drop"></div></button>
+      </div>
+      <div class="controls"><button id="g1Reset" class="smallBtn">↻ Recommencer</button><button id="g1Check" class="primaryBtn">✓ Vérifier</button></div>
+      <div id="g1Msg" class="message">Choisis une image pour commencer.</div>
+    </div>
+  </section>
+
+  <section id="game2" class="hidden">
+    <div class="gameHeader">
+      <button class="homeBtn">⌂ Accueil</button>
+      <div class="parchment"><h1>Le château fort</h1><p>Jeu 2 — La visite guidée</p></div>
+      <div class="stepTag">Jeu 2 / 3</div>
+    </div>
+    <div class="rule">🎯 Pour valider : les 8 images doivent être correctement placées dès la première vérification complète.</div>
+    <div class="panel">
+      <div class="instructions"><span class="dot">2</span><div>Choisis une image de lieu, puis clique sur l’étape de la visite qui lui correspond. Les noms des lieux seront révélés après validation.</div></div>
+      <div class="visitTop">
+        <div class="planCard"><img src="castle_plan.jpg" alt="Plan du château fort"></div>
+        <div class="visitText"><h3>Une visite en 8 étapes</h3><p>Le trajet commence à l’entrée du château, traverse les cours et les bâtiments de la vie quotidienne, puis se termine dans les espaces privés du donjon. Utilise les indices de chaque numéro pour retrouver l’image correspondante.</p></div>
+      </div>
+      <div class="visitLayout">
+        <div><h3>Images à placer</h3><div id="g2Bank" class="imageBank"></div></div>
+        <div><h3>Les 8 étapes</h3><div id="g2Slots" class="clueGrid"></div></div>
+      </div>
+      <div class="controls"><button id="g2Reset" class="smallBtn">↻ Recommencer</button><button id="g2Check" class="primaryBtn">✓ Vérifier</button></div>
+      <div id="g2Msg" class="message">Choisis une image pour commencer.</div>
+    </div>
+  </section>
+
+  <section id="game3" class="hidden">
+    <div class="gameHeader">
+      <button class="homeBtn">⌂ Accueil</button>
+      <div class="parchment"><h1>Le château fort</h1><p>Jeu 3 — La trace écrite</p></div>
+      <div class="stepTag">Jeu 3 / 3</div>
+    </div>
+    <div class="rule">🎯 Pour valider : complète les 6 trous sans aucune erreur lors de la première vérification complète.</div>
+    <div class="panel">
+      <div class="instructions"><span class="dot">3</span><div>Choisis un mot dans la banque, puis clique sur le trou où tu veux le placer.</div></div>
+      <div class="textGame">
+        <div><h3>Mots à placer</h3><div id="g3Bank" class="wordBank"></div></div>
+        <div>
+          <div class="traceCard">
+            Au Moyen Âge, les premiers châteaux étaient construits en <button class="blank" data-blank="0"></button>.<br>
+            Avec le temps, les <button class="blank" data-blank="1"></button> ont commencé à construire des châteaux en pierre, plus solides et plus difficiles à <button class="blank" data-blank="2"></button>.<br>
+            Le château fort avait trois fonctions : c’était une forteresse pour se <button class="blank" data-blank="3"></button>, une résidence pour le <button class="blank" data-blank="4"></button> et sa famille, et un symbole de son <button class="blank" data-blank="5"></button> sur le domaine.
+          </div>
+          <div class="traceImage"><img src="castle_view.jpg" alt="Château fort"></div>
+        </div>
+      </div>
+      <div class="controls"><button id="g3Reset" class="smallBtn">↻ Recommencer</button><button id="g3Check" class="primaryBtn">✓ Vérifier</button></div>
+      <div id="g3Msg" class="message">Choisis un mot pour commencer.</div>
+    </div>
+  </section>
+
+  <section id="final" class="hidden">
+    <div class="finalCard"><div class="trophy">🏆</div><h2>Séance validée !</h2><p>Tu as validé les trois jeux du château fort.</p><button id="finalHome" class="primaryBtn">Retour à l’accueil</button></div>
+  </section>
+</div>
+<script>
+const IMG={"castle_motte": "castle_motte_clean.png", "castle_stone": "castle_stone_clean.png", "castle_late": "castle_late_clean.png", "basse_cour": "basse_cour_clean.png", "chapelle": "chapelle_clean.png", "logements": "logements_clean.png", "cuisines": "cuisines_clean.png", "haute_cour": "haute_cour_clean.png", "chambre": "chambre_clean.png", "pont_levis": "pont_levis_clean.png", "grande_salle": "grande_salle_clean.png", "castle_view": "castle_view.jpg", "castle_plan": "castle_plan.jpg"};
+const done={game1:false,game2:false,game3:false};
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function openSection(id){document.querySelectorAll('#home,section').forEach(el=>el.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0)}
+function goHome(){document.querySelectorAll('#home,section').forEach(el=>el.classList.add('hidden'));document.getElementById('home').classList.remove('hidden');document.querySelectorAll('.gameCard').forEach(c=>c.classList.toggle('done',done[c.dataset.open]));window.scrollTo(0,0)}
+document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openSection(b.dataset.open)));
+document.querySelectorAll('.homeBtn').forEach(b=>b.addEventListener('click',goHome));
+document.getElementById('finalHome').addEventListener('click',goHome);
+function maybeFinal(){if(done.game1&&done.game2&&done.game3)openSection('final')}
+
+// GAME 1
+const g1Items=[{id:'castle_motte',img:IMG.castle_motte},{id:'castle_stone',img:IMG.castle_stone},{id:'castle_late',img:IMG.castle_late}];
+const g1Ans=['castle_motte','castle_stone','castle_late'];
+let g1Sel=null,g1Placed=[null,null,null],g1HadError=false;
+const g1Bank=document.getElementById('g1Bank'),g1Slots=[...document.querySelectorAll('#game1 .periodSlot')],g1Msg=document.getElementById('g1Msg');
+function g1Render(){
+ g1Bank.innerHTML='';shuffle(g1Items.filter(x=>!g1Placed.includes(x.id))).forEach(x=>{const b=document.createElement('button');b.className='sourceCard'+(g1Sel===x.id?' selected':'');b.innerHTML=`<img src="${x.img}" alt="Image de château">`;b.onclick=()=>{g1Sel=x.id;g1Render();g1Msg.textContent='Image sélectionnée : choisis une période.'};g1Bank.appendChild(b)});
+ g1Slots.forEach((s,i)=>{s.classList.remove('wrong','correct');const d=s.querySelector('.drop');d.innerHTML=g1Placed[i]?`<img src="${IMG[g1Placed[i]]}" alt="Château placé">`:'';})
+}
+g1Slots.forEach((s,i)=>s.addEventListener('click',()=>{if(g1Placed[i]){g1Sel=g1Placed[i];g1Placed[i]=null;}else if(g1Sel){const old=g1Placed.indexOf(g1Sel);if(old>=0)g1Placed[old]=null;g1Placed[i]=g1Sel;g1Sel=null;}g1Render()}));
+function g1Reset(){g1Sel=null;g1Placed=[null,null,null];g1HadError=false;g1Msg.textContent='Choisis une image pour commencer.';g1Render()}
+document.getElementById('g1Reset').onclick=g1Reset;
+document.getElementById('g1Check').onclick=()=>{if(g1Placed.some(x=>!x)){g1Msg.textContent='Place d’abord les 3 images.';return}const wrong=[];g1Placed.forEach((x,i)=>{if(x!==g1Ans[i])wrong.push(i)});g1Slots.forEach(s=>s.classList.remove('wrong','correct'));if(wrong.length){g1HadError=true;wrong.forEach(i=>g1Slots[i].classList.add('wrong'));g1Msg.textContent=`Il y a ${wrong.length} erreur(s). Corrige pour apprendre, puis recommence pour valider sans faute.`;return}g1Slots.forEach(s=>s.classList.add('correct'));if(g1HadError){g1Msg.innerHTML='👍 Tu as trouvé, mais cette tentative ne peut pas être validée. <button class="smallBtn" id="g1Redo">Recommencer l’activité</button>';document.getElementById('g1Redo').onclick=g1Reset}else{done.game1=true;g1Msg.innerHTML='🏆 Jeu 1 validé sans erreur ! <button class="smallBtn" id="g1Home">Retour à l’accueil</button>';document.getElementById('g1Home').onclick=()=>{goHome();maybeFinal()}}};
+
+// GAME 2
+const g2Places=[
+{id:'pont_levis',name:'Le pont-levis',img:IMG.pont_levis,clue:'Grande planche de bois mobile que l’on peut relever rapidement grâce à des chaînes.'},
+{id:'basse_cour',name:'La basse-cour',img:IMG.basse_cour,clue:'Grande cour ouverte entourée de murs, où travaillent les gens du château au quotidien.'},
+{id:'logements',name:'Les logements',img:IMG.logements,clue:'Ici vivent servantes, cuisiniers, palefreniers, forgerons et soldats.'},
+{id:'haute_cour',name:'La haute-cour',img:IMG.haute_cour,clue:'Partie la plus noble du château. Le sol y est pavé.'},
+{id:'chapelle',name:'La chapelle',img:IMG.chapelle,clue:'Lieu de prière du château où la maisonnée assiste à la messe.'},
+{id:'grande_salle',name:'La grande salle',img:IMG.grande_salle,clue:'Le seigneur y mange en public, rend la justice et reçoit ses vassaux.'},
+{id:'chambre',name:'La chambre du seigneur',img:IMG.chambre,clue:'Grande pièce avec un lit richement décoré et des tapis précieux.'},
+{id:'cuisines',name:'Les cuisines',img:IMG.cuisines,clue:'Dans les sous-sols : grandes cheminées, broches pour rôtir la viande et four à pain.'}
+];
+const g2Ans=g2Places.map(x=>x.id);let g2Sel=null,g2Placed=Array(8).fill(null),g2HadError=false,g2Reveal=false;
+const g2Bank=document.getElementById('g2Bank'),g2Slots=document.getElementById('g2Slots'),g2Msg=document.getElementById('g2Msg');
+function g2Render(){
+ g2Bank.innerHTML='';shuffle(g2Places.filter(x=>!g2Placed.includes(x.id))).forEach(x=>{const b=document.createElement('button');b.className='placeCard'+(g2Sel===x.id?' selected':'');b.innerHTML=`<img src="${x.img}" alt="Lieu du château">`;b.onclick=()=>{g2Sel=x.id;g2Render();g2Msg.textContent='Image sélectionnée : choisis une étape.'};g2Bank.appendChild(b)});
+ g2Slots.innerHTML='';g2Places.forEach((p,i)=>{const b=document.createElement('button');b.className='clueSlot'+(g2Reveal?' revealed':'');b.dataset.i=i;b.innerHTML=`<div class="n">${i+1}</div><div class="clue">${p.clue}</div><div class="placed">${g2Placed[i]?`<img src="${IMG[g2Placed[i]]}" alt="Image placée">`:''}</div><div class="revealName">${p.name}</div>`;b.onclick=()=>{if(g2Placed[i]){g2Sel=g2Placed[i];g2Placed[i]=null;}else if(g2Sel){const old=g2Placed.indexOf(g2Sel);if(old>=0)g2Placed[old]=null;g2Placed[i]=g2Sel;g2Sel=null;}g2Render()};g2Slots.appendChild(b)})
+}
+function g2Reset(){g2Sel=null;g2Placed=Array(8).fill(null);g2HadError=false;g2Reveal=false;g2Msg.textContent='Choisis une image pour commencer.';g2Render()}
+document.getElementById('g2Reset').onclick=g2Reset;
+document.getElementById('g2Check').onclick=()=>{if(g2Placed.some(x=>!x)){g2Msg.textContent='Place d’abord les 8 images.';return}const wrong=[];g2Placed.forEach((x,i)=>{if(x!==g2Ans[i])wrong.push(i)});[...g2Slots.children].forEach(x=>x.classList.remove('wrong'));if(wrong.length){g2HadError=true;wrong.forEach(i=>g2Slots.children[i].classList.add('wrong'));g2Msg.textContent=`Il y a ${wrong.length} erreur(s). Corrige pour apprendre, puis recommence pour valider sans faute.`;return}g2Reveal=true;g2Render();if(g2HadError){g2Msg.innerHTML='👍 Tout est maintenant juste. Pour valider, recommence l’activité et réussis-la sans faute. <button class="smallBtn" id="g2Redo">Recommencer</button>';document.getElementById('g2Redo').onclick=g2Reset}else{done.game2=true;g2Msg.innerHTML='🏆 Jeu 2 validé sans erreur ! Les noms des 8 lieux sont maintenant révélés. <button class="smallBtn" id="g2Home">Retour à l’accueil</button>';document.getElementById('g2Home').onclick=()=>{goHome();maybeFinal()}}};
+
+// GAME 3
+const g3Words=['bois','seigneurs','attaquer','défendre','seigneur','pouvoir'];const g3Ans=['bois','seigneurs','attaquer','défendre','seigneur','pouvoir'];let g3Sel=null,g3Placed=Array(6).fill(null),g3HadError=false;
+const g3Bank=document.getElementById('g3Bank'),g3Blanks=[...document.querySelectorAll('#game3 .blank')],g3Msg=document.getElementById('g3Msg');
+function g3Render(){g3Bank.innerHTML='';shuffle(g3Words.filter(x=>!g3Placed.includes(x))).forEach(w=>{const b=document.createElement('button');b.className='wordBtn'+(g3Sel===w?' selected':'');b.textContent=w;b.onclick=()=>{g3Sel=w;g3Render();g3Msg.textContent='Mot sélectionné : choisis un trou.'};g3Bank.appendChild(b)});g3Blanks.forEach((b,i)=>{b.classList.remove('wrong');b.textContent=g3Placed[i]||''})}
+g3Blanks.forEach((b,i)=>b.addEventListener('click',()=>{if(g3Placed[i]){g3Sel=g3Placed[i];g3Placed[i]=null}else if(g3Sel){const old=g3Placed.indexOf(g3Sel);if(old>=0)g3Placed[old]=null;g3Placed[i]=g3Sel;g3Sel=null}g3Render()}));
+function g3Reset(){g3Sel=null;g3Placed=Array(6).fill(null);g3HadError=false;g3Msg.textContent='Choisis un mot pour commencer.';g3Render()}
+document.getElementById('g3Reset').onclick=g3Reset;
+document.getElementById('g3Check').onclick=()=>{if(g3Placed.some(x=>!x)){g3Msg.textContent='Complète d’abord les 6 trous.';return}const wrong=[];g3Placed.forEach((x,i)=>{if(x!==g3Ans[i])wrong.push(i)});if(wrong.length){g3HadError=true;wrong.forEach(i=>g3Blanks[i].classList.add('wrong'));g3Msg.textContent=`Il y a ${wrong.length} erreur(s). Corrige pour apprendre, puis recommence pour valider sans faute.`;return}if(g3HadError){g3Msg.innerHTML='👍 Le texte est maintenant juste. Pour valider, recommence et réussis sans faute. <button class="smallBtn" id="g3Redo">Recommencer</button>';document.getElementById('g3Redo').onclick=g3Reset}else{done.game3=true;g3Msg.innerHTML='🏆 Jeu 3 validé sans erreur ! <button class="smallBtn" id="g3Home">Retour à l’accueil</button>';document.getElementById('g3Home').onclick=()=>{goHome();maybeFinal()}}};
+
+g1Reset();g2Reset();g3Reset();
+</script>
+</body>
+</html>

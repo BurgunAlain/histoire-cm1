@@ -1,0 +1,11 @@
+JEU CM1 — LE CHÂTEAU FORT
+
+À ajouter au dépôt GitHub Pages existant :
+- conserver le index.html actuel à la racine (jeu de la seigneurie) ;
+- ajouter le dossier complet « chateau-fort » à la racine ;
+- conserver le fichier .nojekyll déjà présent à la racine.
+
+Adresse du nouveau jeu une fois publié :
+https://burgunalain.github.io/histoire-cm1/chateau-fort/
+
+Le dossier chateau-fort contient son propre index.html et toutes ses images : il n'écrase donc pas le premier jeu.
