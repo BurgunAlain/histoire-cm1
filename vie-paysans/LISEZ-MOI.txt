@@ -1,0 +1,11 @@
+JEU CM1 — LA VIE QUOTIDIENNE DES PAYSANS
+
+Dossier GitHub : vie-paysans
+
+Le ZIP contient le dossier complet vie-paysans.
+À déposer dans le dépôt histoire-cm1 sans toucher aux autres dossiers.
+
+Adresse :
+https://burgunalain.github.io/histoire-cm1/vie-paysans/
+
+Le .nojekyll placé à la racine du dépôt suffit.
