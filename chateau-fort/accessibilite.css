@@ -1,0 +1,29 @@
+/* Lecture vocale - accessibilité petits lecteurs */
+.tts-target{position:relative;padding-right:44px!important}
+.tts-speaker{
+  position:absolute;right:7px;top:7px;z-index:50;
+  width:31px;height:31px;display:inline-flex;align-items:center;justify-content:center;
+  border:2px solid #2f78bb;border-radius:999px;background:#eef7ff;color:#174f80;
+  font:700 16px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.12);
+  -webkit-tap-highlight-color:transparent;user-select:none
+}
+.tts-speaker:hover{background:#dceeff}
+.tts-speaker.tts-speaking{background:#ffe7a8;border-color:#c78913;color:#6f4500;box-shadow:0 0 0 3px rgba(255,196,55,.28)}
+.tts-target.tts-reading{outline:4px solid rgba(255,191,45,.48)!important;outline-offset:2px}
+.gameCard.tts-target{padding-right:54px!important;padding-bottom:48px!important}
+.gameCard>.tts-speaker{top:auto;bottom:10px}
+.instructions.tts-target{padding-right:52px!important}
+.details-reading-placeholder{display:none}
+.wordBtn.tts-target{padding-right:44px!important}
+.period.tts-target{padding-right:38px!important}
+.period>.tts-speaker{width:27px;height:27px;font-size:14px;right:2px;top:0}
+.clueSlot.tts-target{padding-right:44px!important}
+.clueSlot>.tts-speaker{top:6px;right:6px}
+.message.tts-target{padding-right:52px!important}
+.finalCard.tts-target{padding-right:56px!important}
+@media(max-width:650px){
+  .tts-target{padding-right:40px!important}
+  .tts-speaker{width:28px;height:28px;font-size:14px;right:5px;top:5px}
+  .gameCard.tts-target{padding-right:48px!important;padding-bottom:44px!important}
+  .period.tts-target{padding-right:34px!important}
+}

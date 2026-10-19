@@ -1,11 +1,14 @@
-JEU CM1 — LE CHÂTEAU FORT
+MISE À JOUR ACCESSIBILITÉ — LE CHÂTEAU FORT
 
-À ajouter au dépôt GitHub Pages existant :
-- conserver le index.html actuel à la racine (jeu de la seigneurie) ;
-- ajouter le dossier complet « chateau-fort » à la racine ;
-- conserver le fichier .nojekyll déjà présent à la racine.
+Cette version ajoute la lecture vocale 🔊 en français aux textes utiles :
+- accueil et descriptions des trois jeux ;
+- règles et consignes ;
+- texte documentaire sur l'évolution des châteaux ;
+- présentation de la visite et chacun des huit indices ;
+- périodes chronologiques ;
+- mots et texte de la trace écrite ;
+- messages d'aide, de correction et de réussite.
 
-Adresse du nouveau jeu une fois publié :
+GitHub : remplace les fichiers du dossier /chateau-fort par ceux de ce dossier.
+L'adresse et le QR code ne changent pas :
 https://burgunalain.github.io/histoire-cm1/chateau-fort/
-
-Le dossier chateau-fort contient son propre index.html et toutes ses images : il n'écrase donc pas le premier jeu.
