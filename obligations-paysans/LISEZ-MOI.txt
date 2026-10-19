@@ -1,16 +1,23 @@
-JEU CM1 — LES OBLIGATIONS DES PAYSANS
+MISE À JOUR ACCESSIBILITÉ — LES OBLIGATIONS DES PAYSANS
 
-Dossier GitHub conseillé : obligations-paysans
+Cette version ajoute la lecture vocale 🔊 en français aux textes utiles :
+- règle générale et consignes ;
+- les trois définitions ;
+- les mots à placer ;
+- le récit de l’année du paysan ;
+- les quatre situations ;
+- les messages d’aide, d’erreur et de réussite ;
+- la trace écrite et les mots à replacer ;
+- le message final.
 
-À déposer ensemble dans ce dossier :
-- index.html
-- cens.png
-- corvee.png
-- banalite.png
-- piece.png
-- bouclier.png
+Fonctionnement :
+- un clic sur 🔊 lance la lecture ;
+- un second clic sur le même bouton l’arrête ;
+- lancer une autre lecture coupe la précédente.
 
-Adresse prévue :
+GitHub : remplace les fichiers du dossier /obligations-paysans par ceux de ce dossier.
+
+L’adresse et le QR code ne changent pas :
 https://burgunalain.github.io/histoire-cm1/obligations-paysans/
 
-Le .nojekyll placé à la racine du dépôt histoire-cm1 suffit.
+Le .nojekyll déjà présent à la racine du dépôt suffit.

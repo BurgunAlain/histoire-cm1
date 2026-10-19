@@ -101,6 +101,11 @@ button{font:inherit;color:inherit}
   .event{grid-template-columns:48px 1fr}.eventNum{width:44px;height:44px;font-size:21px}
   .coin{width:34px;height:34px}.traceCard img{height:145px}
 }
+
+/* --- Accessibilité : lecture vocale --- */
+.speakBtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;min-width:34px;padding:0;border:2px solid #2f78bb;background:#eef7ff;color:#174f80;border-radius:999px;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.12);font-size:18px;line-height:1;vertical-align:middle;-webkit-tap-highlight-color:transparent;user-select:none}
+.speakBtn:hover{background:#dceeff}.speakBtn.speaking{background:#ffe7a8;border-color:#c78913;color:#6f4500;box-shadow:0 0 0 3px rgba(255,196,55,.28)}.speakingText{outline:4px solid rgba(255,191,45,.50)!important;outline-offset:2px}.hasSpeak{position:relative;padding-right:46px!important}.hasSpeak>.speakBtn{position:absolute;right:6px;top:6px;z-index:8}.instructions.hasSpeak>.speakBtn,.rule.hasSpeak>.speakBtn,.status.hasSpeak>.speakBtn,.yearResult.hasSpeak>.speakBtn{top:50%;transform:translateY(-50%)}.defText.hasSpeak{padding:7px 45px 7px 7px!important}.eventText.hasSpeak{padding-right:42px!important}.traceSentence.hasSpeak{padding-right:42px!important}.bottomSentence.hasSpeak{padding-right:46px!important}.tokenAudioWrap{display:inline-flex;align-items:stretch;gap:5px;position:relative}.tokenAudioWrap>.token{height:100%}.tokenAudioWrap>.speakBtn{align-self:center;width:32px;height:32px;min-width:32px;font-size:16px}.bankTitle.hasSpeak{display:inline-block;left:50%;transform:translateX(-50%);padding-right:44px!important}@media(max-width:560px){.speakBtn{width:31px;height:31px;min-width:31px;font-size:16px}.hasSpeak{padding-right:40px!important}.defText.hasSpeak,.eventText.hasSpeak,.traceSentence.hasSpeak{padding-right:38px!important}.tokenAudioWrap>.speakBtn{width:29px;height:29px;min-width:29px;font-size:15px}}
+
 </style>
 </head>
 <body>
@@ -217,7 +222,7 @@ button{font:inherit;color:inherit}
 
 <script>
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const setStatus=(id,msg,type='')=>{const e=document.getElementById(id);e.className='status'+(type?' '+type:'');e.innerHTML=msg};
+const setStatus=(id,msg,type='')=>{const e=document.getElementById(id);e.className='status'+(type?' '+type:'');e.innerHTML=msg;addSpeakButton(e,'Écouter le message')};
 function gotoStage(n){
   document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));
   document.getElementById('final').classList.remove('show');
@@ -233,7 +238,7 @@ const answer1=['cens','corvee','banalite'];
 let s1sel=null,s1type=null,s1words=Array(3).fill(null),s1pics=Array(3).fill(null),s1HadError=false;
 function buildStage1(){
   const wb=document.getElementById('wordBank1'),ib=document.getElementById('imageBank1'); wb.innerHTML='';ib.innerHTML='';
-  shuffle(Object.keys(words1)).forEach(k=>{const b=document.createElement('button');b.className='token';b.dataset.key=k;b.textContent=words1[k];b.onclick=()=>selectS1('word',k);wb.appendChild(b)});
+  shuffle(Object.keys(words1)).forEach(k=>{const w=document.createElement('span');w.className='tokenAudioWrap';const b=document.createElement('button');b.className='token';b.dataset.key=k;b.textContent=words1[k];b.onclick=()=>selectS1('word',k);const s=document.createElement('button');s.className='speakBtn';s.type='button';s.dataset.speakText=words1[k];s.setAttribute('aria-label','Écouter : '+words1[k]);s.title='Écouter';s.textContent='🔊';w.append(b,s);wb.appendChild(w)});
   shuffle(Object.keys(pics1)).forEach(k=>{const b=document.createElement('button');b.className='token imageToken';b.dataset.key=k;b.innerHTML='<img src="'+pics1[k]+'" alt="">';b.onclick=()=>selectS1('img',k);ib.appendChild(b)});
 }
 function selectS1(type,key){s1sel=key;s1type=type;render1()}
@@ -273,7 +278,7 @@ let s2sel=null,s2=Array(4).fill(null),s2HadError=false,startCoins=8;
 function drawCoins(n){const box=document.getElementById('coins');box.innerHTML='';for(let i=0;i<n;i++){const im=document.createElement('img');im.src='piece.png';im.className='coin';im.alt='pièce';box.appendChild(im)}document.getElementById('coinCount').textContent=n}
 function buildRoleBank(){
   const b=document.getElementById('roleBank');b.innerHTML='';
-  shuffle(Object.keys(roleLabels)).forEach(k=>{const el=document.createElement('button');el.className='token';el.dataset.key=k;el.textContent=roleLabels[k];el.onclick=()=>{if(s2.includes(k))return;s2sel=k;render2()};b.appendChild(el)})
+  shuffle(Object.keys(roleLabels)).forEach(k=>{const w=document.createElement('span');w.className='tokenAudioWrap';const el=document.createElement('button');el.className='token';el.dataset.key=k;el.textContent=roleLabels[k];el.onclick=()=>{if(s2.includes(k))return;s2sel=k;render2()};const s=document.createElement('button');s.className='speakBtn';s.type='button';s.dataset.speakText=roleLabels[k];s.setAttribute('aria-label','Écouter : '+roleLabels[k]);s.title='Écouter';s.textContent='🔊';w.append(el,s);b.appendChild(w)})
 }
 document.querySelectorAll('.eventSlot').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;if(s2[i]){s2sel=s2[i];s2[i]=null}else if(s2sel){const old=s2.indexOf(s2sel);if(old>=0)s2[old]=null;s2[i]=s2sel;s2sel=null}render2()});
 function render2(){
@@ -294,7 +299,7 @@ document.getElementById('check2').onclick=()=>{
   if(wrong.length){s2HadError=true;setStatus('status2','Il y a '+wrong.length+' réponse(s) incorrecte(s). Corrige, puis recommence toute l’étape sans faute pour la valider.','bad');return}
   if(s2HadError){setStatus('status2','👍 Tout est maintenant juste. Comme il y a eu une erreur pendant cette tentative, recommence toute l’étape sans faute. <button class="action" id="redo2">Recommencer maintenant</button>','good');document.getElementById('redo2').onclick=reset2;return}
   const left=startCoins-3;drawCoins(left);
-  const yr=document.getElementById('yearResult');yr.innerHTML='🏆 <strong>Étape 2 validée !</strong><br>Tu avais '+startCoins+' pièces. Tu en as donné <strong>2 pour le cens</strong> et <strong>1 pour la banalité</strong> : il t’en reste <strong>'+left+'</strong>. Tu as aussi donné <strong>3 jours de travail gratuit</strong> pour les corvées. En échange, le seigneur assure ta <strong>protection</strong>.';yr.classList.add('show');
+  const yr=document.getElementById('yearResult');yr.innerHTML='🏆 <strong>Étape 2 validée !</strong><br>Tu avais '+startCoins+' pièces. Tu en as donné <strong>2 pour le cens</strong> et <strong>1 pour la banalité</strong> : il t’en reste <strong>'+left+'</strong>. Tu as aussi donné <strong>3 jours de travail gratuit</strong> pour les corvées. En échange, le seigneur assure ta <strong>protection</strong>.';yr.classList.add('show');addSpeakButton(yr,'Écouter le bilan');
   setStatus('status2','Observe ce qu’il te reste à la fin de l’année. <button class="action" id="go3">Passer à l’étape 3 →</button>','good');
   document.getElementById('go3').onclick=()=>{reset3();gotoStage(3)};
 };
@@ -305,7 +310,7 @@ const answer3=['cens','corvees','banalites','protection'];
 let s3sel=null,s3=Array(4).fill(null),s3HadError=false;
 function buildTraceBank(){
   const b=document.getElementById('traceBank');b.innerHTML='';
-  shuffle(Object.keys(traceLabels)).forEach(k=>{const el=document.createElement('button');el.className='token';el.dataset.key=k;el.textContent=traceLabels[k];el.onclick=()=>{if(s3.includes(k))return;s3sel=k;render3()};b.appendChild(el)})
+  shuffle(Object.keys(traceLabels)).forEach(k=>{const w=document.createElement('span');w.className='tokenAudioWrap';const el=document.createElement('button');el.className='token';el.dataset.key=k;el.textContent=traceLabels[k];el.onclick=()=>{if(s3.includes(k))return;s3sel=k;render3()};const s=document.createElement('button');s.className='speakBtn';s.type='button';s.dataset.speakText=traceLabels[k];s.setAttribute('aria-label','Écouter : '+traceLabels[k]);s.title='Écouter';s.textContent='🔊';w.append(el,s);b.appendChild(w)})
 }
 document.querySelectorAll('.blankSlot').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;if(s3[i]){s3sel=s3[i];s3[i]=null}else if(s3sel){const old=s3.indexOf(s3sel);if(old>=0)s3[old]=null;s3[i]=s3sel;s3sel=null}render3()});
 function render3(){
@@ -325,6 +330,18 @@ document.getElementById('check3').onclick=()=>{
 document.getElementById('replay').onclick=()=>{reset1();reset2();reset3();gotoStage(1)};
 
 reset1(); reset2(); reset3();
+
+/* --- Lecture vocale française --- */
+let activeSpeechButton=null;let activeSpeechTarget=null;
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();if(activeSpeechButton)activeSpeechButton.classList.remove('speaking');if(activeSpeechTarget)activeSpeechTarget.classList.remove('speakingText');activeSpeechButton=null;activeSpeechTarget=null}
+function frenchVoice(){if(!('speechSynthesis' in window))return null;const voices=window.speechSynthesis.getVoices();return voices.find(v=>/^fr(-|_)/i.test(v.lang)&&/France|French|français/i.test(v.name))||voices.find(v=>/^fr(-|_)/i.test(v.lang))||null}
+function cleanSpeechText(txt){return(txt||'').replace(/🔊/g,'').replace(/🎯/g,'').replace(/🏆/g,'').replace(/↻/g,'').replace(/✔/g,'').replace(/→/g,'').replace(/\s+/g,' ').trim()}
+function textWithoutControls(el){const c=el.cloneNode(true);c.querySelectorAll('.speakBtn,.action').forEach(x=>x.remove());return cleanSpeechText(c.textContent)}
+function addSpeakButton(el,label='Écouter ce texte'){if(!el||el.querySelector(':scope > .speakBtn'))return;el.classList.add('hasSpeak');const b=document.createElement('button');b.type='button';b.className='speakBtn';b.dataset.speakParent='1';b.setAttribute('aria-label',label);b.title=label;b.textContent='🔊';el.appendChild(b)}
+function decorateStaticSpeech(){const selectors=['.rule','.instructions','.defText','.storyBox','.eventText','.traceLead','.traceSentence','.bottomSentence','.final p'];document.querySelectorAll(selectors.join(',')).forEach(el=>addSpeakButton(el))}
+function speakButton(btn){if(!('speechSynthesis' in window)){alert("La lecture vocale n’est pas disponible sur ce navigateur.");return}if(activeSpeechButton===btn&&window.speechSynthesis.speaking){stopSpeech();return}stopSpeech();let target=null;let txt=btn.dataset.speakText||'';if(btn.dataset.speakParent){target=btn.parentElement;txt=textWithoutControls(target)}txt=cleanSpeechText(txt);if(!txt)return;const u=new SpeechSynthesisUtterance(txt);u.lang='fr-FR';u.rate=.88;u.pitch=1;const v=frenchVoice();if(v)u.voice=v;activeSpeechButton=btn;activeSpeechTarget=target;btn.classList.add('speaking');if(target)target.classList.add('speakingText');const finish=()=>{btn.classList.remove('speaking');if(target)target.classList.remove('speakingText');if(activeSpeechButton===btn){activeSpeechButton=null;activeSpeechTarget=null}};u.onend=finish;u.onerror=finish;window.speechSynthesis.speak(u)}
+document.addEventListener('click',e=>{const btn=e.target.closest('.speakBtn');if(!btn)return;e.preventDefault();e.stopPropagation();speakButton(btn)},true);document.addEventListener('visibilitychange',()=>{if(document.hidden)stopSpeech()});window.addEventListener('beforeunload',stopSpeech);if('speechSynthesis'in window)window.speechSynthesis.getVoices();decorateStaticSpeech();
+
 </script>
 </body>
 </html>
