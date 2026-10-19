@@ -1,0 +1,15 @@
+MISE À JOUR ACCESSIBILITÉ — LA SEIGNEURIE
+
+Cette version ajoute la lecture vocale 🔊 en français :
+- règle de validation ;
+- consigne de l'étape 1 ;
+- indice du personnage sélectionné ;
+- consigne de l'étape 2 ;
+- toutes les étiquettes de relations ;
+- message final.
+
+Dans GitHub, remplace les fichiers du dossier /seigneurie par ceux de ce dossier.
+L'adresse et le QR code ne changent pas :
+https://burgunalain.github.io/histoire-cm1/seigneurie/
+
+Le fichier .nojekyll déjà présent à la racine du dépôt suffit.

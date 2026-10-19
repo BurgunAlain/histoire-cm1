@@ -38,9 +38,51 @@
 @media(max-width:900px){.answerPanel{grid-template-columns:1fr}.answerTitle{text-align:center}.answerGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.check2Btn{justify-self:center;min-width:200px}}
 
 .scene2 .purpleUpper{font-size:clamp(11px,.98vw,17px);padding:2px 5px}
+
+/* --- Accessibilité : lecture vocale --- */
+.speakBtn,.speakOverlay{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:2px solid #2f78bb;background:#eef7ff;color:#174f80;
+  border-radius:999px;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.12);
+  -webkit-tap-highlight-color:transparent;user-select:none;
+}
+.speakBtn{width:34px;height:34px;min-width:34px;padding:0;font-size:18px;line-height:1}
+.inlineSpeak{margin-left:8px;vertical-align:middle}
+.speakBtn:hover,.speakOverlay:hover{background:#dceeff}
+.speakBtn.speaking,.speakOverlay.speaking{
+  background:#ffe7a8;border-color:#c78913;color:#6f4500;
+  box-shadow:0 0 0 3px rgba(255,196,55,.28)
+}
+.speakingText{outline:4px solid rgba(255,191,45,.55)!important;outline-offset:2px}
+.speakOverlay{
+  position:absolute;z-index:30;width:3.15%;aspect-ratio:1/1;padding:0;
+  font-size:clamp(16px,1.6vw,25px)
+}
+.labelSpeakWrap{position:relative;min-width:0;display:flex;align-items:stretch}
+.labelSpeakWrap .labelHot{width:100%!important;padding-right:44px!important}
+.labelSpeakWrap .speakBtn{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);z-index:12;
+  width:31px;height:31px;min-width:31px;font-size:16px
+}
+.answerTitleRow{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.answerTitleRow .answerTitle{white-space:normal}
+.finalSpeak{margin-top:10px}
+@media(max-width:900px){
+  .answerTitleRow{justify-content:center}
+  .speakOverlay{width:4.5%}
+}
+@media(max-width:600px){
+  .speakBtn{width:32px;height:32px;min-width:32px}
+  .speakOverlay{width:7%;font-size:17px}
+  .labelSpeakWrap .labelHot{padding-right:39px!important}
+  .labelSpeakWrap .speakBtn{width:28px;height:28px;min-width:28px}
+}
+
 </style></head><body><div class="wrap">
-<div id="stage1"><div class="notice">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative.</div><div class="scene"><img class="bg" src="asset_01.png"><div class="overlay">
-<div id="cardsPanel" class="cardsPanel" style="left:1.6276%;top:34.7656%;width:36.5885%;height:52.7344%"></div><div class="bandMask" data-band="0" style="left:65.3646%;top:27.3438%;width:6.7708%;height:2.8320%"></div>
+<div id="stage1"><div class="notice">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative.<button class="speakBtn inlineSpeak" data-speak-text="Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative." aria-label="Écouter la règle" title="Écouter">🔊</button></div><div class="scene"><img class="bg" src="asset_01.png"><div class="overlay">
+<div id="cardsPanel" class="cardsPanel" style="left:1.6276%;top:34.7656%;width:36.5885%;height:52.7344%"></div>
+<button class="speakOverlay" id="speakInstructions1" style="left:34.05%;top:14.0%" data-speak-text="Premièrement, clique sur un personnage pour lire son indice. Deuxièmement, clique sur une case de la pyramide pour le placer. Troisièmement, quand tu as placé tous les personnages, clique sur Vérifier." aria-label="Écouter la consigne" title="Écouter la consigne">🔊</button>
+<button class="speakOverlay" id="speakHint1" style="left:33.35%;top:89.9%" data-speak-target="hint1" aria-label="Écouter l’indice" title="Écouter l’indice">🔊</button><div class="bandMask" data-band="0" style="left:65.3646%;top:27.3438%;width:6.7708%;height:2.8320%"></div>
 <div class="bandMask" data-band="1" style="left:73.6328%;top:27.3438%;width:6.7708%;height:2.8320%"></div>
 <div class="bandMask" data-band="2" style="left:62.8255%;top:44.8242%;width:8.0729%;height:2.9297%"></div>
 <div class="bandMask" data-band="3" style="left:73.8932%;top:44.8242%;width:8.0729%;height:2.9297%"></div>
@@ -65,7 +107,7 @@
 
 
 <div id="stage2" class="hidden">
-  <div class="notice">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative.</div>
+  <div class="notice">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative.<button class="speakBtn inlineSpeak" data-speak-text="Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative." aria-label="Écouter la règle" title="Écouter">🔊</button></div>
   <div class="scene scene2">
     <img class="bg" src="asset_02.png">
     <button class="relHot" data-idx="0" style="left:32.113%;top:39.551%;width:13.122%;height:6.180%"></button>
@@ -79,16 +121,16 @@
   </div>
 
   <div class="answerPanel">
-    <div class="answerTitle">Étiquettes à placer :</div>
+    <div class="answerTitleRow"><div class="answerTitle">Étiquettes à placer :</div><button class="speakBtn" data-speak-text="Choisis une étiquette, puis touche la case qui correspond à la relation entre les personnages. Quand les huit étiquettes sont placées, clique sur Vérifier." aria-label="Écouter la consigne" title="Écouter la consigne">🔊</button></div>
     <div class="answerGrid">
-      <button class="labelHot redLab" data-label="dirige">Ils dirigent et protègent</button>
-      <button class="labelHot goldLab" data-label="dirigejuge">Ils dirigent, jugent et protègent</button>
-      <button class="labelHot greenLab" data-label="protege">Ils protègent</button>
-      <button class="labelHot orangeLab" data-label="taxes">Ils obéissent et paient des taxes</button>
-      <button class="labelHot blueLab" data-label="fidelite1">Ils doivent fidélité</button>
-      <button class="labelHot blueLab" data-label="fidelite2">Il doit fidélité</button>
-      <button class="labelHot purpleLab" data-label="forme">Il forme</button>
-      <button class="labelHot purpleLab" data-label="sert">Il sert</button>
+      <div class="labelSpeakWrap"><button class="labelHot redLab" data-label="dirige">Ils dirigent et protègent</button><button class="speakBtn relationSpeak" data-speak-text="Ils dirigent et protègent" aria-label="Écouter : Ils dirigent et protègent" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot goldLab" data-label="dirigejuge">Ils dirigent, jugent et protègent</button><button class="speakBtn relationSpeak" data-speak-text="Ils dirigent, jugent et protègent" aria-label="Écouter : Ils dirigent, jugent et protègent" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot greenLab" data-label="protege">Ils protègent</button><button class="speakBtn relationSpeak" data-speak-text="Ils protègent" aria-label="Écouter : Ils protègent" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot orangeLab" data-label="taxes">Ils obéissent et paient des taxes</button><button class="speakBtn relationSpeak" data-speak-text="Ils obéissent et paient des taxes" aria-label="Écouter : Ils obéissent et paient des taxes" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot blueLab" data-label="fidelite1">Ils doivent fidélité</button><button class="speakBtn relationSpeak" data-speak-text="Ils doivent fidélité" aria-label="Écouter : Ils doivent fidélité" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot blueLab" data-label="fidelite2">Il doit fidélité</button><button class="speakBtn relationSpeak" data-speak-text="Il doit fidélité" aria-label="Écouter : Il doit fidélité" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot purpleLab" data-label="forme">Il forme</button><button class="speakBtn relationSpeak" data-speak-text="Il forme" aria-label="Écouter : Il forme" title="Écouter">🔊</button></div>
+      <div class="labelSpeakWrap"><button class="labelHot purpleLab" data-label="sert">Il sert</button><button class="speakBtn relationSpeak" data-speak-text="Il sert" aria-label="Écouter : Il sert" title="Écouter">🔊</button></div>
     </div>
     <button id="check2" class="check2Btn">✔ Vérifier</button>
   </div>
@@ -99,14 +141,90 @@
     <button id="back1" class="smallBtn">← Retour à l’étape 1</button>
   </div>
 </div>
-<div id="final" class="hidden"><div class="final"><div class="trophy">🏆</div><h2>Activité validée !</h2><p>Tu as réussi les deux étapes sans erreur dans la tentative de validation.</p><button id="replay">Rejouer</button></div></div>
+<div id="final" class="hidden"><div class="final"><div class="trophy">🏆</div><h2>Activité validée !</h2><p id="finalText">Tu as réussi les deux étapes sans erreur dans la tentative de validation.</p><button class="speakBtn finalSpeak" data-speak-target="finalText" aria-label="Écouter le message de réussite" title="Écouter">🔊</button><br><button id="replay">Rejouer</button></div></div>
 </div><script>
 const PEOPLE={"roi": {"name": "Le roi", "hint": "Il est tout en haut de la société : il dirige et protège le royaume.", "img": "asset_03.png"}, "reine": {"name": "La reine", "hint": "Elle vit au sommet de la pyramide avec le roi.", "img": "asset_04.png"}, "seigneur": {"name": "Le seigneur", "hint": "Il possède la seigneurie et commande sur ses terres.", "img": "asset_05.png"}, "chatelaine": {"name": "La châtelaine", "hint": "Elle vit au château avec le seigneur.", "img": "asset_06.png"}, "chevalier": {"name": "Le chevalier", "hint": "Il combat et protège le seigneur.", "img": "asset_07.png"}, "page": {"name": "Le page", "hint": "Il apprend son métier auprès du chevalier.", "img": "asset_08.png"}, "servante": {"name": "La servante", "hint": "Elle sert au château auprès du seigneur et de la châtelaine.", "img": "asset_09.png"}, "paysan": {"name": "Le paysan", "hint": "Il travaille la terre et fait partie des paysans.", "img": "asset_10.png"}, "paysanne": {"name": "La paysanne", "hint": "Elle fait partie des paysans.", "img": "asset_11.png"}, "garcon": {"name": "Le garçon", "hint": "Il fait partie des enfants paysans.", "img": "asset_12.png"}, "fille": {"name": "La fille", "hint": "Elle fait partie des enfants paysans.", "img": "asset_13.png"}};const IDS=Object.keys(PEOPLE);const GROUPS=[['roi','reine'],['seigneur','chatelaine'],['chevalier','page','servante'],['paysan','paysanne','garcon','fille']];
 const LABELS={dirige:'Ils dirigent et protègent',dirigejuge:'Ils dirigent, jugent et protègent',protege:'Ils protègent',taxes:'Ils obéissent et paient des taxes',fidelite1:'Ils doivent fidélité',fidelite2:'Il doit fidélité',forme:'Il forme',sert:'Il sert'};const ANSWERS=[['fidelite1'],['protege'],['fidelite2'],['dirige'],['dirigejuge'],['taxes'],['sert'],['forme']];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a}function row(i){if(i<2)return 0;if(i<4)return 1;if(i<7)return 2;return 3}function show(id,html){const e=document.getElementById(id);e.innerHTML=html||'';e.style.display=html?'flex':'none'}
 let selected=null,placed=Array(11).fill(null),hadErr=false;const cardsPanel=document.getElementById('cardsPanel'),slotEls=[...document.querySelectorAll('.slot')];
-function buildCards(){cardsPanel.innerHTML='';shuffle(IDS).forEach(id=>{const b=document.createElement('button');b.className='card';b.dataset.id=id;b.innerHTML='<div class="cardArt"><img src="'+PEOPLE[id].img+'"></div><div class="cardName">'+PEOPLE[id].name+'</div>';b.onclick=()=>{selected=id;document.getElementById('hint1').textContent='💡 '+PEOPLE[id].hint;render1()};cardsPanel.appendChild(b)})}
+function buildCards(){cardsPanel.innerHTML='';shuffle(IDS).forEach(id=>{const b=document.createElement('button');b.className='card';b.dataset.id=id;b.innerHTML='<div class="cardArt"><img src="'+PEOPLE[id].img+'"></div><div class="cardName">'+PEOPLE[id].name+'</div>';b.onclick=()=>{selected=id;document.getElementById('hint1').textContent='💡 '+PEOPLE[id].name+'. '+PEOPLE[id].hint;render1()};cardsPanel.appendChild(b)})}
 function render1(){[...cardsPanel.children].forEach(b=>{const id=b.dataset.id;b.classList.toggle('selected',selected===id);b.classList.toggle('used',placed.includes(id))});slotEls.forEach((s,i)=>{s.classList.remove('wrong');const id=placed[i];s.querySelector('.imageArea').innerHTML=id?'<img src="'+PEOPLE[id].img+'">':'';s.querySelector('.nameArea').textContent=id?PEOPLE[id].name:''})}
 slotEls.forEach((s,i)=>s.onclick=()=>{if(placed[i]){selected=placed[i];placed[i]=null}else if(selected){const old=placed.indexOf(selected);if(old>=0)placed[old]=null;placed[i]=selected;selected=null}render1()});function reset1(){selected=null;placed=Array(11).fill(null);hadErr=false;document.getElementById('hint1').textContent='💡 Clique sur un personnage pour lire son indice.';show('msg1','');buildCards();render1()}document.getElementById('reset1').onclick=reset1;document.getElementById('check1').onclick=()=>{if(placed.some(v=>!v)){show('msg1','Place d’abord tous les personnages.');return}const wrong=[];for(let i=0;i<11;i++)if(!GROUPS[row(i)].includes(placed[i]))wrong.push(i);wrong.forEach(i=>slotEls[i].classList.add('wrong'));if(!wrong.length){if(!hadErr){show('msg1','🏆 Étape 1 validée ! <button id="go2">Passer à l’étape 2</button>');document.getElementById('go2').onclick=()=>{document.getElementById('stage1').classList.add('hidden');document.getElementById('stage2').classList.remove('hidden');scrollTo(0,0)}}else{show('msg1','👍 Tout est juste. Comme il y a eu une erreur pendant cette tentative, refais maintenant toute l’étape sans faute. <button id="redo1">Recommencer</button>');document.getElementById('redo1').onclick=reset1}}else{hadErr=true;show('msg1','Il y a '+wrong.length+' erreur(s). Corrige pour apprendre, puis recommence toute l’étape sans faute pour la valider.')}};
 let selLab=null,p2=Array(8).fill(null),hadErr2=false;const labEls=[...document.querySelectorAll('.labelHot')],relEls=[...document.querySelectorAll('.relHot')],status2=document.getElementById('status2');function render2(){labEls.forEach(e=>{const id=e.dataset.label;e.classList.toggle('selected',selLab===id);e.classList.toggle('used',p2.includes(id))});relEls.forEach((e,i)=>{e.classList.remove('wrong');const v=p2[i];e.classList.toggle('filled',!!v);e.textContent=v?LABELS[v]:''});status2.innerHTML=selLab?'Étiquette sélectionnée : <strong>'+LABELS[selLab]+'</strong>':'Choisis une étiquette à placer.'}labEls.forEach(e=>e.onclick=()=>{const id=e.dataset.label;if(p2.includes(id))return;selLab=id;render2()});relEls.forEach((e,i)=>e.onclick=()=>{if(p2[i]){selLab=p2[i];p2[i]=null}else if(selLab){const old=p2.indexOf(selLab);if(old>=0)p2[old]=null;p2[i]=selLab;selLab=null}render2()});function reset2(){selLab=null;p2=Array(8).fill(null);hadErr2=false;render2()}document.getElementById('reset2').onclick=reset2;document.getElementById('back1').onclick=()=>{document.getElementById('stage2').classList.add('hidden');document.getElementById('stage1').classList.remove('hidden');scrollTo(0,0)};document.getElementById('check2').onclick=()=>{if(p2.some(v=>!v)){status2.textContent='Place d’abord les 8 étiquettes.';return}const wrong=[];for(let i=0;i<8;i++)if(!ANSWERS[i].includes(p2[i]))wrong.push(i);wrong.forEach(i=>relEls[i].classList.add('wrong'));if(!wrong.length){if(!hadErr2){document.getElementById('stage2').classList.add('hidden');document.getElementById('final').classList.remove('hidden');scrollTo(0,0)}else{status2.innerHTML='👍 Tout est juste. Comme il y a eu une erreur pendant cette tentative, refais maintenant toute l’étape sans faute. <button id="redo2">Recommencer</button>';document.getElementById('redo2').onclick=reset2}}else{hadErr2=true;status2.textContent='Il y a '+wrong.length+' erreur(s). Corrige pour apprendre, puis recommence toute l’étape sans faute pour la valider.'}};document.getElementById('replay').onclick=()=>{reset1();reset2();document.getElementById('final').classList.add('hidden');document.getElementById('stage1').classList.remove('hidden');scrollTo(0,0)};reset1();reset2();
+
+/* --- Lecture vocale française --- */
+let activeSpeechButton=null;
+let activeSpeechTarget=null;
+
+function stopSpeech(){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  if(activeSpeechButton) activeSpeechButton.classList.remove('speaking');
+  if(activeSpeechTarget) activeSpeechTarget.classList.remove('speakingText');
+  activeSpeechButton=null;
+  activeSpeechTarget=null;
+}
+
+function frenchVoice(){
+  const voices=window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  return voices.find(v=>/^fr(-|_)/i.test(v.lang) && /France|français|French/i.test(v.name))
+      || voices.find(v=>/^fr(-|_)/i.test(v.lang))
+      || null;
+}
+
+function speakFromButton(btn){
+  if(!('speechSynthesis' in window)){
+    alert("La lecture vocale n’est pas disponible sur ce navigateur.");
+    return;
+  }
+  if(activeSpeechButton===btn && window.speechSynthesis.speaking){
+    stopSpeech();
+    return;
+  }
+  stopSpeech();
+  let target=null;
+  let txt=btn.dataset.speakText || '';
+  if(btn.dataset.speakTarget){
+    target=document.getElementById(btn.dataset.speakTarget);
+    if(target) txt=target.textContent || '';
+  }
+  txt=txt.replace(/^💡\s*/,'').trim();
+  if(!txt) return;
+
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='fr-FR';
+  u.rate=0.88;
+  u.pitch=1;
+  const voice=frenchVoice();
+  if(voice) u.voice=voice;
+
+  activeSpeechButton=btn;
+  activeSpeechTarget=target;
+  btn.classList.add('speaking');
+  if(target) target.classList.add('speakingText');
+
+  const finish=()=>{
+    btn.classList.remove('speaking');
+    if(target) target.classList.remove('speakingText');
+    if(activeSpeechButton===btn){
+      activeSpeechButton=null;
+      activeSpeechTarget=null;
+    }
+  };
+  u.onend=finish;
+  u.onerror=finish;
+  window.speechSynthesis.speak(u);
+}
+
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-speak-text],[data-speak-target]');
+  if(!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  speakFromButton(btn);
+},true);
+
+document.addEventListener('visibilitychange',()=>{if(document.hidden) stopSpeech()});
+window.addEventListener('beforeunload',stopSpeech);
+if('speechSynthesis' in window) window.speechSynthesis.getVoices();
+
 </script></body></html>
