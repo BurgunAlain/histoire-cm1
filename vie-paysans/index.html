@@ -31,17 +31,51 @@ button{font:inherit;color:inherit}.app{max-width:1480px;margin:auto;padding:12px
 @media(max-width:1050px){.calendar{grid-template-columns:repeat(3,minmax(0,1fr))}.taskBank{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:850px){.heroInner{grid-template-columns:70px 1fr 70px;padding:12px}.heroIcon{font-size:47px}.monthGrid{grid-template-columns:1fr}.textBank{grid-template-columns:1fr}.textToken{max-height:none}.calendar{grid-template-columns:repeat(2,minmax(0,1fr))}.taskBank{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:520px){.app{padding:7px}.heroInner{grid-template-columns:45px 1fr 45px;gap:3px}.heroIcon{font-size:34px}.hero p{font-size:12px}.rule{font-size:13px}.pill{font-size:12px;padding:6px 9px}.board{padding:10px}.calendar{grid-template-columns:1fr 1fr;gap:7px}.monthSlot{min-height:150px;padding:6px}.taskSlot{min-height:105px}.taskSlot img{height:67px}.taskBank{grid-template-columns:repeat(2,minmax(0,1fr))}.blank{min-width:120px}.lesson{padding:12px}}
+
+/* --- Accessibilité : lecture vocale --- */
+.speakBtn,.miniSpeak{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:2px solid #2f78bb;background:#eef7ff;color:#174f80;
+  border-radius:999px;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.12);
+  -webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation
+}
+.speakBtn{width:34px;height:34px;min-width:34px;padding:0;font-size:18px;line-height:1;vertical-align:middle}
+.miniSpeak{width:29px;height:29px;min-width:29px;padding:0;font-size:15px;line-height:1}
+.inlineSpeak{margin-left:8px}
+.speakBtn:hover,.miniSpeak:hover{background:#dceeff}
+.speakBtn.speaking,.miniSpeak.speaking{background:#ffe7a8;border-color:#c78913;color:#6f4500;box-shadow:0 0 0 3px rgba(255,196,55,.28)}
+.speakingText{outline:4px solid rgba(255,191,45,.55)!important;outline-offset:2px}
+.audioHeadline{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.heroAudio{position:absolute;right:12px;bottom:10px;z-index:3}
+.tokenAudioWrap{position:relative;min-width:0;display:flex;align-items:stretch}
+.tokenAudioWrap>.textToken,.tokenAudioWrap>.taskToken,.tokenAudioWrap>.wordToken{width:100%;padding-right:42px!important}
+.tokenAudioWrap>.miniSpeak{position:absolute;right:5px;top:7px;z-index:7}
+.taskAudioWrap>.miniSpeak{top:auto;bottom:7px}
+.wordAudioWrap>.miniSpeak{top:50%;transform:translateY(-50%)}
+.monthNameRow{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:7px}
+.monthNameRow .monthName{margin:0}
+.traceLine{position:relative;padding-right:44px}
+.traceLine>.miniSpeak{position:absolute;right:3px;top:50%;transform:translateY(-50%)}
+.status{position:relative;padding-right:48px}
+.status>.speakBtn{position:absolute;right:7px;top:50%;transform:translateY(-50%)}
+@media(max-width:520px){
+ .speakBtn{width:32px;height:32px;min-width:32px;font-size:16px}
+ .miniSpeak{width:27px;height:27px;min-width:27px;font-size:14px}
+ .heroAudio{right:7px;bottom:7px}
+ .traceLine{padding-right:36px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header class="hero"><div class="heroInner"><div class="heroIcon">🌾</div><div><h1>La vie quotidienne des paysans</h1><p>Une année avec Gringoire et sa famille</p></div><div class="heroIcon">🏰</div></div></header>
+<header class="hero"><div class="heroInner"><div class="heroIcon">🌾</div><div id="heroText"><h1>La vie quotidienne des paysans</h1><p>Une année avec Gringoire et sa famille</p></div><button class="speakBtn heroAudio" data-speak-target="heroText" aria-label="Écouter le titre" title="Écouter">🔊</button><div class="heroIcon">🏰</div></div></header>
 <div class="progress"><span class="pill active" id="p1">1 · Une année avec Gringoire</span><span class="pill" id="p2">2 · Calendrier des travaux</span><span class="pill" id="p3">3 · Trace écrite</span></div>
-<div class="rule">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative. Après une erreur, il faut recommencer toute l’étape pour la valider.</div>
+<div class="rule" id="mainRule">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative. Après une erreur, il faut recommencer toute l’étape pour la valider. <button class="speakBtn inlineSpeak" data-speak-target="mainRule" aria-label="Écouter la règle" title="Écouter">🔊</button></div>
 
 <section class="stage active" id="stage1"><div class="board">
-<h2 class="stageTitle">Mission 1 — Une année dans la vie de Gringoire</h2>
-<p class="instructions">Pour chaque groupe de trois mois, sélectionne un texte puis touche l’image du mois correspondant. Tu dois réussir les quatre groupes sans aucune erreur pour valider la mission.</p>
+<div id="mission1Intro"><div class="audioHeadline"><h2 class="stageTitle">Mission 1 — Une année dans la vie de Gringoire</h2><button class="speakBtn" data-speak-target="mission1Intro" aria-label="Écouter la mission 1" title="Écouter">🔊</button></div>
+<p class="instructions">Pour chaque groupe de trois mois, sélectionne un texte puis touche l’image du mois correspondant. Tu dois réussir les quatre groupes sans aucune erreur pour valider la mission.</p></div>
 <div class="quarterTabs" id="quarterTabs"></div><div class="monthGrid" id="monthGrid1"></div>
 <div class="bankBox"><div class="bankTitle">Textes à placer</div><div class="textBank" id="textBank1"></div></div>
 <div class="status" id="status1">Commence par placer les trois textes.</div>
@@ -49,8 +83,8 @@ button{font:inherit;color:inherit}.app{max-width:1480px;margin:auto;padding:12px
 </div></section>
 
 <section class="stage" id="stage2"><div class="board">
-<h2 class="stageTitle">Mission 2 — Le calendrier des travaux</h2>
-<p class="instructions">Sélectionne une activité puis touche le mois où elle doit être placée. Les travaux agricoles suivent le rythme des saisons.</p>
+<div id="mission2Intro"><div class="audioHeadline"><h2 class="stageTitle">Mission 2 — Le calendrier des travaux</h2><button class="speakBtn" data-speak-target="mission2Intro" aria-label="Écouter la mission 2" title="Écouter">🔊</button></div>
+<p class="instructions">Sélectionne une activité puis touche le mois où elle doit être placée. Les travaux agricoles suivent le rythme des saisons.</p></div>
 <div class="seasonLegend"><span>❄️ Hiver</span><span>🌱 Printemps</span><span>☀️ Été</span><span>🍂 Automne</span></div>
 <div class="calendar" id="calendar2"></div>
 <div class="bankBox"><div class="bankTitle">Activités à placer</div><div class="taskBank" id="taskBank2"></div></div>
@@ -59,22 +93,22 @@ button{font:inherit;color:inherit}.app{max-width:1480px;margin:auto;padding:12px
 </div></section>
 
 <section class="stage" id="stage3"><div class="board">
-<h2 class="stageTitle">Mission 3 — Complète la trace écrite</h2>
-<p class="instructions">Replace les six mots dans le texte.</p>
+<div id="mission3Intro"><div class="audioHeadline"><h2 class="stageTitle">Mission 3 — Complète la trace écrite</h2><button class="speakBtn" data-speak-target="mission3Intro" aria-label="Écouter la mission 3" title="Écouter">🔊</button></div>
+<p class="instructions">Replace les six mots dans le texte.</p></div>
 <div class="lesson">
-<p>Au Moyen Âge, la vie des paysans est rythmée par les <button class="blank" data-i="0"></button>.</p>
-<p>Au printemps, on <button class="blank" data-i="1"></button> et on sème le blé.</p>
-<p>En été, c’est le temps de la <button class="blank" data-i="2"></button> et de la moisson.</p>
-<p>En automne, on fait les <button class="blank" data-i="3"></button>.</p>
-<p>En hiver, on abat le <button class="blank" data-i="4"></button> et on répare les outils.</p>
-<p>Toute la <button class="blank" data-i="5"></button> participe aux travaux : le père, la mère et les enfants.</p>
+<p class="traceLine" id="trace0">Au Moyen Âge, la vie des paysans est rythmée par les <button class="blank" data-i="0"></button>.<button class="miniSpeak" data-speak-target="trace0" aria-label="Écouter cette phrase" title="Écouter">🔊</button></p>
+<p class="traceLine" id="trace1">Au printemps, on <button class="blank" data-i="1"></button> et on sème le blé.<button class="miniSpeak" data-speak-target="trace1" aria-label="Écouter cette phrase" title="Écouter">🔊</button></p>
+<p class="traceLine" id="trace2">En été, c’est le temps de la <button class="blank" data-i="2"></button> et de la moisson.<button class="miniSpeak" data-speak-target="trace2" aria-label="Écouter cette phrase" title="Écouter">🔊</button></p>
+<p class="traceLine" id="trace3">En automne, on fait les <button class="blank" data-i="3"></button>.<button class="miniSpeak" data-speak-target="trace3" aria-label="Écouter cette phrase" title="Écouter">🔊</button></p>
+<p class="traceLine" id="trace4">En hiver, on abat le <button class="blank" data-i="4"></button> et on répare les outils.<button class="miniSpeak" data-speak-target="trace4" aria-label="Écouter cette phrase" title="Écouter">🔊</button></p>
+<p class="traceLine" id="trace5">Toute la <button class="blank" data-i="5"></button> participe aux travaux : le père, la mère et les enfants.<button class="miniSpeak" data-speak-target="trace5" aria-label="Écouter cette phrase" title="Écouter">🔊</button></p>
 </div>
 <div class="bankBox"><div class="bankTitle">Mots à replacer</div><div class="wordBank" id="wordBank3"></div></div>
 <div class="status" id="status3">Place les six mots dans les bonnes cases.</div>
 <div class="controls"><button class="action" id="reset3">↻ Recommencer</button><button class="action primary" id="check3">✔ Vérifier</button></div>
 </div></section>
 
-<section class="final" id="final"><div class="trophy">🏆</div><h2>Mission accomplie !</h2><p>Tu as reconstitué une année de travail paysan : les activités changent avec les <strong>saisons</strong>, mais la famille travaille toute l’année.</p><button class="action primary" id="replay">Rejouer</button></section>
+<section class="final" id="final"><div class="trophy">🏆</div><h2>Mission accomplie !</h2><p id="finalText">Tu as reconstitué une année de travail paysan : les activités changent avec les <strong>saisons</strong>, mais la famille travaille toute l’année.</p><button class="speakBtn" data-speak-target="finalText" aria-label="Écouter le bilan" title="Écouter">🔊</button><br><br><button class="action primary" id="replay">Rejouer</button></section>
 </div>
 
 <script>
@@ -82,7 +116,7 @@ const MONTHS=[["janvier", "Janvier"], ["fevrier", "Février"], ["mars", "Mars"],
 const MONTH_TEXTS={"decembre": "Ce matin-là, comme tous les matins d’hiver, chacun a sa tâche. Le père répare les outils abîmés aux champs, la mère prépare la soupe au coin du feu, et Gringoire fend le bois.", "janvier": "Même sous la neige, le travail ne s’arrête jamais. Pendant que les hommes taillent la vigne du seigneur rang après rang, Gringoire répare la charrue abîmée. Dans la grange, sa mère bat le grain. Et sa petite sœur, elle, s’occupe des poules.", "fevrier": "La neige fond peu à peu mais le froid reste vif. Le père laboure déjà la terre avec la charrue tirée par le cheval, pour préparer les prochaines semailles. Près de la rivière, sa petite sœur va chercher de l’eau. Gringoire, lui, taille les arbres fruitiers et sa mère tisse près du feu.", "mars": "Les beaux jours reviennent. Gringoire sème le blé d’une main sûre dans le grand champ labouré. Son père entretient les fossés. Sa mère et sa petite sœur s’occupent du potager qui leur fournira les légumes. Le printemps est la saison des semailles : tout doit être planté avant l’été.", "avril": "Le printemps s’est installé. Les femmes du village entretiennent les vignes du seigneur pour qu’elles donnent de belles grappes à l’automne. Pendant ce temps, Gringoire et sa petite sœur mènent les moutons au pâturage, pendant que le père tond la laine d’une brebis dans la grange.", "mai": "Les beaux jours apportent leur lot de travail. Le père fauche déjà l’herbe haute du pré avec sa faux. Plus loin, les vaches et les moutons paissent librement, surveillés par les enfants du village. La mère désherbe le potager. La nature est généreuse, mais il faut sans cesse veiller à tout.", "juin": "C’est le temps de la fenaison. Le père coupe l’herbe haute à la faux, sous le soleil déjà chaud. Gringoire et sa petite sœur ramassent le foin coupé avec leur râteau, tandis que la mère l’étale pour le faire sécher. Le foin sera précieux pour nourrir les bêtes l’hiver prochain.", "juillet": "La moisson est le moment le plus important de l’année. Le père coupe le blé à la faucille. La mère et sa fille ramassent les tiges et les attachent en gerbes. Gringoire emporte le grain vers le moulin du seigneur pour le transformer en farine. Il faut finir avant que l’orage n’arrive.", "aout": "La fin de l’été approche. Gringoire sème les graines d’hiver dans la terre fraîchement labourée. Sa sœur cueille les premières pommes dans le verger. Près de la maison, sa mère trie le grain récolté, alors que son père laboure un nouveau champ pour les prochaines cultures.", "septembre": "Gringoire et son père vendangent la vigne. Dans la grange, on foule le raisin aux pieds pour en extraire le jus. La mère paye le cens au seigneur et la fille mène les cochons en forêt pour qu’ils se nourrissent de glands. Plus loin, on installe déjà les tentes de la foire Saint-Michel.", "octobre": "L’automne s’installe. Le père rentre les animaux à l’étable pour l’hiver. Gringoire ramasse les navets encore cachés sous la terre. Sa petite sœur ramène les cochons, qui se sont nourris de glands dans la forêt. Leur mère file la laine : il faut se préparer pour les mois froids qui arrivent.", "novembre": "Il est le temps d’abattre le cochon. Le père s’en charge avant de découper la viande, tandis que sa mère sale les morceaux pour les conserver tout l’hiver. Pendant ce temps, Gringoire et sa petite sœur rentrent du bois pour le feu. Les jours raccourcissent et le froid approche."};
 const TASKS={"janvier": "battre le grain", "fevrier": "tailler les arbres fruitiers", "mars": "planter le potager", "avril": "tondre les brebis", "mai": "garder les animaux aux pâturages", "juin": "couper le foin", "juillet": "lier les gerbes de blé", "aout": "ramasser les fruits", "septembre": "vendanger", "octobre": "filer la laine", "novembre": "abattre le cochon", "decembre": "réparer les outils"};
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const setStatus=(id,msg,type='')=>{const e=document.getElementById(id);e.className='status'+(type?' '+type:'');e.innerHTML=msg};
+const setStatus=(id,msg,type='')=>{const e=document.getElementById(id);e.className='status'+(type?' '+type:'');e.innerHTML=msg;const s=document.createElement('button');s.className='speakBtn';s.dataset.speakTarget=id;s.setAttribute('aria-label','Écouter le message');s.title='Écouter';s.textContent='🔊';e.appendChild(s)};
 function go(n){document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));document.getElementById('final').classList.remove('show');if(n<=3)document.getElementById('stage'+n).classList.add('active');['p1','p2','p3'].forEach((id,i)=>{let p=document.getElementById(id);p.classList.toggle('active',i===n-1);p.classList.toggle('done',i<n-1)});scrollTo({top:0,behavior:'smooth'})}
 
 const QUARTERS=[['decembre','janvier','fevrier'],['mars','avril','mai'],['juin','juillet','aout'],['septembre','octobre','novembre']];
@@ -90,14 +124,14 @@ const QTITLES=['Décembre · Janvier · Février','Mars · Avril · Mai','Juin �
 let q=0,s1sel=null,s1slots={},s1HadError=false,s1Done=[false,false,false,false];
 const monthLabel=k=>MONTHS.find(x=>x[0]===k)[1];
 function buildTabs(){const b=document.getElementById('quarterTabs');b.innerHTML='';QTITLES.forEach((t,i)=>{const x=document.createElement('span');x.className='qtab'+(i===q?' active':'')+(s1Done[i]?' done':'');x.textContent=(i+1)+' · '+t;b.appendChild(x)})}
-function renderQuarter(){buildTabs();s1sel=null;s1slots={};const mg=document.getElementById('monthGrid1'),tb=document.getElementById('textBank1');mg.innerHTML='';tb.innerHTML='';QUARTERS[q].forEach(k=>{const c=document.createElement('article');c.className='monthCard';c.innerHTML='<div class="monthName">'+monthLabel(k)+'</div><img src="mois_'+k+'.jpg" alt="'+monthLabel(k)+'"><button class="textSlot" data-month="'+k+'">Touchez ici pour placer le texte</button>';mg.appendChild(c)});shuffle(QUARTERS[q]).forEach(k=>{const b=document.createElement('button');b.className='textToken';b.dataset.key=k;b.innerHTML='<b>Texte à placer</b>'+MONTH_TEXTS[k];b.onclick=()=>{if(Object.values(s1slots).includes(k))return;s1sel=k;renderS1()};tb.appendChild(b)});document.querySelectorAll('.textSlot').forEach(e=>e.onclick=()=>{const m=e.dataset.month;if(s1slots[m]){s1sel=s1slots[m];delete s1slots[m]}else if(s1sel){for(const k of Object.keys(s1slots))if(s1slots[k]===s1sel)delete s1slots[k];s1slots[m]=s1sel;s1sel=null}renderS1()});renderS1();setStatus('status1','Place les trois textes de ce groupe de mois.')}
+function renderQuarter(){buildTabs();s1sel=null;s1slots={};const mg=document.getElementById('monthGrid1'),tb=document.getElementById('textBank1');mg.innerHTML='';tb.innerHTML='';QUARTERS[q].forEach(k=>{const c=document.createElement('article');c.className='monthCard';c.innerHTML='<div class="monthNameRow"><div class="monthName">'+monthLabel(k)+'</div><button class="miniSpeak" data-speak-text="'+monthLabel(k)+'" aria-label="Écouter '+monthLabel(k)+'" title="Écouter">🔊</button></div><img src="mois_'+k+'.jpg" alt="'+monthLabel(k)+'"><button class="textSlot" data-month="'+k+'">Touchez ici pour placer le texte</button>';mg.appendChild(c)});shuffle(QUARTERS[q]).forEach(k=>{const w=document.createElement('div');w.className='tokenAudioWrap';const b=document.createElement('button');b.className='textToken';b.dataset.key=k;b.innerHTML='<b>Texte à placer</b>'+MONTH_TEXTS[k];b.onclick=()=>{if(Object.values(s1slots).includes(k))return;s1sel=k;renderS1()};const s=document.createElement('button');s.className='miniSpeak';s.dataset.speakText=MONTH_TEXTS[k];s.setAttribute('aria-label','Écouter le texte');s.title='Écouter';s.textContent='🔊';w.appendChild(b);w.appendChild(s);tb.appendChild(w)});document.querySelectorAll('.textSlot').forEach(e=>e.onclick=()=>{const m=e.dataset.month;if(s1slots[m]){s1sel=s1slots[m];delete s1slots[m]}else if(s1sel){for(const k of Object.keys(s1slots))if(s1slots[k]===s1sel)delete s1slots[k];s1slots[m]=s1sel;s1sel=null}renderS1()});renderS1();setStatus('status1','Place les trois textes de ce groupe de mois.')}
 function renderS1(){document.querySelectorAll('#textBank1 .textToken').forEach(b=>{b.classList.toggle('selected',s1sel===b.dataset.key);b.classList.toggle('used',Object.values(s1slots).includes(b.dataset.key))});document.querySelectorAll('.textSlot').forEach(e=>{const v=s1slots[e.dataset.month];e.classList.remove('wrong');e.classList.toggle('filled',!!v);e.textContent=v?MONTH_TEXTS[v]:'Touchez ici pour placer le texte'})}
 function reset1(){q=0;s1sel=null;s1slots={};s1HadError=false;s1Done=[false,false,false,false];renderQuarter()}
 document.getElementById('reset1').onclick=reset1;
 document.getElementById('check1').onclick=()=>{const keys=QUARTERS[q];if(keys.some(k=>!s1slots[k])){setStatus('status1','Place d’abord les trois textes.','bad');return}const wrong=keys.filter(k=>s1slots[k]!==k);wrong.forEach(k=>document.querySelector('.textSlot[data-month="'+k+'"]').classList.add('wrong'));if(wrong.length){s1HadError=true;setStatus('status1','Il reste '+wrong.length+' association(s) incorrecte(s). Corrige pour comprendre. Pour valider la mission, il faudra ensuite la recommencer entièrement sans faute.','bad');return}s1Done[q]=true;if(q<3){q++;renderQuarter();return}if(s1HadError){setStatus('status1','👍 Toutes les associations sont maintenant correctes. Comme il y a eu au moins une erreur pendant cette tentative, recommence toute la mission et réussis les quatre groupes sans faute. <button class="action" id="redo1">Recommencer maintenant</button>','good');document.getElementById('redo1').onclick=reset1;return}setStatus('status1','🏆 Mission 1 validée ! <button class="action" id="go2">Passer au calendrier →</button>','good');document.getElementById('go2').onclick=()=>{reset2();go(2)}};
 
 let s2sel=null,s2={},s2HadError=false;
-function buildCalendar(){const cal=document.getElementById('calendar2'),bank=document.getElementById('taskBank2');cal.innerHTML='';bank.innerHTML='';MONTHS.forEach(([k,label])=>{const c=document.createElement('article');c.className='monthSlot';c.innerHTML='<div class="slotTitle">'+label+'</div><button class="taskSlot" data-month="'+k+'">Placer une activité</button>';cal.appendChild(c)});shuffle(MONTHS.map(x=>x[0])).forEach(k=>{const b=document.createElement('button');b.className='taskToken';b.dataset.key=k;b.innerHTML='<img src="travail_'+k+'.jpg" alt=""><div class="lbl">'+TASKS[k]+'</div>';b.onclick=()=>{if(Object.values(s2).includes(k))return;s2sel=k;render2()};bank.appendChild(b)});document.querySelectorAll('.taskSlot').forEach(e=>e.onclick=()=>{const m=e.dataset.month;if(s2[m]){s2sel=s2[m];delete s2[m]}else if(s2sel){for(const k of Object.keys(s2))if(s2[k]===s2sel)delete s2[k];s2[m]=s2sel;s2sel=null}render2()})}
+function buildCalendar(){const cal=document.getElementById('calendar2'),bank=document.getElementById('taskBank2');cal.innerHTML='';bank.innerHTML='';MONTHS.forEach(([k,label])=>{const c=document.createElement('article');c.className='monthSlot';c.innerHTML='<div class="monthNameRow"><div class="slotTitle">'+label+'</div><button class="miniSpeak" data-speak-text="'+label+'" aria-label="Écouter '+label+'" title="Écouter">🔊</button></div><button class="taskSlot" data-month="'+k+'">Placer une activité</button>';cal.appendChild(c)});shuffle(MONTHS.map(x=>x[0])).forEach(k=>{const w=document.createElement('div');w.className='tokenAudioWrap taskAudioWrap';const b=document.createElement('button');b.className='taskToken';b.dataset.key=k;b.innerHTML='<img src="travail_'+k+'.jpg" alt=""><div class="lbl">'+TASKS[k]+'</div>';b.onclick=()=>{if(Object.values(s2).includes(k))return;s2sel=k;render2()};const s=document.createElement('button');s.className='miniSpeak';s.dataset.speakText=TASKS[k];s.setAttribute('aria-label','Écouter : '+TASKS[k]);s.title='Écouter';s.textContent='🔊';w.appendChild(b);w.appendChild(s);bank.appendChild(w)});document.querySelectorAll('.taskSlot').forEach(e=>e.onclick=()=>{const m=e.dataset.month;if(s2[m]){s2sel=s2[m];delete s2[m]}else if(s2sel){for(const k of Object.keys(s2))if(s2[k]===s2sel)delete s2[k];s2[m]=s2sel;s2sel=null}render2()})}
 function render2(){document.querySelectorAll('#taskBank2 .taskToken').forEach(b=>{b.classList.toggle('selected',s2sel===b.dataset.key);b.classList.toggle('used',Object.values(s2).includes(b.dataset.key))});document.querySelectorAll('.taskSlot').forEach(e=>{const v=s2[e.dataset.month];e.classList.remove('wrong');e.innerHTML=v?'<div><img src="travail_'+v+'.jpg" alt=""><div class="lbl">'+TASKS[v]+'</div></div>':'Placer une activité'})}
 function reset2(){s2sel=null;s2={};s2HadError=false;buildCalendar();render2();setStatus('status2','Place les douze activités dans le calendrier.')}
 document.getElementById('reset2').onclick=reset2;
@@ -106,7 +140,7 @@ document.getElementById('check2').onclick=()=>{const keys=MONTHS.map(x=>x[0]);if
 const WORDS={saisons:'saisons',laboure:'laboure',fenaison:'fenaison',vendanges:'vendanges',cochon:'cochon',famille:'famille'};
 const ANSWER3=['saisons','laboure','fenaison','vendanges','cochon','famille'];
 let s3sel=null,s3=Array(6).fill(null),s3HadError=false;
-function buildWords(){const b=document.getElementById('wordBank3');b.innerHTML='';shuffle(Object.keys(WORDS)).forEach(k=>{const x=document.createElement('button');x.className='wordToken';x.dataset.key=k;x.textContent=WORDS[k];x.onclick=()=>{if(s3.includes(k))return;s3sel=k;render3()};b.appendChild(x)})}
+function buildWords(){const b=document.getElementById('wordBank3');b.innerHTML='';shuffle(Object.keys(WORDS)).forEach(k=>{const w=document.createElement('div');w.className='tokenAudioWrap wordAudioWrap';const x=document.createElement('button');x.className='wordToken';x.dataset.key=k;x.textContent=WORDS[k];x.onclick=()=>{if(s3.includes(k))return;s3sel=k;render3()};const s=document.createElement('button');s.className='miniSpeak';s.dataset.speakText=WORDS[k];s.setAttribute('aria-label','Écouter : '+WORDS[k]);s.title='Écouter';s.textContent='🔊';w.appendChild(x);w.appendChild(s);b.appendChild(w)})}
 document.querySelectorAll('.blank').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;if(s3[i]){s3sel=s3[i];s3[i]=null}else if(s3sel){const old=s3.indexOf(s3sel);if(old>=0)s3[old]=null;s3[i]=s3sel;s3sel=null}render3()});
 function render3(){document.querySelectorAll('#wordBank3 .wordToken').forEach(b=>{b.classList.toggle('selected',s3sel===b.dataset.key);b.classList.toggle('used',s3.includes(b.dataset.key))});document.querySelectorAll('.blank').forEach((e,i)=>{e.classList.remove('wrong');e.textContent=s3[i]?WORDS[s3[i]]:''})}
 function reset3(){s3sel=null;s3=Array(6).fill(null);s3HadError=false;buildWords();render3();setStatus('status3','Place les six mots dans les bonnes cases.')}
@@ -114,6 +148,46 @@ document.getElementById('reset3').onclick=reset3;
 document.getElementById('check3').onclick=()=>{if(s3.some(x=>!x)){setStatus('status3','Place d’abord les six mots.','bad');return}const wrong=[];for(let i=0;i<6;i++)if(s3[i]!==ANSWER3[i])wrong.push(i);wrong.forEach(i=>document.querySelector('.blank[data-i="'+i+'"]').classList.add('wrong'));if(wrong.length){s3HadError=true;setStatus('status3','Il y a '+wrong.length+' réponse(s) incorrecte(s). Corrige, puis recommence toute l’étape sans faute pour la valider.','bad');return}if(s3HadError){setStatus('status3','👍 Tout est maintenant juste. Comme il y a eu une erreur pendant cette tentative, recommence toute l’étape sans faute. <button class="action" id="redo3">Recommencer maintenant</button>','good');document.getElementById('redo3').onclick=reset3;return}document.getElementById('stage3').classList.remove('active');document.getElementById('p3').classList.remove('active');document.getElementById('p3').classList.add('done');document.getElementById('final').classList.add('show');scrollTo({top:0,behavior:'smooth'})};
 document.getElementById('replay').onclick=()=>{reset1();reset2();reset3();go(1)};
 reset1();reset2();reset3();
+
+/* --- Lecture vocale française --- */
+let activeSpeechButton=null;
+let activeSpeechTarget=null;
+function stopSpeech(){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  if(activeSpeechButton) activeSpeechButton.classList.remove('speaking');
+  if(activeSpeechTarget) activeSpeechTarget.classList.remove('speakingText');
+  activeSpeechButton=null;activeSpeechTarget=null;
+}
+function frenchVoice(){
+  if(!('speechSynthesis' in window)) return null;
+  const voices=window.speechSynthesis.getVoices();
+  return voices.find(v=>/^fr(-|_)/i.test(v.lang)&&/France|French|français/i.test(v.name))
+      || voices.find(v=>/^fr(-|_)/i.test(v.lang)) || null;
+}
+function targetSpeechText(target){
+  const clone=target.cloneNode(true);
+  clone.querySelectorAll('.speakBtn,.miniSpeak,.action').forEach(n=>n.remove());
+  return clone.textContent||'';
+}
+function cleanSpeechText(txt){return (txt||'').replace(/[🎯🏆🌾🏰❄️🌱☀️🍂✔↻→]/g,' ').replace(/\s+/g,' ').trim()}
+function speakFromButton(btn){
+  if(!('speechSynthesis' in window)){alert('La lecture vocale n’est pas disponible sur ce navigateur.');return}
+  if(activeSpeechButton===btn && window.speechSynthesis.speaking){stopSpeech();return}
+  stopSpeech();
+  let target=null,txt=btn.dataset.speakText||'';
+  if(btn.dataset.speakTarget){target=document.getElementById(btn.dataset.speakTarget);if(target)txt=targetSpeechText(target)}
+  txt=cleanSpeechText(txt);if(!txt)return;
+  const u=new SpeechSynthesisUtterance(txt);u.lang='fr-FR';u.rate=.88;u.pitch=1;
+  const voice=frenchVoice();if(voice)u.voice=voice;
+  activeSpeechButton=btn;activeSpeechTarget=target;btn.classList.add('speaking');if(target)target.classList.add('speakingText');
+  const end=()=>{btn.classList.remove('speaking');if(target)target.classList.remove('speakingText');if(activeSpeechButton===btn){activeSpeechButton=null;activeSpeechTarget=null}};
+  u.onend=end;u.onerror=end;window.speechSynthesis.speak(u);
+}
+document.addEventListener('click',e=>{const btn=e.target.closest('[data-speak-text],[data-speak-target]');if(!btn)return;e.preventDefault();e.stopPropagation();speakFromButton(btn)},true);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopSpeech()});
+window.addEventListener('beforeunload',stopSpeech);
+if('speechSynthesis' in window)window.speechSynthesis.getVoices();
+
 </script>
 </body>
 </html>
