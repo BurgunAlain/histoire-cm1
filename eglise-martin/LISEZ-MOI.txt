@@ -1,12 +1,13 @@
-Dossier GitHub Pages prêt à l'emploi.
+JEU CM1 — LA VIE DE MARTIN ET L'ÉGLISE — VERSION V3
 
-Contenu :
-- index.html : jeu interactif + trace écrite + BD imprimable
-- trace-imprimable.html : fiche A4 avec 16 trous
+Corrections vérifiées :
+- les étiquettes de la mission 1 sont dans un ordre source volontairement mélangé ;
+- elles sont à nouveau mélangées à chaque nouvelle tentative ;
+- une étiquette posée peut être retirée en recliquant sur sa case ;
+- une étiquette posée peut être remplacée par une autre ;
+- la banque des 16 mots de la trace écrite est elle aussi mélangée à chaque tentative.
 
-Pour GitHub :
-1. Créer un dossier "eglise-martin" dans le dépôt.
-2. Ouvrir ce dossier.
-3. Importer index.html + trace-imprimable.html + LISEZ-MOI.txt dans ce dossier.
-4. Attendre la fin du déploiement GitHub Pages.
-5. L'URL sera : https://burgunalain.github.io/histoire-cm1/eglise-martin/
+GitHub Pages : importer les fichiers dans le dossier eglise-martin.
+URL : https://burgunalain.github.io/histoire-cm1/eglise-martin/
+
+Après remplacement sur GitHub, si l'ancienne version reste visible, faire un rechargement forcé (Ctrl+F5 sur Windows).

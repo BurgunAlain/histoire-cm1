@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>La vie de Martin et l'Église — Histoire CM1</title>
+<!-- BUILD: 2026-10-24-v3-melange-et-retrait-verifies -->
 <style>
 :root{
   --ink:#3d2a1c;--paper:#fffaf0;--gold:#d5a43a;--gold2:#f3d27e;--line:#c6a05a;
@@ -249,17 +250,26 @@ const stage1Answers={
   fete1:'Noël', fete2:'Pâques', fete3:'Toussaint'
 };
 const stage1Tokens=[
-  'baptême','mariage','enterrement','prie matin et soir',
+  'Toussaint',
+  'aide ses parents dans les champs',
+  'mariage',
+  'Pâques',
+  'prie matin et soir',
+  'la cloche sonne le matin',
+  'baptême',
+  'Noël',
   'se rend à l’église avec tout le village et écoute le prêtre',
-  'Noël','Pâques','Toussaint',
-  'aide ses parents dans les champs','la cloche sonne le matin'
+  'enterrement'
 ];
 
 const traceAnswers={
   t1:'Église',t2:'cloche',t3:'signe de croix',t4:'prière',t5:'prie encore',t6:'dimanche',t7:'prêtre',t8:'Jésus',
   t9:'baptême',t10:'mariage',t11:'enterrement',t12:'Noël',t13:'Pâques',t14:'Toussaint',t15:'tombes',t16:'cimetière'
 };
-const traceTokens=['Église','cloche','signe de croix','prière','prie encore','dimanche','prêtre','Jésus','baptême','mariage','enterrement','Noël','Pâques','Toussaint','tombes','cimetière'];
+const traceTokens=[
+  'Pâques','prêtre','cimetière','prière','Noël','cloche','mariage','Jésus',
+  'Toussaint','signe de croix','tombes','dimanche','enterrement','Église','prie encore','baptême'
+];
 
 const bdMoments=[
  'La cloche sonne le matin',
@@ -281,7 +291,17 @@ const bdMoments=[
 let selected1=null, selected2=null, validated1=false, validated2=false;
 function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/œ/g,'oe').replace(/\s+/g,' ').trim();}
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shuffle(arr){
+  const a=[...arr];
+  const rnd=max=>{
+    if(window.crypto&&window.crypto.getRandomValues){const x=new Uint32Array(1);window.crypto.getRandomValues(x);return x[0]%max;}
+    return Math.floor(Math.random()*max);
+  };
+  for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}
+  // Sécurité pédagogique : on refuse l'ordre source exact.
+  if(a.every((v,i)=>v===arr[i]) && a.length>1){[a[0],a[1]]=[a[1],a[0]];}
+  return a;
+}
 function setStatus(id,msg,type=''){const el=document.getElementById(id);el.className='status'+(type?' '+type:'');el.firstChild?el.childNodes[0].nodeValue='':null;el.innerHTML=esc(msg)+' <button class="speakBtn" data-speak-inline="'+esc(msg)+'" aria-label="Écouter le message" title="Écouter">🔊</button>';bindAudio();}
 
 function renderStage1Bank(){
@@ -348,7 +368,7 @@ function checkStage1(){
 
 function renderTraceBank(){
   const bank=document.getElementById('traceBank'); bank.innerHTML='';
-  traceTokens.forEach(txt=>{
+  shuffle(traceTokens).forEach(txt=>{
     const d=document.createElement('button'); d.className='wordToken'; d.type='button'; d.dataset.value=txt;
     d.innerHTML='<span>'+esc(txt)+'</span><span class="miniSpeak" data-speak-inline="'+esc(txt)+'" title="Écouter" aria-label="Écouter">🔊</span>';
     d.addEventListener('click',e=>{ if(e.target.classList.contains('miniSpeak')) return; document.querySelectorAll('#traceBank .wordToken').forEach(t=>t.classList.remove('selected')); selected2=d; d.classList.add('selected'); });
