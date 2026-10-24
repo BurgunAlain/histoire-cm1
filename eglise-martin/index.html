@@ -281,11 +281,12 @@ const bdMoments=[
 let selected1=null, selected2=null, validated1=false, validated2=false;
 function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/œ/g,'oe').replace(/\s+/g,' ').trim();}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function setStatus(id,msg,type=''){const el=document.getElementById(id);el.className='status'+(type?' '+type:'');el.firstChild?el.childNodes[0].nodeValue='':null;el.innerHTML=esc(msg)+' <button class="speakBtn" data-speak-inline="'+esc(msg)+'" aria-label="Écouter le message" title="Écouter">🔊</button>';bindAudio();}
 
 function renderStage1Bank(){
   const bank=document.getElementById('tokenBank1'); bank.innerHTML='';
-  stage1Tokens.forEach((txt,i)=>{
+  shuffle(stage1Tokens).forEach(txt=>{
     const d=document.createElement('button'); d.className='token'; d.type='button'; d.dataset.value=txt;
     d.innerHTML='<span>'+esc(txt)+'</span><span class="miniSpeak" data-speak-inline="'+esc(txt)+'" title="Écouter" aria-label="Écouter">🔊</span>';
     d.addEventListener('click',e=>{ if(e.target.classList.contains('miniSpeak')) return; selectStage1Token(d); });
@@ -294,12 +295,44 @@ function renderStage1Bank(){
   bindAudio();
 }
 function selectStage1Token(el){document.querySelectorAll('#tokenBank1 .token').forEach(t=>t.classList.remove('selected')); selected1=el; el.classList.add('selected');}
-function resetStage1(){selected1=null; document.querySelectorAll('#tokenBank1 .token').forEach(t=>{t.classList.remove('selected','used','wrong'); t.disabled=false;}); document.querySelectorAll('#stage1 .slot').forEach(s=>{s.textContent=s.dataset.slot.startsWith('fete')?s.textContent==='1'||s.textContent==='2'||s.textContent==='3'?s.textContent:s.dataset.slot==='fete1'?'1':s.dataset.slot==='fete2'?'2':'3':''; s.innerHTML=s.dataset.slot==='naissance'||s.dataset.slot==='union'||s.dataset.slot==='mort'||s.dataset.slot==='touslesjours'||s.dataset.slot==='dimanche'||s.dataset.slot.startsWith('fete') ? ({naissance:'Choisis une étiquette',union:'Choisis une étiquette',mort:'Choisis une étiquette',touslesjours:'Martin ...',dimanche:'Choisis une étiquette',fete1:'1',fete2:'2',fete3:'3'})[s.dataset.slot] : ''; delete s.dataset.value; s.classList.remove('filled','usedWrong');}); setStatus('status1','Choisis une étiquette puis clique sur une case.'); }
-function placeStage1(slot){ if(!selected1) return; const prev=slot.dataset.value; if(prev){ // return old token
-    const old=[...document.querySelectorAll('#tokenBank1 .token')].find(t=>t.dataset.value===prev); if(old){old.classList.remove('used','wrong'); old.disabled=false;}
+function resetStage1(){
+  selected1=null;
+  renderStage1Bank();
+  document.querySelectorAll('#stage1 .slot').forEach(s=>{
+    s.innerHTML=({naissance:'Choisis une étiquette',union:'Choisis une étiquette',mort:'Choisis une étiquette',touslesjours:'Martin ...',dimanche:'Choisis une étiquette',fete1:'1',fete2:'2',fete3:'3'})[s.dataset.slot]||'';
+    delete s.dataset.value;
+    s.classList.remove('filled','usedWrong');
+  });
+  setStatus('status1','Choisis une étiquette puis clique sur une case. Tu peux recliquer sur une case remplie pour retirer son étiquette.');
+}
+function placeStage1(slot){
+  const prev=slot.dataset.value;
+
+  // Si aucune étiquette n'est sélectionnée, recliquer sur une case remplie retire l'étiquette.
+  if(!selected1){
+    if(!prev) return;
+    const old=[...document.querySelectorAll('#tokenBank1 .token')].find(t=>t.dataset.value===prev);
+    if(old){old.classList.remove('used','wrong'); old.disabled=false;}
+    delete slot.dataset.value;
+    slot.classList.remove('filled','usedWrong');
+    slot.innerHTML=({naissance:'Choisis une étiquette',union:'Choisis une étiquette',mort:'Choisis une étiquette',touslesjours:'Martin ...',dimanche:'Choisis une étiquette',fete1:'1',fete2:'2',fete3:'3'})[slot.dataset.slot]||'';
+    return;
   }
-  slot.textContent=selected1.dataset.value; slot.dataset.value=selected1.dataset.value; slot.classList.add('filled');
-  selected1.classList.add('used'); selected1.disabled=true; selected1.classList.remove('selected','wrong'); selected1=null;
+
+  // Si la case contient déjà une autre étiquette, on rend l'ancienne à la banque.
+  if(prev){
+    const old=[...document.querySelectorAll('#tokenBank1 .token')].find(t=>t.dataset.value===prev);
+    if(old){old.classList.remove('used','wrong'); old.disabled=false;}
+  }
+
+  slot.textContent=selected1.dataset.value;
+  slot.dataset.value=selected1.dataset.value;
+  slot.classList.add('filled');
+  slot.classList.remove('usedWrong');
+  selected1.classList.add('used');
+  selected1.disabled=true;
+  selected1.classList.remove('selected','wrong');
+  selected1=null;
 }
 function checkStage1(){
   const slots=[...document.querySelectorAll('#stage1 .slot')];
@@ -410,7 +443,7 @@ function stopSpeech(){ if(window.speechSynthesis){ window.speechSynthesis.cancel
 function speak(btn){ const txt=speechTextFromBtn(btn); if(!txt || !('speechSynthesis' in window)) return; if(currentBtn===btn){ stopSpeech(); return; } stopSpeech(); const u=new SpeechSynthesisUtterance(txt); currentUtter=u; currentBtn=btn; btn.classList.add('speaking'); u.lang='fr-FR'; u.rate=.95; u.pitch=1; u.onend=()=>{ if(currentBtn===btn) btn.classList.remove('speaking'); currentBtn=null; }; speechSynthesis.speak(u); }
 function bindAudio(){ document.querySelectorAll('[data-speak-target],[data-speak-inline]').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',e=>{ e.stopPropagation(); speak(btn); });}); }
 
-renderStage1Bank(); renderTraceBank(); renderBD(); resetStage1(); resetStage2(); bindAudio();
+renderTraceBank(); renderBD(); resetStage1(); resetStage2(); bindAudio();
 </script>
 </body>
 </html>
