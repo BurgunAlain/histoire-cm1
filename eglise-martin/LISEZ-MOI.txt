@@ -1,0 +1,12 @@
+Dossier GitHub Pages prêt à l'emploi.
+
+Contenu :
+- index.html : jeu interactif + trace écrite + BD imprimable
+- trace-imprimable.html : fiche A4 avec 16 trous
+
+Pour GitHub :
+1. Créer un dossier "eglise-martin" dans le dépôt.
+2. Ouvrir ce dossier.
+3. Importer index.html + trace-imprimable.html + LISEZ-MOI.txt dans ce dossier.
+4. Attendre la fin du déploiement GitHub Pages.
+5. L'URL sera : https://burgunalain.github.io/histoire-cm1/eglise-martin/

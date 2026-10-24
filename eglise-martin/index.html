@@ -1,1 +1,416 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La vie de Martin et l'Église — Histoire CM1</title>
+<style>
+:root{
+  --ink:#3d2a1c;--paper:#fffaf0;--gold:#d5a43a;--gold2:#f3d27e;--line:#c6a05a;
+  --blue:#2f7db9;--green:#5e8f52;--red:#b64a4a;--cream:#fff7e0;--shadow:0 10px 28px rgba(70,50,25,.14)
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 15% 3%,rgba(255,255,255,.95),transparent 24rem),linear-gradient(#e9f5fb 0,#f8fbfe 44%,#edf5f7 100%)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{max-width:1460px;margin:auto;padding:12px}
+.hero{position:relative;overflow:hidden;border:2px solid #c79d38;border-radius:24px;background:linear-gradient(135deg,#fff6d1,#f0cf76 58%,#ddb143);box-shadow:var(--shadow);margin-bottom:12px}
+.hero::before,.hero::after{content:"";position:absolute;width:230px;height:230px;border:18px solid rgba(255,255,255,.22);border-radius:50%;top:-145px}
+.hero::before{left:-55px}.hero::after{right:-70px}
+.heroInner{position:relative;z-index:1;display:grid;grid-template-columns:95px 1fr 95px;gap:8px;align-items:center;padding:18px 22px}
+.heroIcon{text-align:center;font-size:64px;filter:drop-shadow(0 3px 1px rgba(0,0,0,.14))}
+.hero h1{margin:0;text-align:center;font:700 clamp(30px,4.1vw,56px)/1.05 Georgia,serif;color:#5c3516}
+.hero p{margin:7px 0 0;text-align:center;font-weight:900;font-size:clamp(14px,1.35vw,20px)}
+.progress{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.pill{border:2px solid #ceb676;background:#fff;border-radius:999px;padding:7px 13px;font-weight:900;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.pill.active{background:#fff0b5;border-color:#b48316}.pill.done{background:#e8f6eb;border-color:#69a774}
+.rule{max-width:1120px;margin:0 auto 14px;background:#fff7dc;border:2px solid #d1ad59;border-radius:14px;padding:10px 14px;text-align:center;font-weight:900;line-height:1.35}
+.stage{display:none}.stage.active{display:block}
+.board{background:rgba(255,251,239,.97);border:2px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:16px}
+.audioHeadline{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.stageTitle{text-align:center;margin:2px 0 5px;font:700 clamp(25px,3vw,42px)/1.1 Georgia,serif;color:#633f1f}
+.instructions{text-align:center;margin:0 auto 14px;max-width:1100px;font-weight:800;font-size:clamp(14px,1.2vw,19px);line-height:1.38}
+.twoCol{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+.parchment{background:linear-gradient(#fffef9,#f8edd0);border:2px solid #cfb16c;border-radius:18px;padding:14px;box-shadow:0 5px 14px rgba(0,0,0,.06)}
+.parchment h3,.exerciseBoard h3,.bankTitle{margin:0 0 10px;text-align:center;font:700 26px Georgia,serif;color:#6a431d}
+.readingText{max-height:650px;overflow:auto;padding-right:8px;line-height:1.64;font-size:18px;font-weight:700}
+.readingText p{margin:0 0 14px}
+.readingText strong{color:#6f3c1a}
+.exerciseBoard{background:#fffdf6;border:2px solid #d6b875;border-radius:18px;padding:14px}
+.exerciseGrid{display:grid;gap:12px}
+.qCard{border:2px solid #c8a55e;border-radius:16px;background:#fffaf0;padding:12px}
+.qCard h4{margin:0 0 8px;font:700 21px Georgia,serif;color:#5f3d21}
+.lifeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.labelSlot{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.labelSlot .lbl{font-weight:900;text-align:center}
+.slot,.traceBlank{border:3px dashed #c6a55f;border-radius:12px;background:#fff;padding:10px;min-height:58px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;line-height:1.25;cursor:pointer}
+.slot.filled,.traceBlank.filled{border-style:solid;background:#fffbee;justify-content:flex-start;text-align:left}
+.slot.usedWrong,.traceBlank.usedWrong{background:#ffeaea;border-color:#c65555}
+.bankBox{margin-top:14px;border:2px solid #a8cbe2;background:#edf7ff;border-radius:15px;padding:12px}.bankTitle{font-size:22px;color:#245e86}
+.tokenGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.token{position:relative;border:2px solid #90bad8;background:#fff;border-radius:12px;padding:10px 42px 10px 10px;font-weight:800;text-align:left;line-height:1.28;cursor:pointer;min-height:60px;display:flex;align-items:center}
+.token.selected{outline:4px solid #3b8fe6;outline-offset:2px}.token.used{opacity:.35;pointer-events:none}
+.token.wrong{border-color:#c65555;background:#ffecec}
+.token .miniSpeak{position:absolute;right:6px;top:50%;transform:translateY(-50%)}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.action{border:2px solid #754c20;background:linear-gradient(#fff9e8,#efd594);border-radius:12px;padding:10px 18px;font-weight:900;box-shadow:0 3px 0 rgba(70,45,20,.16)}.action.primary{background:linear-gradient(#439bdb,#286fa6);border-color:#205f8d;color:#fff;min-width:150px}.action.green{background:linear-gradient(#76b885,#4f9460);border-color:#417c50;color:#fff}
+.status{position:relative;max-width:1100px;margin:12px auto 0;border:2px solid #d8b45c;background:#fff8df;border-radius:13px;padding:10px 50px 10px 14px;text-align:center;font-weight:900;min-height:52px;line-height:1.35}.status.good{border-color:#65a878;background:#eaf8ee;color:#275b36}.status.bad{border-color:#d16b6b;background:#fff0f0;color:#852929}.status .speakBtn{position:absolute;right:7px;top:50%;transform:translateY(-50%)}
+.lesson{max-width:1100px;margin:auto;border:2px solid #c8a55f;border-radius:18px;background:linear-gradient(#fffdf5,#f8ebcb);padding:18px}
+.lesson p{font-size:clamp(17px,1.45vw,22px);line-height:1.8;font-weight:800;margin:10px 0;text-align:center}
+.traceBlank{display:inline-flex;vertical-align:middle;min-width:130px;min-height:46px;padding:4px 8px;margin:0 2px}
+.wordBank{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:1100px;margin:14px auto 0}
+.wordToken{position:relative;border:2px solid #b58b32;background:#fff4ce;border-radius:11px;padding:10px 40px 10px 10px;font-weight:900;cursor:pointer;text-align:center;line-height:1.25;min-height:56px;display:flex;align-items:center;justify-content:center}
+.wordToken .miniSpeak{position:absolute;right:6px;top:50%;transform:translateY(-50%)}
+.printLinkBox{margin-top:14px;text-align:center}
+.printLinkBox a{display:inline-block;text-decoration:none;border:2px solid #7a5227;background:#fffdf0;border-radius:12px;padding:10px 16px;font-weight:900;box-shadow:0 3px 0 rgba(70,45,20,.12)}
+.bdTop{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.bdTop input{border:2px solid #c6a05a;border-radius:10px;padding:8px 10px;background:#fff;width:min(320px,100%)}
+.bdHelp{max-width:1050px;margin:0 auto 14px;background:#fff7dc;border:2px solid #d8b45c;border-radius:14px;padding:10px 14px;font-weight:800;line-height:1.4}
+.bdHelp ul{margin:8px 0 0 18px}
+.momentBank{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.momentCard{border:2px solid #9bbad3;background:#f7fbff;border-radius:14px;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:800}
+.comicGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.panel{border:3px solid #5e3d20;border-radius:16px;background:#fffdf8;min-height:270px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 0 rgba(94,61,32,.12)}
+.panelHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.panelNum{font:700 22px Georgia,serif;color:#5e3d20}.panel select,.panel textarea{width:100%;border:2px solid #c9aa65;border-radius:10px;background:#fff;padding:8px}.panel textarea{min-height:92px;resize:vertical;line-height:1.35}
+.panel .drawZone{border:3px dashed #ccb27b;border-radius:12px;background:linear-gradient(#fffefb,#fff6df);min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700;color:#8a6e48}
+.panel .captionPreview{border:2px solid #e1d3af;border-radius:10px;background:#fffdf5;padding:8px;font-size:14px;line-height:1.35;min-height:52px}
+.finalBox{display:none;max-width:820px;margin:22px auto 0;background:#fff8df;border:3px solid #d2ae5b;border-radius:22px;padding:28px;text-align:center;box-shadow:var(--shadow)}.finalBox.show{display:block}.finalBox h2{font:700 40px Georgia,serif;margin:4px 0 10px}
+/* audio */
+.speakBtn,.miniSpeak{display:inline-flex;align-items:center;justify-content:center;border:2px solid #2f78bb;background:#eef7ff;color:#174f80;border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.12);-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+.speakBtn{width:34px;height:34px;min-width:34px;padding:0;font-size:18px;line-height:1}.miniSpeak{width:29px;height:29px;min-width:29px;padding:0;font-size:15px;line-height:1}.inlineSpeak{margin-left:8px}.speakBtn:hover,.miniSpeak:hover{background:#dceeff}.speakBtn.speaking,.miniSpeak.speaking{background:#ffe7a8;border-color:#c78913;color:#6f4500;box-shadow:0 0 0 3px rgba(255,196,55,.28)}
+.heroAudio{position:absolute;right:12px;bottom:10px;z-index:3}
+@media(max-width:1150px){.twoCol{grid-template-columns:1fr}.wordBank,.momentBank{grid-template-columns:repeat(2,minmax(0,1fr))}.comicGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.heroInner{grid-template-columns:65px 1fr 65px;padding:12px}.heroIcon{font-size:45px}.lifeGrid,.tokenGrid,.wordBank,.momentBank,.comicGrid{grid-template-columns:1fr}.readingText{max-height:none;font-size:17px}.panel{min-height:240px}}
+@media(max-width:520px){.app{padding:7px}.heroInner{grid-template-columns:44px 1fr 44px;gap:3px}.heroIcon{font-size:32px}.hero p{font-size:12px}.board{padding:10px}.pill{font-size:12px;padding:6px 9px}.traceBlank{min-width:110px}}
+/* print BD only */
+@media print{
+  body.printBD .app>*:not(#bdPrintWrap){display:none!important}
+  body.printBD #bdPrintWrap{display:block!important}
+  body.printBD .board{border:none;box-shadow:none;background:#fff;padding:0}
+  body.printBD .controls,body.printBD .hero,body.printBD .progress,body.printBD .rule,body.printBD .bdTop .action,body.printBD .bdHelp,body.printBD #momentBankWrap,body.printBD .printOnlyHide{display:none!important}
+  body.printBD .stage{display:block!important}
+  body.printBD .panel select,body.printBD .panel textarea{display:none!important}
+  body.printBD .comicGrid{grid-template-columns:repeat(2,1fr);gap:10px}
+  body.printBD .panel{min-height:320px;break-inside:avoid}
+  body.printBD .drawZone{min-height:180px}
+  body.printBD .captionPreview{font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="appWrap">
+  <header class="hero">
+    <div class="heroInner">
+      <div class="heroIcon">⛪</div>
+      <div id="heroText">
+        <h1>La vie de Martin et l'Église au Moyen Âge</h1>
+        <p>Recherche dans un texte • Trace écrite à trous • BD interactive imprimable</p>
+      </div>
+      <button class="speakBtn heroAudio" data-speak-target="heroText" aria-label="Écouter le titre" title="Écouter">🔊</button>
+      <div class="heroIcon">📜</div>
+    </div>
+  </header>
 
+  <div class="progress">
+    <span class="pill active" id="pill1">1 · Recherche</span>
+    <span class="pill" id="pill2">2 · Trace écrite</span>
+    <span class="pill" id="pill3">3 · BD interactive</span>
+  </div>
+
+  <div class="rule" id="mainRule">🎯 Une étape n’est validée que si toutes les réponses sont justes lors d’une même tentative. En cas d’erreur, toute l’étape recommence. <button class="speakBtn inlineSpeak" data-speak-target="mainRule" aria-label="Écouter la règle" title="Écouter">🔊</button></div>
+
+  <section class="stage active" id="stage1">
+    <div class="board">
+      <div id="mission1Intro">
+        <div class="audioHeadline"><h2 class="stageTitle">Mission 1 — Chercher les informations dans le texte</h2><button class="speakBtn" data-speak-target="mission1Intro" aria-label="Écouter la mission 1" title="Écouter">🔊</button></div>
+        <p class="instructions">Lis le texte de Martin. Puis place les bonnes étiquettes dans les bonnes cases. Attention : il y a <strong>2 étiquettes pièges</strong>. Tu dois tout réussir d’un seul coup pour valider cette mission.</p>
+      </div>
+      <div class="twoCol">
+        <article class="parchment">
+          <div class="audioHeadline"><h3>Le texte de Martin</h3><button class="speakBtn" data-speak-target="martinText" aria-label="Écouter le texte de Martin" title="Écouter">🔊</button></div>
+          <div class="readingText" id="martinText">
+            <p><strong>Je m’appelle Martin</strong> et je vis dans un petit village au Moyen Âge, près de l’église. Sa cloche rythme nos journées. Quand elle sonne le matin, je me réveille et j’aide mes parents dans les champs.</p>
+            <p>Avant de partir, nous faisons le signe de croix et nous disons une prière. Ma mère murmure les mots doucement, et je les répète avec elle. Le soir, après le repas, nous prions encore, à la lueur de la bougie.</p>
+            <p>Le dimanche, nous enfilons nos « vêtements du dimanche », les plus propres que nous ayons. Tout le village se retrouve dans l’église. Le prêtre parle longtemps. Il raconte la vie de Jésus et nous apprend comment bien agir. Parfois, je ne comprends pas tout, mais j’écoute.</p>
+            <p>Il arrive souvent que les cloches sonnent pour autre chose. Un jour, c’est pour le baptême d’un bébé. Un autre, pour un mariage. Et parfois, elles sonnent plus lentement… alors tout le monde sait qu’une personne est morte, et nous nous rassemblons pour l’accompagner jusqu’au cimetière.</p>
+            <p>Au fil de l’année, il y a des moments que j’attends particulièrement. À Noël, l’église est pleine et nous célébrons la naissance de Jésus. À Pâques, on dit qu’il est revenu à la vie selon notre religion. Et à la Toussaint, nous allons nous recueillir sur les tombes. Jésus est très important dans ma religion. Dans ma religion, on dit qu’il est le fils de Dieu. Le prêtre raconte souvent son histoire, et j’essaie de m’en souvenir. Parfois, je vais à l’église en semaine. J’y apprends des prières et j’écoute encore les paroles du prêtre.</p>
+          </div>
+        </article>
+        <aside class="exerciseBoard">
+          <div class="audioHeadline"><h3>Les exercices</h3><button class="speakBtn" data-speak-target="exerciseArea" aria-label="Écouter les exercices" title="Écouter">🔊</button></div>
+          <div class="exerciseGrid" id="exerciseArea">
+            <div class="qCard">
+              <h4>Dans la vie :</h4>
+              <div class="lifeGrid">
+                <div class="labelSlot"><div class="lbl">Naissance</div><div class="slot" data-slot="naissance">Choisis une étiquette</div></div>
+                <div class="labelSlot"><div class="lbl">Union</div><div class="slot" data-slot="union">Choisis une étiquette</div></div>
+                <div class="labelSlot"><div class="lbl">Mort</div><div class="slot" data-slot="mort">Choisis une étiquette</div></div>
+              </div>
+            </div>
+            <div class="qCard">
+              <h4>Tous les jours :</h4>
+              <div class="slot" data-slot="touslesjours">Martin ...</div>
+            </div>
+            <div class="qCard">
+              <h4>Le dimanche :</h4>
+              <div class="slot" data-slot="dimanche">Choisis une étiquette</div>
+            </div>
+            <div class="qCard">
+              <h4>Les fêtes religieuses de l’année :</h4>
+              <div class="lifeGrid">
+                <div class="slot" data-slot="fete1">1</div>
+                <div class="slot" data-slot="fete2">2</div>
+                <div class="slot" data-slot="fete3">3</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="bankBox">
+        <div class="bankTitle">Étiquettes à placer</div>
+        <div class="tokenGrid" id="tokenBank1"></div>
+      </div>
+      <div class="controls">
+        <button class="action" id="resetStage1">Recommencer la mission</button>
+        <button class="action primary" id="checkStage1">Vérifier</button>
+      </div>
+      <div class="status" id="status1">Choisis une étiquette puis clique sur une case. <button class="speakBtn" data-speak-target="status1" aria-label="Écouter le message" title="Écouter">🔊</button></div>
+    </div>
+  </section>
+
+  <section class="stage" id="stage2">
+    <div class="board">
+      <div id="mission2Intro">
+        <div class="audioHeadline"><h2 class="stageTitle">Mission 2 — Trace écrite à trous</h2><button class="speakBtn" data-speak-target="mission2Intro" aria-label="Écouter la mission 2" title="Écouter">🔊</button></div>
+        <p class="instructions">Complète la trace écrite. Il y a <strong>16 mots ou groupes de mots</strong> à replacer. Tu dois réussir toute la trace écrite sans erreur pour valider la mission. Une version imprimable t’attend ensuite.</p>
+      </div>
+      <div class="lesson" id="traceLesson">
+        <p id="traceP1">Au Moyen Âge, l’<button class="traceBlank" data-slot="t1">1</button> est très présente dans la vie des habitants. Martin vit près de l’église et la <button class="traceBlank" data-slot="t2">2</button> rythme ses journées.</p>
+        <p id="traceP2">Le matin, il fait le <button class="traceBlank" data-slot="t3">3</button> et dit une <button class="traceBlank" data-slot="t4">4</button>. Le soir, après le repas, il <button class="traceBlank" data-slot="t5">5</button>.</p>
+        <p id="traceP3">Le <button class="traceBlank" data-slot="t6">6</button>, tout le village se retrouve dans l’église pour écouter le <button class="traceBlank" data-slot="t7">7</button>, qui raconte la vie de <button class="traceBlank" data-slot="t8">8</button>.</p>
+        <p id="traceP4">L’Église accompagne aussi les grands moments de la vie : le <button class="traceBlank" data-slot="t9">9</button> pour la naissance, le <button class="traceBlank" data-slot="t10">10</button> pour l’union et l’<button class="traceBlank" data-slot="t11">11</button> lorsqu’une personne meurt.</p>
+        <p id="traceP5">Dans l’année, les chrétiens célèbrent <button class="traceBlank" data-slot="t12">12</button>, <button class="traceBlank" data-slot="t13">13</button> et la <button class="traceBlank" data-slot="t14">14</button>.</p>
+        <p id="traceP6">À la Toussaint, ils vont se recueillir sur les <button class="traceBlank" data-slot="t15">15</button> du <button class="traceBlank" data-slot="t16">16</button>.</p>
+      </div>
+      <div class="bankBox">
+        <div class="bankTitle">Banque de mots</div>
+        <div class="wordBank" id="traceBank"></div>
+      </div>
+      <div class="controls">
+        <button class="action" id="resetStage2">Recommencer la mission</button>
+        <button class="action primary" id="checkStage2">Vérifier</button>
+      </div>
+      <div class="printLinkBox"><a href="trace-imprimable.html" target="_blank" rel="noopener">🖨️ Ouvrir la version imprimable de la trace écrite</a></div>
+      <div class="status" id="status2">Clique sur un mot de la banque, puis sur le bon trou. <button class="speakBtn" data-speak-target="status2" aria-label="Écouter le message" title="Écouter">🔊</button></div>
+    </div>
+  </section>
+
+  <section class="stage" id="stage3">
+    <div class="board" id="bdPrintWrap">
+      <div id="mission3Intro">
+        <div class="audioHeadline"><h2 class="stageTitle">Atelier bonus — Crée la BD de Martin</h2><button class="speakBtn" data-speak-target="mission3Intro" aria-label="Écouter l'atelier BD" title="Écouter">🔊</button></div>
+        <p class="instructions">Choisis <strong>8 moments</strong> de la vie religieuse de Martin, écris une petite phrase pour chaque vignette, puis imprime ta BD. Tu peux aussi l’imprimer et laisser les élèves dessiner à la main dans les cadres.</p>
+      </div>
+      <div class="bdTop printOnlyHide">
+        <input id="studentName" type="text" placeholder="Prénom de l'élève">
+        <button class="action" id="fillDemo">Remplir un exemple</button>
+        <button class="action green" id="printBD">Imprimer ma BD</button>
+      </div>
+      <div class="bdHelp printOnlyHide" id="bdHelpText">
+        <strong>Conseils :</strong>
+        <ul>
+          <li>Choisis des moments réellement présents dans le texte.</li>
+          <li>Essaie de ne pas répéter deux fois le même moment.</li>
+          <li>Écris une courte phrase simple dans chaque vignette.</li>
+          <li>Au moment d’imprimer, les cadres resteront grands pour permettre un dessin à la main si tu veux.</li>
+        </ul>
+        <button class="speakBtn inlineSpeak" data-speak-target="bdHelpText" aria-label="Écouter les conseils" title="Écouter">🔊</button>
+      </div>
+      <div id="momentBankWrap">
+        <div class="bankTitle">Moments disponibles pour la BD</div>
+        <div class="momentBank" id="momentBank"></div>
+      </div>
+      <div class="comicGrid" id="comicGrid"></div>
+    </div>
+  </section>
+
+  <div class="finalBox" id="finalBox">
+    <div style="font-size:70px">🏆</div>
+    <h2>Bravo !</h2>
+    <p>Tu as réussi les deux missions obligatoires. Tu peux maintenant utiliser l’atelier BD et imprimer ta production.</p>
+  </div>
+</div>
+
+<script>
+const stage1Answers={
+  naissance:'baptême', union:'mariage', mort:'enterrement',
+  touslesjours:'prie matin et soir',
+  dimanche:'se rend à l’église avec tout le village et écoute le prêtre',
+  fete1:'Noël', fete2:'Pâques', fete3:'Toussaint'
+};
+const stage1Tokens=[
+  'baptême','mariage','enterrement','prie matin et soir',
+  'se rend à l’église avec tout le village et écoute le prêtre',
+  'Noël','Pâques','Toussaint',
+  'aide ses parents dans les champs','la cloche sonne le matin'
+];
+
+const traceAnswers={
+  t1:'Église',t2:'cloche',t3:'signe de croix',t4:'prière',t5:'prie encore',t6:'dimanche',t7:'prêtre',t8:'Jésus',
+  t9:'baptême',t10:'mariage',t11:'enterrement',t12:'Noël',t13:'Pâques',t14:'Toussaint',t15:'tombes',t16:'cimetière'
+};
+const traceTokens=['Église','cloche','signe de croix','prière','prie encore','dimanche','prêtre','Jésus','baptême','mariage','enterrement','Noël','Pâques','Toussaint','tombes','cimetière'];
+
+const bdMoments=[
+ 'La cloche sonne le matin',
+ 'Martin fait le signe de croix',
+ 'Martin dit une prière avec sa mère',
+ 'Martin aide ses parents dans les champs',
+ 'Martin prie encore le soir',
+ 'Le dimanche, tout le village va à l’église',
+ 'Le prêtre raconte la vie de Jésus',
+ 'Le baptême d’un bébé',
+ 'Un mariage au village',
+ 'Une personne est accompagnée jusqu’au cimetière',
+ 'La fête de Noël',
+ 'La fête de Pâques',
+ 'La Toussaint au cimetière',
+ 'Martin va à l’église en semaine'
+];
+
+let selected1=null, selected2=null, validated1=false, validated2=false;
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/œ/g,'oe').replace(/\s+/g,' ').trim();}
+function setStatus(id,msg,type=''){const el=document.getElementById(id);el.className='status'+(type?' '+type:'');el.firstChild?el.childNodes[0].nodeValue='':null;el.innerHTML=esc(msg)+' <button class="speakBtn" data-speak-inline="'+esc(msg)+'" aria-label="Écouter le message" title="Écouter">🔊</button>';bindAudio();}
+
+function renderStage1Bank(){
+  const bank=document.getElementById('tokenBank1'); bank.innerHTML='';
+  stage1Tokens.forEach((txt,i)=>{
+    const d=document.createElement('button'); d.className='token'; d.type='button'; d.dataset.value=txt;
+    d.innerHTML='<span>'+esc(txt)+'</span><span class="miniSpeak" data-speak-inline="'+esc(txt)+'" title="Écouter" aria-label="Écouter">🔊</span>';
+    d.addEventListener('click',e=>{ if(e.target.classList.contains('miniSpeak')) return; selectStage1Token(d); });
+    bank.appendChild(d);
+  });
+  bindAudio();
+}
+function selectStage1Token(el){document.querySelectorAll('#tokenBank1 .token').forEach(t=>t.classList.remove('selected')); selected1=el; el.classList.add('selected');}
+function resetStage1(){selected1=null; document.querySelectorAll('#tokenBank1 .token').forEach(t=>{t.classList.remove('selected','used','wrong'); t.disabled=false;}); document.querySelectorAll('#stage1 .slot').forEach(s=>{s.textContent=s.dataset.slot.startsWith('fete')?s.textContent==='1'||s.textContent==='2'||s.textContent==='3'?s.textContent:s.dataset.slot==='fete1'?'1':s.dataset.slot==='fete2'?'2':'3':''; s.innerHTML=s.dataset.slot==='naissance'||s.dataset.slot==='union'||s.dataset.slot==='mort'||s.dataset.slot==='touslesjours'||s.dataset.slot==='dimanche'||s.dataset.slot.startsWith('fete') ? ({naissance:'Choisis une étiquette',union:'Choisis une étiquette',mort:'Choisis une étiquette',touslesjours:'Martin ...',dimanche:'Choisis une étiquette',fete1:'1',fete2:'2',fete3:'3'})[s.dataset.slot] : ''; delete s.dataset.value; s.classList.remove('filled','usedWrong');}); setStatus('status1','Choisis une étiquette puis clique sur une case.'); }
+function placeStage1(slot){ if(!selected1) return; const prev=slot.dataset.value; if(prev){ // return old token
+    const old=[...document.querySelectorAll('#tokenBank1 .token')].find(t=>t.dataset.value===prev); if(old){old.classList.remove('used','wrong'); old.disabled=false;}
+  }
+  slot.textContent=selected1.dataset.value; slot.dataset.value=selected1.dataset.value; slot.classList.add('filled');
+  selected1.classList.add('used'); selected1.disabled=true; selected1.classList.remove('selected','wrong'); selected1=null;
+}
+function checkStage1(){
+  const slots=[...document.querySelectorAll('#stage1 .slot')];
+  for(const s of slots){ if(!s.dataset.value){ setStatus('status1','Il reste des cases vides.','bad'); return; } }
+  let ok=true;
+  slots.forEach(s=>{
+    const right=stage1Answers[s.dataset.slot];
+    if(norm(s.dataset.value)!==norm(right)){ ok=false; s.classList.add('usedWrong'); const tok=[...document.querySelectorAll('#tokenBank1 .token')].find(t=>t.dataset.value===s.dataset.value); if(tok) tok.classList.add('wrong'); }
+  });
+  if(ok){ validated1=true; document.getElementById('pill1').classList.remove('active'); document.getElementById('pill1').classList.add('done'); document.getElementById('pill2').classList.add('active'); setStatus('status1','Bravo ! Mission 1 réussie. Tu peux passer à la trace écrite.','good'); setTimeout(()=>showStage(2),700); }
+  else { setStatus('status1','Il y a au moins une erreur. Toute la mission recommence dans 2 secondes.','bad'); setTimeout(resetStage1,2000); }
+}
+
+function renderTraceBank(){
+  const bank=document.getElementById('traceBank'); bank.innerHTML='';
+  traceTokens.forEach(txt=>{
+    const d=document.createElement('button'); d.className='wordToken'; d.type='button'; d.dataset.value=txt;
+    d.innerHTML='<span>'+esc(txt)+'</span><span class="miniSpeak" data-speak-inline="'+esc(txt)+'" title="Écouter" aria-label="Écouter">🔊</span>';
+    d.addEventListener('click',e=>{ if(e.target.classList.contains('miniSpeak')) return; document.querySelectorAll('#traceBank .wordToken').forEach(t=>t.classList.remove('selected')); selected2=d; d.classList.add('selected'); });
+    bank.appendChild(d);
+  });
+  bindAudio();
+}
+function resetStage2(){ selected2=null; document.querySelectorAll('#traceBank .wordToken').forEach(t=>{t.classList.remove('selected','used','wrong'); t.disabled=false;}); document.querySelectorAll('.traceBlank').forEach(b=>{b.innerHTML=b.dataset.slot.slice(1); delete b.dataset.value; b.classList.remove('filled','usedWrong');}); setStatus('status2','Clique sur un mot de la banque, puis sur le bon trou.'); }
+function placeTraceBlank(blank){ if(!selected2) return; const prev=blank.dataset.value; if(prev){ const old=[...document.querySelectorAll('#traceBank .wordToken')].find(t=>t.dataset.value===prev); if(old){old.classList.remove('used','wrong'); old.disabled=false;} }
+  blank.textContent=selected2.dataset.value; blank.dataset.value=selected2.dataset.value; blank.classList.add('filled'); selected2.classList.add('used'); selected2.disabled=true; selected2.classList.remove('selected'); selected2=null;
+}
+function checkStage2(){
+  const blanks=[...document.querySelectorAll('.traceBlank')];
+  for(const b of blanks){ if(!b.dataset.value){ setStatus('status2','Il reste des trous à compléter.','bad'); return; } }
+  let ok=true; blanks.forEach(b=>{ if(norm(b.dataset.value)!==norm(traceAnswers[b.dataset.slot])){ ok=false; b.classList.add('usedWrong'); const tok=[...document.querySelectorAll('#traceBank .wordToken')].find(t=>t.dataset.value===b.dataset.value); if(tok) tok.classList.add('wrong'); }});
+  if(ok){ validated2=true; document.getElementById('pill2').classList.remove('active'); document.getElementById('pill2').classList.add('done'); document.getElementById('pill3').classList.add('active'); setStatus('status2','Bravo ! Trace écrite réussie. Tu peux maintenant créer la BD.','good'); document.getElementById('finalBox').classList.add('show'); setTimeout(()=>showStage(3),700); }
+  else { setStatus('status2','Il y a au moins une erreur. Toute la mission recommence dans 2 secondes.','bad'); setTimeout(resetStage2,2000); }
+}
+
+function renderBD(){
+  const bank=document.getElementById('momentBank'); bank.innerHTML='';
+  bdMoments.forEach(txt=>{ const c=document.createElement('div'); c.className='momentCard'; c.innerHTML='<span>'+esc(txt)+'</span><span class="miniSpeak" data-speak-inline="'+esc(txt)+'" title="Écouter" aria-label="Écouter">🔊</span>'; bank.appendChild(c); });
+  const grid=document.getElementById('comicGrid'); grid.innerHTML='';
+  for(let i=1;i<=8;i++){
+    const panel=document.createElement('div'); panel.className='panel';
+    panel.innerHTML=`<div class="panelHead"><div class="panelNum">Vignette ${i}</div><span class="miniSpeak" data-speak-inline="Vignette ${i}" title="Écouter" aria-label="Écouter">🔊</span></div>
+      <label>Moment choisi :</label>
+      <select class="momentSelect">
+        <option value="">Choisir un moment...</option>
+        ${bdMoments.map(m=>`<option>${esc(m)}</option>`).join('')}
+      </select>
+      <div class="drawZone">Zone de dessin / illustration</div>
+      <label>Petite phrase ou bulle :</label>
+      <textarea maxlength="160" placeholder="Écris une petite phrase simple..."></textarea>
+      <div class="captionPreview"><strong>Texte à imprimer :</strong> <span class="captionTxt">...</span></div>`;
+    const sel=panel.querySelector('select'); const ta=panel.querySelector('textarea'); const preview=panel.querySelector('.captionTxt');
+    function refresh(){
+      const moment=sel.value||'Moment non choisi';
+      const txt=ta.value.trim()||'Tu peux écrire ici une phrase ou dessiner à la main après impression.';
+      preview.textContent=moment+' — '+txt;
+      panel.querySelector('.drawZone').textContent=sel.value? sel.value : 'Zone de dessin / illustration';
+    }
+    sel.addEventListener('change',refresh); ta.addEventListener('input',refresh); refresh();
+    grid.appendChild(panel);
+  }
+  bindAudio();
+}
+
+function showStage(n){
+  document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active')); document.getElementById('stage'+n).classList.add('active');
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); document.getElementById('pill'+n).classList.add('active');
+  if(validated1) document.getElementById('pill1').classList.add('done');
+  if(validated2) document.getElementById('pill2').classList.add('done');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('#stage1 .slot').forEach(s=>s.addEventListener('click',()=>placeStage1(s)));
+document.querySelectorAll('.traceBlank').forEach(b=>b.addEventListener('click',()=>placeTraceBlank(b)));
+document.getElementById('checkStage1').addEventListener('click',checkStage1);
+document.getElementById('resetStage1').addEventListener('click',resetStage1);
+document.getElementById('checkStage2').addEventListener('click',checkStage2);
+document.getElementById('resetStage2').addEventListener('click',resetStage2);
+
+document.getElementById('pill1').addEventListener('click',()=>showStage(1));
+document.getElementById('pill2').addEventListener('click',()=>{if(validated1)showStage(2)});
+document.getElementById('pill3').addEventListener('click',()=>{if(validated2)showStage(3)});
+
+document.getElementById('fillDemo').addEventListener('click',()=>{
+  const selects=[...document.querySelectorAll('.momentSelect')], tas=[...document.querySelectorAll('#comicGrid textarea')];
+  const demo=[
+    ['La cloche sonne le matin','Le matin, la cloche réveille Martin.'],
+    ['Martin fait le signe de croix','Avant de partir, il fait le signe de croix.'],
+    ['Martin dit une prière avec sa mère','Martin prie avec sa mère avant le travail.'],
+    ['Le dimanche, tout le village va à l’église','Le dimanche, tout le village se retrouve à l’église.'],
+    ['Le prêtre raconte la vie de Jésus','Le prêtre apprend aux habitants comment bien agir.'],
+    ['Le baptême d’un bébé','Les cloches sonnent pour le baptême du bébé.'],
+    ['Un mariage au village','Au village, les habitants assistent à un mariage.'],
+    ['La fête de Noël','À Noël, l’église est pleine pour célébrer Jésus.']
+  ];
+  demo.forEach((d,i)=>{selects[i].value=d[0]; tas[i].value=d[1]; selects[i].dispatchEvent(new Event('change')); tas[i].dispatchEvent(new Event('input'));});
+});
+document.getElementById('printBD').addEventListener('click',()=>{document.body.classList.add('printBD'); window.print(); setTimeout(()=>document.body.classList.remove('printBD'),600);});
+
+/* speech synthesis */
+let currentUtter=null, currentBtn=null;
+function speechTextFromBtn(btn){
+  if(btn.dataset.speakInline) return btn.dataset.speakInline;
+  const targetId=btn.dataset.speakTarget; if(targetId){const t=document.getElementById(targetId); return (t?.innerText||'').replace(/🔊/g,' ').trim();}
+  return btn.parentElement?.innerText?.replace(/🔊/g,' ').trim()||'';
+}
+function stopSpeech(){ if(window.speechSynthesis){ window.speechSynthesis.cancel(); } if(currentBtn){ currentBtn.classList.remove('speaking'); currentBtn=null; } }
+function speak(btn){ const txt=speechTextFromBtn(btn); if(!txt || !('speechSynthesis' in window)) return; if(currentBtn===btn){ stopSpeech(); return; } stopSpeech(); const u=new SpeechSynthesisUtterance(txt); currentUtter=u; currentBtn=btn; btn.classList.add('speaking'); u.lang='fr-FR'; u.rate=.95; u.pitch=1; u.onend=()=>{ if(currentBtn===btn) btn.classList.remove('speaking'); currentBtn=null; }; speechSynthesis.speak(u); }
+function bindAudio(){ document.querySelectorAll('[data-speak-target],[data-speak-inline]').forEach(btn=>{ if(btn.dataset.bound) return; btn.dataset.bound='1'; btn.addEventListener('click',e=>{ e.stopPropagation(); speak(btn); });}); }
+
+renderStage1Bank(); renderTraceBank(); renderBD(); resetStage1(); resetStage2(); bindAudio();
+</script>
+</body>
+</html>
