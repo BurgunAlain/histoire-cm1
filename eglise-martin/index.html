@@ -51,7 +51,10 @@ button{cursor:pointer}
 .bankBox{margin-top:14px;border:2px solid #a8cbe2;background:#edf7ff;border-radius:15px;padding:12px}.bankTitle{font-size:22px;color:#245e86}
 .tokenGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .token{position:relative;border:2px solid #90bad8;background:#fff;border-radius:12px;padding:10px 42px 10px 10px;font-weight:800;text-align:left;line-height:1.28;cursor:pointer;min-height:60px;display:flex;align-items:center}
-.token.selected{outline:4px solid #3b8fe6;outline-offset:2px}.token.used{opacity:.35;pointer-events:none}
+.token.selected{outline:4px solid #3b8fe6;outline-offset:2px}
+.token.used,.wordToken.used{opacity:1!important;pointer-events:none;background:#f6f7f8!important;border-color:#d9dde1!important;color:#bcc2c8!important;box-shadow:none!important}
+.token.used>span:first-child,.wordToken.used>span:first-child{color:#bcc2c8!important}
+.token.used .miniSpeak,.wordToken.used .miniSpeak{opacity:.3;filter:grayscale(1)}
 .token.wrong{border-color:#c65555;background:#ffecec}
 .token .miniSpeak{position:absolute;right:6px;top:50%;transform:translateY(-50%)}
 .controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.action{border:2px solid #754c20;background:linear-gradient(#fff9e8,#efd594);border-radius:12px;padding:10px 18px;font-weight:900;box-shadow:0 3px 0 rgba(70,45,20,.16)}.action.primary{background:linear-gradient(#439bdb,#286fa6);border-color:#205f8d;color:#fff;min-width:150px}.action.green{background:linear-gradient(#76b885,#4f9460);border-color:#417c50;color:#fff}
