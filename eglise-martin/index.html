@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>La vie de Martin et l'Église — Histoire CM1</title>
-<!-- BUILD V9-FLAT-ASSETS:  2026-11-08-v6-trace-selection-et-bd-preview -->
+<!-- BUILD V10-PRINT-IMG-FIX:  2026-11-08-v6-trace-selection-et-bd-preview -->
 <style>
 :root{
   --ink:#3d2a1c;--paper:#fffaf0;--gold:#d5a43a;--gold2:#f3d27e;--line:#c6a05a;
@@ -131,8 +131,8 @@ body.printBW .sceneDecor,body.printBW .sceneChars{filter:grayscale(1)}
 .panel label{font-weight:900;font-size:13px;color:#5e3d20}
 .panel select,.panel textarea{font-size:14px}
 .bdScene{position:relative;aspect-ratio:16/9;overflow:hidden;border:3px solid #5e3d20;border-radius:13px;background:#efe6d4;isolation:isolate}
-.bdSceneBg{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;z-index:0}
-.bdScene.empty .bdSceneBg{background-image:linear-gradient(#f5ecd8,#fffaf0)!important}
+.bdSceneBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;display:block}
+.bdScene.empty .bdSceneBg{display:none}
 .bdNarration{position:absolute;z-index:5;top:7px;left:8px;right:8px;margin:auto;max-width:92%;padding:5px 9px;border:2px solid #704b25;border-radius:9px;background:linear-gradient(#fff5cf,#edd59d);font:700 12px/1.2 Georgia,serif;text-align:center;color:#3f2b18;box-shadow:0 2px 5px rgba(0,0,0,.14)}
 .bdPeople{position:absolute;inset:0;z-index:2;pointer-events:none}
 .bdPerson{position:absolute;bottom:4px;object-fit:contain;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28));max-height:66%;max-width:34%}
@@ -146,6 +146,7 @@ body.printBW .sceneDecor,body.printBW .sceneChars{filter:grayscale(1)}
 .captionPreview{display:none!important}
 .previewPanel{padding:7px}.previewPanel .bdScene{aspect-ratio:16/9}.previewPanel .previewArtist{margin:2px 2px 6px}.previewPanel .previewCaption{display:none}
 body.printBW .bdSceneBg,body.printBW .bdPerson{filter:grayscale(1) contrast(1.18) brightness(1.08)}
+body.printBD .bdSceneBg,body.printBD .bdPerson{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body.printBW .bdNarration{background:#fff;border-color:#333;color:#111}
 body.printBW .bdSpeech{background:#fff;border-color:#222;color:#111}
 body.printBD .panel .editControls,body.printBD .panel>label,body.printBD .panel>textarea,body.printBD .panel>.captionPreview{display:none!important}
@@ -531,7 +532,7 @@ function renderBD(){
         <div><label>Position de la bulle :</label><select class="bubbleSide"><option value="left">À gauche</option><option value="right">À droite</option></select></div>
         <div class="full charRow"><div><label>Personnage 1 :</label><select class="charSelect c1">${charOptions}</select></div><div><label>Personnage 2 :</label><select class="charSelect c2">${charOptions}</select></div><div><label>Personnage 3 :</label><select class="charSelect c3">${charOptions}</select></div></div>
       </div>
-      <div class="bdScene empty"><div class="bdSceneBg"></div><div class="bdScenePlaceholder">Choisis un décor et des personnages pour créer cette vignette.</div><div class="bdNarration">Moment à choisir</div><div class="bdPeople"></div><div class="bdSpeech left">Écris une bulle...</div></div>
+      <div class="bdScene empty"><img class="bdSceneBg" alt="Décor médiéval"><div class="bdScenePlaceholder">Choisis un décor et des personnages pour créer cette vignette.</div><div class="bdNarration">Moment à choisir</div><div class="bdPeople"></div><div class="bdSpeech left">Écris une bulle...</div></div>
       <label>Bulle de dialogue :</label>
       <textarea maxlength="150" placeholder="Écris ce qu’un personnage pourrait dire..."></textarea>
       <div class="captionPreview"><span class="captionTxt"></span></div>`;
@@ -543,7 +544,7 @@ function renderBD(){
       const bubble=ta.value.trim()||'Écris une bulle...';
       panel.querySelector('.bdNarration').textContent=momentText;
       const bg=panel.querySelector('.bdSceneBg');
-      bg.style.backgroundImage=decor.value?`url('${decor.value}')`:'none';
+      if(decor.value){ bg.src=decor.value; bg.alt=decor.options[decor.selectedIndex].text; } else { bg.removeAttribute('src'); bg.alt=''; }
       scene.classList.toggle('empty',!decor.value);
       const people=panel.querySelector('.bdPeople'); people.innerHTML='';
       chars.forEach((s,idx)=>{ if(!s.value)return; const im=document.createElement('img'); im.className='bdPerson p'+(idx+1); im.src=s.value; im.alt=s.options[s.selectedIndex].text; people.appendChild(im); });

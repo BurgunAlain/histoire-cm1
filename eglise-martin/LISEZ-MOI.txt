@@ -1,22 +1,10 @@
-HISTOIRE CM1 — SÉANCE 7 — VERSION V9 ASSETS À PLAT
+HISTOIRE CM1 — SÉANCE 7 — VERSION V10
 
-IMPORTANT :
-Tous les fichiers PNG sont volontairement placés AU MÊME NIVEAU que index.html.
-Il n'y a plus de dossier assets/ à importer.
+Correction impression BD :
+- les décors sont maintenant de vraies images <img> dans les vignettes ;
+- ils restent donc visibles dans l'aperçu d'impression même si le navigateur n'imprime pas les arrière-plans CSS ;
+- les personnages restent également de vraies images ;
+- mode couleur et noir et blanc conservés.
 
-Pour GitHub :
-1. Ouvrir le dossier eglise-martin dans le dépôt.
-2. Supprimer/remplacer l'ancien contenu si nécessaire.
-3. Importer TOUS les fichiers contenus dans ce dossier directement dans eglise-martin.
-4. Vérifier que index.html et les fichiers decor_*.png / perso_*.png sont visibles ensemble dans la liste GitHub.
-5. Attendre le redéploiement GitHub Pages puis faire Ctrl+F5.
-
-URL :
-https://burgunalain.github.io/histoire-cm1/eglise-martin/
-
-Cette version conserve :
-- missions 1 et 2 ;
-- trace écrite interactive ;
-- atelier BD illustré ;
-- prévisualisation ;
-- impression couleur / noir et blanc.
+Tous les PNG restent au même niveau que index.html.
+Remplacer entièrement le contenu du dossier eglise-martin sur GitHub par les fichiers de ce dossier.
