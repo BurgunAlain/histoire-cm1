@@ -1,29 +1,22 @@
-HISTOIRE CM1 — SÉANCE 7 : LA VIE DE MARTIN ET L'ÉGLISE
-VERSION V8 — STUDIO BD ILLUSTRÉ
+HISTOIRE CM1 — SÉANCE 7 — VERSION V9 ASSETS À PLAT
 
-Dossier GitHub Pages : eglise-martin/
-URL : https://burgunalain.github.io/histoire-cm1/eglise-martin/
+IMPORTANT :
+Tous les fichiers PNG sont volontairement placés AU MÊME NIVEAU que index.html.
+Il n'y a plus de dossier assets/ à importer.
 
-Contenu :
-- index.html : jeu complet
-- trace-imprimable.html : trace à trous imprimable
-- assets/decors/ : 6 vrais décors médiévaux
-- assets/chars/ : personnages détourés et accessoires
+Pour GitHub :
+1. Ouvrir le dossier eglise-martin dans le dépôt.
+2. Supprimer/remplacer l'ancien contenu si nécessaire.
+3. Importer TOUS les fichiers contenus dans ce dossier directement dans eglise-martin.
+4. Vérifier que index.html et les fichiers decor_*.png / perso_*.png sont visibles ensemble dans la liste GitHub.
+5. Attendre le redéploiement GitHub Pages puis faire Ctrl+F5.
 
-Le jeu comprend :
-- mission 1 : recherche dans le texte ;
-- mission 2 : trace écrite à 16 trous ;
-- lecture vocale ;
-- validation stricte ;
-- studio BD interactif avec 8 vignettes ;
-- cartouche narratif en haut de chaque case ;
-- vrai décor pleine case ;
-- jusqu'à 3 personnages par vignette ;
-- bulle de dialogue à gauche ou à droite ;
-- aperçu complet ;
-- impression couleur ;
-- impression noir et blanc ;
-- mode binôme / individuel ;
-- mode collectif avec groupe responsable par vignette.
+URL :
+https://burgunalain.github.io/histoire-cm1/eglise-martin/
 
-Pour mettre à jour GitHub : remplacer entièrement le contenu du dossier eglise-martin par celui de ce ZIP. L'URL et le QR code restent les mêmes.
+Cette version conserve :
+- missions 1 et 2 ;
+- trace écrite interactive ;
+- atelier BD illustré ;
+- prévisualisation ;
+- impression couleur / noir et blanc.
