@@ -1,20 +1,29 @@
 HISTOIRE CM1 — SÉANCE 7 : LA VIE DE MARTIN ET L'ÉGLISE
+VERSION V8 — STUDIO BD ILLUSTRÉ
 
-VERSION 2026-11-08 — CORRECTIONS TRACE + BD
+Dossier GitHub Pages : eglise-martin/
+URL : https://burgunalain.github.io/histoire-cm1/eglise-martin/
+
+Contenu :
+- index.html : jeu complet
+- trace-imprimable.html : trace à trous imprimable
+- assets/decors/ : 6 vrais décors médiévaux
+- assets/chars/ : personnages détourés et accessoires
 
 Le jeu comprend :
-- Mission 1 : recherche dans le texte de Martin
-- Mission 2 : trace écrite interactive à 16 trous
-- Atelier BD interactif
+- mission 1 : recherche dans le texte ;
+- mission 2 : trace écrite à 16 trous ;
+- lecture vocale ;
+- validation stricte ;
+- studio BD interactif avec 8 vignettes ;
+- cartouche narratif en haut de chaque case ;
+- vrai décor pleine case ;
+- jusqu'à 3 personnages par vignette ;
+- bulle de dialogue à gauche ou à droite ;
+- aperçu complet ;
+- impression couleur ;
+- impression noir et blanc ;
+- mode binôme / individuel ;
+- mode collectif avec groupe responsable par vignette.
 
-Corrections de cette version :
-- Dans la trace interactive, le mot sélectionné devient nettement gris/bleuté avant placement.
-- Après placement, le mot reste grisé dans la banque pour indiquer qu'il est déjà utilisé.
-- Atelier BD : bouton « Prévisualiser ma BD » bien visible.
-- Boutons d'impression couleur et noir et blanc visibles en haut et en bas de l'atelier.
-- Aperçu de la BD avec 8 vignettes avant impression.
-- Mode binôme / individuel et mode collectif classe.
-- Lecture vocale disponible.
-
-Dossier GitHub cible : eglise-martin
-URL : https://burgunalain.github.io/histoire-cm1/eglise-martin/
+Pour mettre à jour GitHub : remplacer entièrement le contenu du dossier eglise-martin par celui de ce ZIP. L'URL et le QR code restent les mêmes.

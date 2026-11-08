@@ -123,6 +123,42 @@ body.printBW .sceneDecor,body.printBW .sceneChars{filter:grayscale(1)}
   body.printBD .artistRow input{border:none!important;border-bottom:1px solid #444!important;border-radius:0!important;background:transparent!important;padding:2px!important}
 }
 
+
+/* --- V8 : studio BD illustré --- */
+.panel{min-height:0}
+.panel .editControls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.panel .editControls .full{grid-column:1/-1}
+.panel label{font-weight:900;font-size:13px;color:#5e3d20}
+.panel select,.panel textarea{font-size:14px}
+.bdScene{position:relative;aspect-ratio:16/9;overflow:hidden;border:3px solid #5e3d20;border-radius:13px;background:#efe6d4;isolation:isolate}
+.bdSceneBg{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;z-index:0}
+.bdScene.empty .bdSceneBg{background-image:linear-gradient(#f5ecd8,#fffaf0)!important}
+.bdNarration{position:absolute;z-index:5;top:7px;left:8px;right:8px;margin:auto;max-width:92%;padding:5px 9px;border:2px solid #704b25;border-radius:9px;background:linear-gradient(#fff5cf,#edd59d);font:700 12px/1.2 Georgia,serif;text-align:center;color:#3f2b18;box-shadow:0 2px 5px rgba(0,0,0,.14)}
+.bdPeople{position:absolute;inset:0;z-index:2;pointer-events:none}
+.bdPerson{position:absolute;bottom:4px;object-fit:contain;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28));max-height:66%;max-width:34%}
+.bdPerson.p1{left:7%}.bdPerson.p2{left:50%;transform:translateX(-50%)}.bdPerson.p3{right:7%}
+.bdSpeech{position:absolute;z-index:6;top:48px;max-width:43%;min-width:110px;padding:7px 9px;border:2px solid #4f3825;border-radius:17px;background:rgba(255,255,255,.96);font:800 12px/1.22 Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bdSpeech.left{left:9px}.bdSpeech.right{right:9px}.bdSpeech:after{content:"";position:absolute;bottom:-10px;border-width:10px 9px 0;border-style:solid;border-color:#4f3825 transparent transparent}.bdSpeech.left:after{left:22px}.bdSpeech.right:after{right:22px}
+.bdSpeech:before{content:"";position:absolute;bottom:-7px;border-width:8px 7px 0;border-style:solid;border-color:#fff transparent transparent;z-index:2}.bdSpeech.left:before{left:24px}.bdSpeech.right:before{right:24px}
+.bdScenePlaceholder{position:absolute;z-index:1;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center;color:#806f58;font-weight:800;background:linear-gradient(#fffdf8,#f5ead4)}
+.bdScene:not(.empty) .bdScenePlaceholder{display:none}
+.charRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.captionPreview{display:none!important}
+.previewPanel{padding:7px}.previewPanel .bdScene{aspect-ratio:16/9}.previewPanel .previewArtist{margin:2px 2px 6px}.previewPanel .previewCaption{display:none}
+body.printBW .bdSceneBg,body.printBW .bdPerson{filter:grayscale(1) contrast(1.18) brightness(1.08)}
+body.printBW .bdNarration{background:#fff;border-color:#333;color:#111}
+body.printBW .bdSpeech{background:#fff;border-color:#222;color:#111}
+body.printBD .panel .editControls,body.printBD .panel>label,body.printBD .panel>textarea,body.printBD .panel>.captionPreview{display:none!important}
+body.printBD .bdScene{aspect-ratio:16/9;min-height:0}
+body.printBD .comicGrid{grid-template-columns:repeat(2,1fr);gap:8px}
+body.printBD .panel{min-height:0;padding:7px;break-inside:avoid}
+body.printBD .app>#stage3{display:block!important}
+body.printBD #mission3Intro{display:none!important}
+body.printBD .panelHead .miniSpeak{display:none!important}
+body.printBD #bdPrintWrap:not(.bd-collective) .artistRow{display:none!important}
+body.printBD #bdPrintWrap.bd-collective .artistRow{display:block!important}
+@media(max-width:760px){.panel .editControls{grid-template-columns:1fr}.panel .editControls .full{grid-column:auto}.charRow{grid-template-columns:1fr}.bdSpeech{font-size:11px;max-width:48%}}
+
 .finalBox{display:none;max-width:820px;margin:22px auto 0;background:#fff8df;border:3px solid #d2ae5b;border-radius:22px;padding:28px;text-align:center;box-shadow:var(--shadow)}.finalBox.show{display:block}.finalBox h2{font:700 40px Georgia,serif;margin:4px 0 10px}
 /* audio */
 .speakBtn,.miniSpeak{display:inline-flex;align-items:center;justify-content:center;border:2px solid #2f78bb;background:#eef7ff;color:#174f80;border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.12);-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
@@ -266,7 +302,7 @@ body.printBW .sceneDecor,body.printBW .sceneChars{filter:grayscale(1)}
         <ul>
           <li><strong>Mode binôme / individuel</strong> : crée une BD déjà mise en couleur, prête à être imprimée.</li>
           <li><strong>Mode collectif classe</strong> : chaque vignette peut être confiée à un élève ou un groupe ; la version noir et blanc permet ensuite de colorier chaque partie.</li>
-          <li>Pour chaque vignette, choisis un <strong>moment</strong>, un <strong>décor</strong>, des <strong>personnages</strong> et écris une <strong>bulle</strong> ou une courte légende.</li>
+          <li>Pour chaque vignette, choisis un <strong>moment</strong>, un <strong>vrai décor illustré</strong>, jusqu’à <strong>3 personnages</strong>, puis écris une <strong>bulle de dialogue</strong>. Le moment choisi devient le cartouche narratif en haut de la case.</li>
           <li>Essaie de varier les moments et d’utiliser seulement des informations réellement présentes dans le texte.</li>
         </ul>
         <button class="speakBtn inlineSpeak" data-speak-target="bdHelpText" aria-label="Écouter les conseils" title="Écouter">🔊</button>
@@ -357,10 +393,26 @@ const bdMoments=[
  'Martin va à l’église en semaine'
 ];
 const bdDecors=[
-  ['Près de l’église','⛪'],['Maison de Martin','🏠'],['Champs du village','🌾'],['Intérieur de l’église','🕯️'],['Village médiéval','🏘️'],['Cimetière','✝️'],['Fête de Noël','⭐'],['Fête de Pâques','🥚']
+  ['Près de l’église','assets/decors/village_eglise.png'],
+  ['Champs du village','assets/decors/champs_village.png'],
+  ['Maison de Martin','assets/decors/maison_interieur.png'],
+  ['Intérieur de l’église','assets/decors/eglise_interieur.png'],
+  ['Parvis de l’église','assets/decors/eglise_entree.png'],
+  ['Cimetière','assets/decors/cimetiere.png']
 ];
 const bdCharacters=[
-  ['Martin seul','🧒'],['Martin et sa mère','🧒 👩'],['Martin et sa famille','🧒 👨 👩'],['Le prêtre','👨‍🦳'],['Le prêtre et les villageois','👨‍🦳 👨 👩'],['Un bébé et sa famille','👶 👨 👩'],['Les mariés et les invités','🤵 👰 👨 👩'],['Des villageois','👨 👩 🧒'],['Le cortège vers le cimetière','👨 👩 ⚰️']
+  ['Aucun',''],
+  ['Martin','assets/chars/martin.png'],
+  ['Martin qui parle','assets/chars/martin_parle.png'],
+  ['La mère de Martin','assets/chars/mere.png'],
+  ['Le père de Martin','assets/chars/pere.png'],
+  ['Le prêtre','assets/chars/pretre.png'],
+  ['Un villageois','assets/chars/villageois_homme.png'],
+  ['Une villageoise','assets/chars/villageoise.png'],
+  ['Un bébé','assets/chars/bebe.png'],
+  ['Les mariés','assets/chars/maries.png'],
+  ['Un homme en deuil','assets/chars/endeuill_homme.png'],
+  ['Une femme en deuil','assets/chars/endeuill_femme.png']
 ];
 let bdMode='duo';
 
@@ -470,36 +522,38 @@ function renderBD(){
   const grid=document.getElementById('comicGrid'); grid.innerHTML='';
   for(let i=1;i<=8;i++){
     const panel=document.createElement('div'); panel.className='panel';
+    const charOptions=bdCharacters.map(c=>`<option value="${esc(c[1])}">${esc(c[0])}</option>`).join('');
     panel.innerHTML=`<div class="panelHead"><div class="panelNum">Vignette ${i}</div><span class="miniSpeak" data-speak-inline="Vignette ${i}" title="Écouter" aria-label="Écouter">🔊</span></div>
       <div class="artistRow"><label>Élève / groupe responsable :</label><input type="text" class="artistInput" placeholder="Ex. Groupe 1 ou prénom(s)"></div>
-      <label>Moment choisi :</label>
-      <select class="momentSelect"><option value="">Choisir un moment...</option>${bdMoments.map(m=>`<option>${esc(m)}</option>`).join('')}</select>
-      <label>Décor :</label>
-      <select class="decorSelect"><option value="">Choisir un décor...</option>${bdDecors.map(d=>`<option value="${esc(d[1])}">${esc(d[0])}</option>`).join('')}</select>
-      <label>Personnages :</label>
-      <select class="charSelect"><option value="">Choisir les personnages...</option>${bdCharacters.map(c=>`<option value="${esc(c[1])}">${esc(c[0])}</option>`).join('')}</select>
-      <div class="scene"><div class="sceneTop"><div class="sceneDecor">⛪</div><div class="sceneMomentTag">Moment à choisir</div></div><div class="sceneChars">🧒</div><div class="sceneBubble">Écris une bulle...</div></div>
-      <label>Petite phrase ou bulle :</label>
-      <textarea maxlength="180" placeholder="Écris une petite phrase simple..."></textarea>
-      <div class="captionPreview"><strong>Texte à imprimer :</strong> <span class="captionTxt">...</span></div>`;
-    const sel=panel.querySelector('.momentSelect'); const dec=panel.querySelector('.decorSelect'); const chr=panel.querySelector('.charSelect'); const ta=panel.querySelector('textarea');
-    const preview=panel.querySelector('.captionTxt'); const scene=panel.querySelector('.scene');
+      <div class="editControls">
+        <div class="full"><label>Moment / cartouche narratif :</label><select class="momentSelect"><option value="">Choisir un moment...</option>${bdMoments.map(m=>`<option>${esc(m)}</option>`).join('')}</select></div>
+        <div><label>Décor :</label><select class="decorSelect"><option value="">Choisir un décor...</option>${bdDecors.map(d=>`<option value="${esc(d[1])}">${esc(d[0])}</option>`).join('')}</select></div>
+        <div><label>Position de la bulle :</label><select class="bubbleSide"><option value="left">À gauche</option><option value="right">À droite</option></select></div>
+        <div class="full charRow"><div><label>Personnage 1 :</label><select class="charSelect c1">${charOptions}</select></div><div><label>Personnage 2 :</label><select class="charSelect c2">${charOptions}</select></div><div><label>Personnage 3 :</label><select class="charSelect c3">${charOptions}</select></div></div>
+      </div>
+      <div class="bdScene empty"><div class="bdSceneBg"></div><div class="bdScenePlaceholder">Choisis un décor et des personnages pour créer cette vignette.</div><div class="bdNarration">Moment à choisir</div><div class="bdPeople"></div><div class="bdSpeech left">Écris une bulle...</div></div>
+      <label>Bulle de dialogue :</label>
+      <textarea maxlength="150" placeholder="Écris ce qu’un personnage pourrait dire..."></textarea>
+      <div class="captionPreview"><span class="captionTxt"></span></div>`;
+    const moment=panel.querySelector('.momentSelect'), decor=panel.querySelector('.decorSelect'), side=panel.querySelector('.bubbleSide'), ta=panel.querySelector('textarea');
+    const chars=[...panel.querySelectorAll('.charSelect')];
     function refresh(){
-      const moment=sel.value||'Moment non choisi';
+      const scene=panel.querySelector('.bdScene');
+      const momentText=moment.value||'Moment à choisir';
       const bubble=ta.value.trim()||'Écris une bulle...';
-      panel.querySelector('.sceneDecor').textContent=dec.value||'⛪';
-      panel.querySelector('.sceneMomentTag').textContent=moment;
-      panel.querySelector('.sceneChars').textContent=chr.value||'🧒';
-      panel.querySelector('.sceneBubble').textContent=bubble;
-      preview.textContent=moment+' — '+bubble;
+      panel.querySelector('.bdNarration').textContent=momentText;
+      const bg=panel.querySelector('.bdSceneBg');
+      bg.style.backgroundImage=decor.value?`url('${decor.value}')`:'none';
+      scene.classList.toggle('empty',!decor.value);
+      const people=panel.querySelector('.bdPeople'); people.innerHTML='';
+      chars.forEach((s,idx)=>{ if(!s.value)return; const im=document.createElement('img'); im.className='bdPerson p'+(idx+1); im.src=s.value; im.alt=s.options[s.selectedIndex].text; people.appendChild(im); });
+      const speech=panel.querySelector('.bdSpeech'); speech.className='bdSpeech '+side.value; speech.textContent=bubble;
     }
-    [sel,dec,chr].forEach(el=>el.addEventListener('change',refresh)); ta.addEventListener('input',refresh); refresh();
+    [moment,decor,side,...chars].forEach(el=>el.addEventListener('change',refresh)); ta.addEventListener('input',refresh); refresh();
     grid.appendChild(panel);
   }
-  applyBDMode();
-  bindAudio();
+  applyBDMode(); bindAudio();
 }
-
 function applyBDMode(){
   const wrap=document.getElementById('bdPrintWrap');
   wrap.classList.toggle('bd-collective',bdMode==='class');
@@ -509,37 +563,22 @@ function applyBDMode(){
 }
 
 function renderBDPreview(){
-  const grid=document.getElementById('bdPreviewGrid');
-  grid.innerHTML='';
+  const grid=document.getElementById('bdPreviewGrid'); grid.innerHTML='';
   const name=(document.getElementById('studentName').value||'').trim();
   const group=(document.getElementById('studentName2').value||'').trim();
   document.getElementById('bdPreviewNames').textContent=[name,group].filter(Boolean).join(' — ') || (bdMode==='class'?'BD collective de la classe':'BD de Martin');
   document.querySelectorAll('#comicGrid .panel').forEach((panel,i)=>{
-    const moment=panel.querySelector('.momentSelect').value || 'Moment à choisir';
-    const decor=panel.querySelector('.decorSelect').value || '⛪';
-    const chars=panel.querySelector('.charSelect').value || '🧒';
-    const bubble=panel.querySelector('textarea').value.trim() || 'Bulle à compléter';
-    const artist=panel.querySelector('.artistInput')?.value.trim() || '';
+    const artist=panel.querySelector('.artistInput')?.value.trim()||'';
     const card=document.createElement('div'); card.className='previewPanel';
-    card.innerHTML=`<div class="previewArtist">Vignette ${i+1}${artist?' — '+esc(artist):''}</div>
-      <div class="scene"><div class="sceneTop"><div class="sceneDecor">${esc(decor)}</div><div class="sceneMomentTag">${esc(moment)}</div></div><div class="sceneChars">${esc(chars)}</div><div class="sceneBubble">${esc(bubble)}</div></div>
-      <div class="previewCaption">${esc(moment)} — ${esc(bubble)}</div>`;
-    grid.appendChild(card);
+    card.innerHTML=`<div class="previewArtist">Vignette ${i+1}${artist?' — '+esc(artist):''}</div>`;
+    const cloned=panel.querySelector('.bdScene').cloneNode(true); card.appendChild(cloned); grid.appendChild(card);
   });
   document.getElementById('bdPreview').classList.add('show');
   document.getElementById('bdPreview').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
 function preparePrint(mode){
   document.body.classList.add('printBD');
   if(mode==='bw') document.body.classList.add('printBW'); else document.body.classList.remove('printBW');
-  // figer les textes imprimés
-  document.querySelectorAll('#comicGrid .panel').forEach(panel=>{
-    const moment=panel.querySelector('.momentSelect').value || 'Moment à compléter';
-    const bubble=panel.querySelector('textarea').value.trim() || '................................................................';
-    panel.querySelector('.sceneMomentTag').textContent=moment;
-    panel.querySelector('.sceneBubble').textContent=bubble;
-  });
   window.print();
   setTimeout(()=>{document.body.classList.remove('printBD','printBW');},700);
 }
@@ -566,25 +605,24 @@ document.getElementById('pill3').addEventListener('click',()=>{if(validated2)sho
 document.getElementById('fillDemo').addEventListener('click',()=>{
   const panels=[...document.querySelectorAll('#comicGrid .panel')];
   const demo=[
-    ['La cloche sonne le matin','Près de l’église','Martin seul','Le matin, la cloche réveille Martin.'],
-    ['Martin fait le signe de croix','Maison de Martin','Martin et sa mère','Avant de partir, Martin fait le signe de croix.'],
-    ['Le dimanche, tout le village va à l’église','Intérieur de l’église','Le prêtre et les villageois','Tout le village vient écouter le prêtre.'],
-    ['Le prêtre raconte la vie de Jésus','Intérieur de l’église','Le prêtre','Le prêtre raconte la vie de Jésus.'],
-    ['Le baptême d’un bébé','Intérieur de l’église','Un bébé et sa famille','On baptise le bébé dans l’église.'],
-    ['Un mariage au village','Intérieur de l’église','Les mariés et les invités','Les habitants assistent au mariage.'],
-    ['La fête de Noël','Fête de Noël','Des villageois','À Noël, l’église est pleine.'],
-    ['La Toussaint au cimetière','Cimetière','Des villageois','Les habitants vont se recueillir sur les tombes.']
+    ['La cloche sonne le matin','Près de l’église',['Martin','',''],'La cloche sonne !','left'],
+    ['Martin fait le signe de croix','Maison de Martin',['Martin','La mère de Martin',''],'Nous allons prier avant de partir.','right'],
+    ['Le dimanche, tout le village va à l’église','Parvis de l’église',['Le prêtre','Un villageois','Une villageoise'],'Entrez, nous allons écouter la parole du prêtre.','left'],
+    ['Le prêtre raconte la vie de Jésus','Intérieur de l’église',['Le prêtre','Martin',''],'Écoutez bien l’histoire de Jésus.','left'],
+    ['Le baptême d’un bébé','Intérieur de l’église',['Le prêtre','Un bébé','La mère de Martin'],'Bienvenue dans la communauté chrétienne.','right'],
+    ['Un mariage au village','Parvis de l’église',['Les mariés','Le prêtre','Une villageoise'],'Nous nous unissons devant Dieu.','right'],
+    ['La fête de Noël','Intérieur de l’église',['Martin','La mère de Martin','Le père de Martin'],'Nous célébrons la naissance de Jésus.','left'],
+    ['La Toussaint au cimetière','Cimetière',['Martin','Un homme en deuil','Une femme en deuil'],'Nous nous recueillons sur les tombes.','right']
   ];
   panels.forEach((panel,i)=>{
-    panel.querySelector('.momentSelect').value=demo[i][0];
-    panel.querySelector('.decorSelect').selectedIndex=[...panel.querySelector('.decorSelect').options].findIndex(o=>o.text===demo[i][1]);
-    panel.querySelector('.charSelect').selectedIndex=[...panel.querySelector('.charSelect').options].findIndex(o=>o.text===demo[i][2]);
-    panel.querySelector('textarea').value=demo[i][3];
-    const artist=panel.querySelector('.artistInput'); if(artist) artist.value='Groupe '+(i+1);
+    const d=demo[i];
+    panel.querySelector('.momentSelect').value=d[0];
+    const decorSel=panel.querySelector('.decorSelect'); decorSel.selectedIndex=[...decorSel.options].findIndex(o=>o.text===d[1]);
+    const charSels=[...panel.querySelectorAll('.charSelect')]; charSels.forEach((s,j)=>{s.selectedIndex=[...s.options].findIndex(o=>o.text===d[2][j]);});
+    panel.querySelector('textarea').value=d[3]; panel.querySelector('.bubbleSide').value=d[4];
+    const artist=panel.querySelector('.artistInput'); if(artist)artist.value='Groupe '+(i+1);
     panel.querySelector('.momentSelect').dispatchEvent(new Event('change'));
-    panel.querySelector('.decorSelect').dispatchEvent(new Event('change'));
-    panel.querySelector('.charSelect').dispatchEvent(new Event('change'));
-    panel.querySelector('textarea').dispatchEvent(new Event('input'));
+    decorSel.dispatchEvent(new Event('change')); charSels.forEach(s=>s.dispatchEvent(new Event('change'))); panel.querySelector('.bubbleSide').dispatchEvent(new Event('change')); panel.querySelector('textarea').dispatchEvent(new Event('input'));
   });
 });
 document.getElementById('previewBD').addEventListener('click',renderBDPreview);
