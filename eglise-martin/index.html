@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>La vie de Martin et l'Église — Histoire CM1</title>
-<!-- BUILD: 2026-10-24-v3-melange-et-retrait-verifies -->
+<!-- BUILD: 2026-11-08-v6-trace-selection-et-bd-preview -->
 <style>
 :root{
   --ink:#3d2a1c;--paper:#fffaf0;--gold:#d5a43a;--gold2:#f3d27e;--line:#c6a05a;
@@ -63,7 +63,9 @@ button{cursor:pointer}
 .lesson p{font-size:clamp(17px,1.45vw,22px);line-height:1.8;font-weight:800;margin:10px 0;text-align:center}
 .traceBlank{display:inline-flex;vertical-align:middle;min-width:130px;min-height:46px;padding:4px 8px;margin:0 2px}
 .wordBank{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:1100px;margin:14px auto 0}
-.wordToken{position:relative;border:2px solid #b58b32;background:#fff4ce;border-radius:11px;padding:10px 40px 10px 10px;font-weight:900;cursor:pointer;text-align:center;line-height:1.25;min-height:56px;display:flex;align-items:center;justify-content:center}
+.wordToken{position:relative;border:2px solid #b58b32;background:#fff4ce;border-radius:11px;padding:10px 40px 10px 10px;font-weight:900;cursor:pointer;text-align:center;line-height:1.25;min-height:56px;display:flex;align-items:center;justify-content:center;transition:.15s ease}
+.wordToken.selected{background:#d7dce1!important;border-color:#71808d!important;color:#36424c!important;outline:4px solid rgba(47,125,185,.28);outline-offset:2px;box-shadow:inset 0 0 0 1px #fff}
+.wordToken.selected>span:first-child{color:#36424c!important}
 .wordToken .miniSpeak{position:absolute;right:6px;top:50%;transform:translateY(-50%)}
 .printLinkBox{margin-top:14px;text-align:center}
 .printLinkBox a{display:inline-block;text-decoration:none;border:2px solid #7a5227;background:#fffdf0;border-radius:12px;padding:10px 16px;font-weight:900;box-shadow:0 3px 0 rgba(70,45,20,.12)}
@@ -78,6 +80,49 @@ button{cursor:pointer}
 .panelHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.panelNum{font:700 22px Georgia,serif;color:#5e3d20}.panel select,.panel textarea{width:100%;border:2px solid #c9aa65;border-radius:10px;background:#fff;padding:8px}.panel textarea{min-height:92px;resize:vertical;line-height:1.35}
 .panel .drawZone{border:3px dashed #ccb27b;border-radius:12px;background:linear-gradient(#fffefb,#fff6df);min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700;color:#8a6e48}
 .panel .captionPreview{border:2px solid #e1d3af;border-radius:10px;background:#fffdf5;padding:8px;font-size:14px;line-height:1.35;min-height:52px}
+
+.bdModeBar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bdModeBtn{border:2px solid #9f7b33;background:#fff8dc;border-radius:999px;padding:9px 15px;font-weight:900;min-height:44px}
+.bdModeBtn.active{background:#e6f4ff;border-color:#3b8fe6;color:#1f5d90;box-shadow:0 0 0 3px rgba(59,143,230,.15)}
+.scene{position:relative;overflow:hidden;border:2px solid #caa768;border-radius:12px;min-height:148px;background:linear-gradient(#bfe8ff 0 55%,#95c36b 55% 100%);padding:8px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.sceneTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;position:relative;z-index:1}
+.sceneDecor{font-size:40px;line-height:1}.sceneMomentTag{background:rgba(255,255,255,.9);border:1px solid rgba(94,61,32,.2);border-radius:999px;padding:3px 8px;font-size:12px;font-weight:900;max-width:75%;text-align:center}
+.sceneChars{display:flex;justify-content:center;gap:8px;font-size:35px;line-height:1;position:relative;z-index:1;flex-wrap:wrap;min-height:40px;align-items:center}
+.sceneBubble{align-self:flex-start;max-width:92%;background:#fff;border:2px solid #6d5538;border-radius:16px;padding:7px 10px;font-size:13px;line-height:1.25;font-weight:800;position:relative;z-index:2;min-height:36px}
+.panel .artistRow{display:none}.bd-collective .panel .artistRow{display:block}.bd-collective .panel .artistRow input{width:100%;border:2px solid #c9aa65;border-radius:10px;background:#fff;padding:8px}
+.printBanner{display:none;text-align:center;font:700 23px Georgia,serif;color:#5d3a1c;margin:0 0 10px}
+.bdActions{margin:14px auto 16px;max-width:1000px;border:2px solid #9bbad3;background:#f4faff;border-radius:16px;padding:12px}
+.bdActionsTitle{text-align:center;font:700 21px Georgia,serif;color:#245e86;margin-bottom:9px}
+.bdActionsRow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.bdActionsRow .action{min-height:44px}
+.previewBtn{background:linear-gradient(#7254b5,#54378f)!important;border-color:#432a77!important;color:#fff!important}
+.bdPreview{display:none;max-width:1180px;margin:16px auto;border:3px solid #7b623a;border-radius:18px;background:#fffdf6;padding:16px;box-shadow:0 8px 22px rgba(70,50,25,.13)}
+.bdPreview.show{display:block}
+.bdPreviewHead{text-align:center;margin-bottom:12px}.bdPreviewHead h3{margin:0;font:700 30px Georgia,serif;color:#5e3d20}.bdPreviewHead p{margin:5px 0 0;font-weight:800;color:#6e5a43}
+.bdPreviewGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.previewPanel{border:3px solid #5e3d20;border-radius:14px;background:#fff;padding:9px;min-width:0}
+.previewPanel .scene{min-height:165px}.previewPanel .previewCaption{padding:7px 5px 2px;font-size:14px;font-weight:800;line-height:1.3}.previewPanel .previewArtist{font-size:12px;color:#6e5a43;font-weight:900;margin-bottom:5px}
+body.printBW .scene{filter:grayscale(1);background:linear-gradient(#f2f2f2 0 55%,#d7d7d7 55% 100%)}
+body.printBW .sceneDecor,body.printBW .sceneChars{filter:grayscale(1)}
+@media(max-width:760px){.bdPreviewGrid{grid-template-columns:1fr}.bdActionsRow .action{width:100%}}
+@media print{
+  body.printBD{background:#fff}
+  body.printBD .app>*:not(#bdPrintWrap){display:none!important}
+  body.printBD #bdPrintWrap{display:block!important}
+  body.printBD .board{border:none;box-shadow:none;background:#fff;padding:0}
+  body.printBD .controls,body.printBD .hero,body.printBD .progress,body.printBD .rule,body.printBD .bdHelp,body.printBD #momentBankWrap,body.printBD .printOnlyHide,body.printBD .bdActions,body.printBD .bdPreview{display:none!important}
+  body.printBD .stage{display:block!important}
+  body.printBD .printBanner{display:block!important}
+  body.printBD .panel select,body.printBD .panel textarea{display:none!important}
+  body.printBD .comicGrid{grid-template-columns:repeat(2,1fr);gap:10px}
+  body.printBD .panel{min-height:320px;break-inside:avoid;box-shadow:none}
+  body.printBD .scene{min-height:180px}
+  body.printBD .captionPreview{font-size:14px;background:#fff}
+  body.printBD .artistRow{display:block!important}
+  body.printBD .artistRow label{font-size:12px;font-weight:900}
+  body.printBD .artistRow input{border:none!important;border-bottom:1px solid #444!important;border-radius:0!important;background:transparent!important;padding:2px!important}
+}
+
 .finalBox{display:none;max-width:820px;margin:22px auto 0;background:#fff8df;border:3px solid #d2ae5b;border-radius:22px;padding:28px;text-align:center;box-shadow:var(--shadow)}.finalBox.show{display:block}.finalBox h2{font:700 40px Georgia,serif;margin:4px 0 10px}
 /* audio */
 .speakBtn,.miniSpeak{display:inline-flex;align-items:center;justify-content:center;border:2px solid #2f78bb;background:#eef7ff;color:#174f80;border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.12);-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
@@ -204,14 +249,12 @@ button{cursor:pointer}
     <div class="board" id="bdPrintWrap">
       <div id="mission3Intro">
         <div class="audioHeadline"><h2 class="stageTitle">Atelier bonus — Crée la BD de Martin</h2><button class="speakBtn" data-speak-target="mission3Intro" aria-label="Écouter l'atelier BD" title="Écouter">🔊</button></div>
-        <p class="instructions">Choisis <strong>8 moments</strong> de la vie religieuse de Martin, écris une petite phrase pour chaque vignette, puis imprime ta BD. Tu peux aussi l’imprimer et laisser les élèves dessiner à la main dans les cadres.</p>
+        <p class="instructions">Crée <strong>8 vignettes</strong> de la vie de Martin : choisis le moment, le décor et les personnages, puis écris une bulle. Utilise ensuite <strong>Prévisualiser ma BD</strong> avant de choisir une impression couleur ou noir et blanc.</p>
       </div>
       <div class="bdTop printOnlyHide">
         <input id="studentName" type="text" placeholder="Prénom de l'élève ou binôme">
         <input id="studentName2" type="text" placeholder="Classe / groupe (facultatif)">
         <button class="action" id="fillDemo">Remplir un exemple</button>
-        <button class="action green" id="printBDColor">Imprimer en couleur</button>
-        <button class="action" id="printBDBW">Imprimer en noir et blanc</button>
       </div>
       <div class="bdModeBar printOnlyHide" id="bdModeBar">
         <button class="bdModeBtn active" id="modeDuo">Mode binôme / individuel</button>
@@ -228,11 +271,36 @@ button{cursor:pointer}
         </ul>
         <button class="speakBtn inlineSpeak" data-speak-target="bdHelpText" aria-label="Écouter les conseils" title="Écouter">🔊</button>
       </div>
+      <div class="bdActions printOnlyHide">
+        <div class="bdActionsTitle">👀 Aperçu et impression</div>
+        <div class="bdActionsRow">
+          <button class="action previewBtn" id="previewBD">Prévisualiser ma BD</button>
+          <button class="action green" id="printBDColor">Imprimer en couleur</button>
+          <button class="action" id="printBDBW">Imprimer en noir et blanc</button>
+        </div>
+      </div>
+      <div class="bdPreview printOnlyHide" id="bdPreview">
+        <div class="bdPreviewHead"><h3>Aperçu de ma BD</h3><p id="bdPreviewNames">La vie de Martin</p></div>
+        <div class="bdPreviewGrid" id="bdPreviewGrid"></div>
+        <div class="bdActionsRow" style="margin-top:14px">
+          <button class="action green" id="printBDColorPreview">Imprimer cet aperçu en couleur</button>
+          <button class="action" id="printBDBWPreview">Imprimer cet aperçu en noir et blanc</button>
+          <button class="action" id="closePreview">Fermer l’aperçu</button>
+        </div>
+      </div>
       <div id="momentBankWrap" class="printOnlyHide">
         <div class="bankTitle">Moments disponibles pour la BD</div>
         <div class="momentBank" id="momentBank"></div>
       </div>
       <div class="comicGrid" id="comicGrid"></div>
+      <div class="bdActions printOnlyHide">
+        <div class="bdActionsTitle">BD terminée ?</div>
+        <div class="bdActionsRow">
+          <button class="action previewBtn" id="previewBDBottom">Prévisualiser ma BD</button>
+          <button class="action green" id="printBDColorBottom">Imprimer en couleur</button>
+          <button class="action" id="printBDBWBottom">Imprimer en noir et blanc</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -379,7 +447,7 @@ function renderTraceBank(){
   shuffle(traceTokens).forEach(txt=>{
     const d=document.createElement('button'); d.className='wordToken'; d.type='button'; d.dataset.value=txt;
     d.innerHTML='<span>'+esc(txt)+'</span><span class="miniSpeak" data-speak-inline="'+esc(txt)+'" title="Écouter" aria-label="Écouter">🔊</span>';
-    d.addEventListener('click',e=>{ if(e.target.classList.contains('miniSpeak')) return; document.querySelectorAll('#traceBank .wordToken').forEach(t=>t.classList.remove('selected')); selected2=d; d.classList.add('selected'); });
+    d.addEventListener('click',e=>{ if(e.target.classList.contains('miniSpeak')) return; document.querySelectorAll('#traceBank .wordToken').forEach(t=>t.classList.remove('selected')); selected2=d; d.classList.add('selected'); setStatus('status2','Mot sélectionné : « '+txt+' ». Clique maintenant sur le trou où tu veux le placer.'); });
     bank.appendChild(d);
   });
   bindAudio();
@@ -440,6 +508,28 @@ function applyBDMode(){
   document.getElementById('printBanner').textContent = bdMode==='class' ? 'BD collective de la classe — à colorier' : "BD de Martin — création d’un élève ou d’un binôme";
 }
 
+function renderBDPreview(){
+  const grid=document.getElementById('bdPreviewGrid');
+  grid.innerHTML='';
+  const name=(document.getElementById('studentName').value||'').trim();
+  const group=(document.getElementById('studentName2').value||'').trim();
+  document.getElementById('bdPreviewNames').textContent=[name,group].filter(Boolean).join(' — ') || (bdMode==='class'?'BD collective de la classe':'BD de Martin');
+  document.querySelectorAll('#comicGrid .panel').forEach((panel,i)=>{
+    const moment=panel.querySelector('.momentSelect').value || 'Moment à choisir';
+    const decor=panel.querySelector('.decorSelect').value || '⛪';
+    const chars=panel.querySelector('.charSelect').value || '🧒';
+    const bubble=panel.querySelector('textarea').value.trim() || 'Bulle à compléter';
+    const artist=panel.querySelector('.artistInput')?.value.trim() || '';
+    const card=document.createElement('div'); card.className='previewPanel';
+    card.innerHTML=`<div class="previewArtist">Vignette ${i+1}${artist?' — '+esc(artist):''}</div>
+      <div class="scene"><div class="sceneTop"><div class="sceneDecor">${esc(decor)}</div><div class="sceneMomentTag">${esc(moment)}</div></div><div class="sceneChars">${esc(chars)}</div><div class="sceneBubble">${esc(bubble)}</div></div>
+      <div class="previewCaption">${esc(moment)} — ${esc(bubble)}</div>`;
+    grid.appendChild(card);
+  });
+  document.getElementById('bdPreview').classList.add('show');
+  document.getElementById('bdPreview').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function preparePrint(mode){
   document.body.classList.add('printBD');
   if(mode==='bw') document.body.classList.add('printBW'); else document.body.classList.remove('printBW');
@@ -497,8 +587,15 @@ document.getElementById('fillDemo').addEventListener('click',()=>{
     panel.querySelector('textarea').dispatchEvent(new Event('input'));
   });
 });
+document.getElementById('previewBD').addEventListener('click',renderBDPreview);
+document.getElementById('previewBDBottom').addEventListener('click',renderBDPreview);
+document.getElementById('closePreview').addEventListener('click',()=>document.getElementById('bdPreview').classList.remove('show'));
 document.getElementById('printBDColor').addEventListener('click',()=>preparePrint('color'));
 document.getElementById('printBDBW').addEventListener('click',()=>preparePrint('bw'));
+document.getElementById('printBDColorBottom').addEventListener('click',()=>preparePrint('color'));
+document.getElementById('printBDBWBottom').addEventListener('click',()=>preparePrint('bw'));
+document.getElementById('printBDColorPreview').addEventListener('click',()=>preparePrint('color'));
+document.getElementById('printBDBWPreview').addEventListener('click',()=>preparePrint('bw'));
 document.getElementById('modeDuo').addEventListener('click',()=>{bdMode='duo';applyBDMode();});
 document.getElementById('modeClass').addEventListener('click',()=>{bdMode='class';applyBDMode();});
 
