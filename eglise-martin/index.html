@@ -88,16 +88,7 @@ button{cursor:pointer}
 @media(max-width:520px){.app{padding:7px}.heroInner{grid-template-columns:44px 1fr 44px;gap:3px}.heroIcon{font-size:32px}.hero p{font-size:12px}.board{padding:10px}.pill{font-size:12px;padding:6px 9px}.traceBlank{min-width:110px}}
 /* print BD only */
 @media print{
-  body.printBD .app>*:not(#bdPrintWrap){display:none!important}
-  body.printBD #bdPrintWrap{display:block!important}
-  body.printBD .board{border:none;box-shadow:none;background:#fff;padding:0}
-  body.printBD .controls,body.printBD .hero,body.printBD .progress,body.printBD .rule,body.printBD .bdTop .action,body.printBD .bdHelp,body.printBD #momentBankWrap,body.printBD .printOnlyHide{display:none!important}
-  body.printBD .stage{display:block!important}
-  body.printBD .panel select,body.printBD .panel textarea{display:none!important}
-  body.printBD .comicGrid{grid-template-columns:repeat(2,1fr);gap:10px}
-  body.printBD .panel{min-height:320px;break-inside:avoid}
-  body.printBD .drawZone{min-height:180px}
-  body.printBD .captionPreview{font-size:15px}
+  body{background:#fff}
 }
 </style>
 </head>
@@ -216,21 +207,28 @@ button{cursor:pointer}
         <p class="instructions">Choisis <strong>8 moments</strong> de la vie religieuse de Martin, écris une petite phrase pour chaque vignette, puis imprime ta BD. Tu peux aussi l’imprimer et laisser les élèves dessiner à la main dans les cadres.</p>
       </div>
       <div class="bdTop printOnlyHide">
-        <input id="studentName" type="text" placeholder="Prénom de l'élève">
+        <input id="studentName" type="text" placeholder="Prénom de l'élève ou binôme">
+        <input id="studentName2" type="text" placeholder="Classe / groupe (facultatif)">
         <button class="action" id="fillDemo">Remplir un exemple</button>
-        <button class="action green" id="printBD">Imprimer ma BD</button>
+        <button class="action green" id="printBDColor">Imprimer en couleur</button>
+        <button class="action" id="printBDBW">Imprimer en noir et blanc</button>
       </div>
+      <div class="bdModeBar printOnlyHide" id="bdModeBar">
+        <button class="bdModeBtn active" id="modeDuo">Mode binôme / individuel</button>
+        <button class="bdModeBtn" id="modeClass">Mode collectif classe</button>
+      </div>
+      <div class="printBanner" id="printBanner">BD de Martin — création des élèves</div>
       <div class="bdHelp printOnlyHide" id="bdHelpText">
-        <strong>Conseils :</strong>
+        <strong>Studio BD :</strong>
         <ul>
-          <li>Choisis des moments réellement présents dans le texte.</li>
-          <li>Essaie de ne pas répéter deux fois le même moment.</li>
-          <li>Écris une courte phrase simple dans chaque vignette.</li>
-          <li>Au moment d’imprimer, les cadres resteront grands pour permettre un dessin à la main si tu veux.</li>
+          <li><strong>Mode binôme / individuel</strong> : crée une BD déjà mise en couleur, prête à être imprimée.</li>
+          <li><strong>Mode collectif classe</strong> : chaque vignette peut être confiée à un élève ou un groupe ; la version noir et blanc permet ensuite de colorier chaque partie.</li>
+          <li>Pour chaque vignette, choisis un <strong>moment</strong>, un <strong>décor</strong>, des <strong>personnages</strong> et écris une <strong>bulle</strong> ou une courte légende.</li>
+          <li>Essaie de varier les moments et d’utiliser seulement des informations réellement présentes dans le texte.</li>
         </ul>
         <button class="speakBtn inlineSpeak" data-speak-target="bdHelpText" aria-label="Écouter les conseils" title="Écouter">🔊</button>
       </div>
-      <div id="momentBankWrap">
+      <div id="momentBankWrap" class="printOnlyHide">
         <div class="bankTitle">Moments disponibles pour la BD</div>
         <div class="momentBank" id="momentBank"></div>
       </div>
@@ -290,6 +288,13 @@ const bdMoments=[
  'La Toussaint au cimetière',
  'Martin va à l’église en semaine'
 ];
+const bdDecors=[
+  ['Près de l’église','⛪'],['Maison de Martin','🏠'],['Champs du village','🌾'],['Intérieur de l’église','🕯️'],['Village médiéval','🏘️'],['Cimetière','✝️'],['Fête de Noël','⭐'],['Fête de Pâques','🥚']
+];
+const bdCharacters=[
+  ['Martin seul','🧒'],['Martin et sa mère','🧒 👩'],['Martin et sa famille','🧒 👨 👩'],['Le prêtre','👨‍🦳'],['Le prêtre et les villageois','👨‍🦳 👨 👩'],['Un bébé et sa famille','👶 👨 👩'],['Les mariés et les invités','🤵 👰 👨 👩'],['Des villageois','👨 👩 🧒'],['Le cortège vers le cimetière','👨 👩 ⚰️']
+];
+let bdMode='duo';
 
 let selected1=null, selected2=null, validated1=false, validated2=false;
 function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
@@ -398,26 +403,55 @@ function renderBD(){
   for(let i=1;i<=8;i++){
     const panel=document.createElement('div'); panel.className='panel';
     panel.innerHTML=`<div class="panelHead"><div class="panelNum">Vignette ${i}</div><span class="miniSpeak" data-speak-inline="Vignette ${i}" title="Écouter" aria-label="Écouter">🔊</span></div>
+      <div class="artistRow"><label>Élève / groupe responsable :</label><input type="text" class="artistInput" placeholder="Ex. Groupe 1 ou prénom(s)"></div>
       <label>Moment choisi :</label>
-      <select class="momentSelect">
-        <option value="">Choisir un moment...</option>
-        ${bdMoments.map(m=>`<option>${esc(m)}</option>`).join('')}
-      </select>
-      <div class="drawZone">Zone de dessin / illustration</div>
+      <select class="momentSelect"><option value="">Choisir un moment...</option>${bdMoments.map(m=>`<option>${esc(m)}</option>`).join('')}</select>
+      <label>Décor :</label>
+      <select class="decorSelect"><option value="">Choisir un décor...</option>${bdDecors.map(d=>`<option value="${esc(d[1])}">${esc(d[0])}</option>`).join('')}</select>
+      <label>Personnages :</label>
+      <select class="charSelect"><option value="">Choisir les personnages...</option>${bdCharacters.map(c=>`<option value="${esc(c[1])}">${esc(c[0])}</option>`).join('')}</select>
+      <div class="scene"><div class="sceneTop"><div class="sceneDecor">⛪</div><div class="sceneMomentTag">Moment à choisir</div></div><div class="sceneChars">🧒</div><div class="sceneBubble">Écris une bulle...</div></div>
       <label>Petite phrase ou bulle :</label>
-      <textarea maxlength="160" placeholder="Écris une petite phrase simple..."></textarea>
+      <textarea maxlength="180" placeholder="Écris une petite phrase simple..."></textarea>
       <div class="captionPreview"><strong>Texte à imprimer :</strong> <span class="captionTxt">...</span></div>`;
-    const sel=panel.querySelector('select'); const ta=panel.querySelector('textarea'); const preview=panel.querySelector('.captionTxt');
+    const sel=panel.querySelector('.momentSelect'); const dec=panel.querySelector('.decorSelect'); const chr=panel.querySelector('.charSelect'); const ta=panel.querySelector('textarea');
+    const preview=panel.querySelector('.captionTxt'); const scene=panel.querySelector('.scene');
     function refresh(){
       const moment=sel.value||'Moment non choisi';
-      const txt=ta.value.trim()||'Tu peux écrire ici une phrase ou dessiner à la main après impression.';
-      preview.textContent=moment+' — '+txt;
-      panel.querySelector('.drawZone').textContent=sel.value? sel.value : 'Zone de dessin / illustration';
+      const bubble=ta.value.trim()||'Écris une bulle...';
+      panel.querySelector('.sceneDecor').textContent=dec.value||'⛪';
+      panel.querySelector('.sceneMomentTag').textContent=moment;
+      panel.querySelector('.sceneChars').textContent=chr.value||'🧒';
+      panel.querySelector('.sceneBubble').textContent=bubble;
+      preview.textContent=moment+' — '+bubble;
     }
-    sel.addEventListener('change',refresh); ta.addEventListener('input',refresh); refresh();
+    [sel,dec,chr].forEach(el=>el.addEventListener('change',refresh)); ta.addEventListener('input',refresh); refresh();
     grid.appendChild(panel);
   }
+  applyBDMode();
   bindAudio();
+}
+
+function applyBDMode(){
+  const wrap=document.getElementById('bdPrintWrap');
+  wrap.classList.toggle('bd-collective',bdMode==='class');
+  document.getElementById('modeDuo').classList.toggle('active',bdMode==='duo');
+  document.getElementById('modeClass').classList.toggle('active',bdMode==='class');
+  document.getElementById('printBanner').textContent = bdMode==='class' ? 'BD collective de la classe — à colorier' : "BD de Martin — création d’un élève ou d’un binôme";
+}
+
+function preparePrint(mode){
+  document.body.classList.add('printBD');
+  if(mode==='bw') document.body.classList.add('printBW'); else document.body.classList.remove('printBW');
+  // figer les textes imprimés
+  document.querySelectorAll('#comicGrid .panel').forEach(panel=>{
+    const moment=panel.querySelector('.momentSelect').value || 'Moment à compléter';
+    const bubble=panel.querySelector('textarea').value.trim() || '................................................................';
+    panel.querySelector('.sceneMomentTag').textContent=moment;
+    panel.querySelector('.sceneBubble').textContent=bubble;
+  });
+  window.print();
+  setTimeout(()=>{document.body.classList.remove('printBD','printBW');},700);
 }
 
 function showStage(n){
@@ -440,20 +474,33 @@ document.getElementById('pill2').addEventListener('click',()=>{if(validated1)sho
 document.getElementById('pill3').addEventListener('click',()=>{if(validated2)showStage(3)});
 
 document.getElementById('fillDemo').addEventListener('click',()=>{
-  const selects=[...document.querySelectorAll('.momentSelect')], tas=[...document.querySelectorAll('#comicGrid textarea')];
+  const panels=[...document.querySelectorAll('#comicGrid .panel')];
   const demo=[
-    ['La cloche sonne le matin','Le matin, la cloche réveille Martin.'],
-    ['Martin fait le signe de croix','Avant de partir, il fait le signe de croix.'],
-    ['Martin dit une prière avec sa mère','Martin prie avec sa mère avant le travail.'],
-    ['Le dimanche, tout le village va à l’église','Le dimanche, tout le village se retrouve à l’église.'],
-    ['Le prêtre raconte la vie de Jésus','Le prêtre apprend aux habitants comment bien agir.'],
-    ['Le baptême d’un bébé','Les cloches sonnent pour le baptême du bébé.'],
-    ['Un mariage au village','Au village, les habitants assistent à un mariage.'],
-    ['La fête de Noël','À Noël, l’église est pleine pour célébrer Jésus.']
+    ['La cloche sonne le matin','Près de l’église','Martin seul','Le matin, la cloche réveille Martin.'],
+    ['Martin fait le signe de croix','Maison de Martin','Martin et sa mère','Avant de partir, Martin fait le signe de croix.'],
+    ['Le dimanche, tout le village va à l’église','Intérieur de l’église','Le prêtre et les villageois','Tout le village vient écouter le prêtre.'],
+    ['Le prêtre raconte la vie de Jésus','Intérieur de l’église','Le prêtre','Le prêtre raconte la vie de Jésus.'],
+    ['Le baptême d’un bébé','Intérieur de l’église','Un bébé et sa famille','On baptise le bébé dans l’église.'],
+    ['Un mariage au village','Intérieur de l’église','Les mariés et les invités','Les habitants assistent au mariage.'],
+    ['La fête de Noël','Fête de Noël','Des villageois','À Noël, l’église est pleine.'],
+    ['La Toussaint au cimetière','Cimetière','Des villageois','Les habitants vont se recueillir sur les tombes.']
   ];
-  demo.forEach((d,i)=>{selects[i].value=d[0]; tas[i].value=d[1]; selects[i].dispatchEvent(new Event('change')); tas[i].dispatchEvent(new Event('input'));});
+  panels.forEach((panel,i)=>{
+    panel.querySelector('.momentSelect').value=demo[i][0];
+    panel.querySelector('.decorSelect').selectedIndex=[...panel.querySelector('.decorSelect').options].findIndex(o=>o.text===demo[i][1]);
+    panel.querySelector('.charSelect').selectedIndex=[...panel.querySelector('.charSelect').options].findIndex(o=>o.text===demo[i][2]);
+    panel.querySelector('textarea').value=demo[i][3];
+    const artist=panel.querySelector('.artistInput'); if(artist) artist.value='Groupe '+(i+1);
+    panel.querySelector('.momentSelect').dispatchEvent(new Event('change'));
+    panel.querySelector('.decorSelect').dispatchEvent(new Event('change'));
+    panel.querySelector('.charSelect').dispatchEvent(new Event('change'));
+    panel.querySelector('textarea').dispatchEvent(new Event('input'));
+  });
 });
-document.getElementById('printBD').addEventListener('click',()=>{document.body.classList.add('printBD'); window.print(); setTimeout(()=>document.body.classList.remove('printBD'),600);});
+document.getElementById('printBDColor').addEventListener('click',()=>preparePrint('color'));
+document.getElementById('printBDBW').addEventListener('click',()=>preparePrint('bw'));
+document.getElementById('modeDuo').addEventListener('click',()=>{bdMode='duo';applyBDMode();});
+document.getElementById('modeClass').addEventListener('click',()=>{bdMode='class';applyBDMode();});
 
 /* speech synthesis */
 let currentUtter=null, currentBtn=null;

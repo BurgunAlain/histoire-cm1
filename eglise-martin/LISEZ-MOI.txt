@@ -1,13 +1,31 @@
-JEU CM1 — LA VIE DE MARTIN ET L'ÉGLISE — VERSION V3
+HISTOIRE CM1 — SÉANCE 7 : LA VIE DE MARTIN ET L'ÉGLISE
 
-Corrections vérifiées :
-- les étiquettes de la mission 1 sont dans un ordre source volontairement mélangé ;
-- elles sont à nouveau mélangées à chaque nouvelle tentative ;
-- une étiquette posée peut être retirée en recliquant sur sa case ;
-- une étiquette posée peut être remplacée par une autre ;
-- la banque des 16 mots de la trace écrite est elle aussi mélangée à chaque tentative.
+DOSSIER COMPLET À METTRE DANS GITHUB
+Dossier cible : /eglise-martin
 
-GitHub Pages : importer les fichiers dans le dossier eglise-martin.
-URL : https://burgunalain.github.io/histoire-cm1/eglise-martin/
+Fichiers :
+- index.html : jeu complet
+- trace-imprimable.html : trace écrite imprimable avec 16 trous
+- LISEZ-MOI.txt : ce mémo
 
-Après remplacement sur GitHub, si l'ancienne version reste visible, faire un rechargement forcé (Ctrl+F5 sur Windows).
+Le jeu comprend :
+- recherche dans le texte de Martin ;
+- validation uniquement si toute la mission est juste en une tentative ;
+- étiquettes mélangées et utilisées grisées ;
+- possibilité de retirer/remplacer une étiquette ;
+- lecture vocale 🔊 ;
+- trace écrite interactive à 16 trous ;
+- atelier BD interactif ;
+- mode binôme / individuel ;
+- mode collectif classe ;
+- impression BD en couleur ;
+- impression BD en noir et blanc pour coloriage.
+
+URL GitHub Pages :
+https://burgunalain.github.io/histoire-cm1/eglise-martin/
+
+Pour mettre à jour :
+1. Ouvrir le dossier eglise-martin sur GitHub.
+2. Remplacer son contenu par les fichiers de ce dossier.
+3. Conserver exactement le même nom de dossier.
+4. L'URL et le QR code ne changent pas.
