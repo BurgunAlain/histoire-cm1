@@ -1,0 +1,14 @@
+HISTOIRE CM1 — SÉANCE 7 — JEU PRINCIPAL SANS BD
+
+Dossier GitHub cible : eglise-martin/
+
+Ce dossier contient uniquement :
+- Mission 1 : recherche dans le texte de Martin
+- Mission 2 : trace écrite interactive
+- la trace imprimable
+- un bouton final vers l'atelier BD indépendant
+
+URL :
+https://burgunalain.github.io/histoire-cm1/eglise-martin/
+
+Le QR actuel de ce jeu ne change pas.
