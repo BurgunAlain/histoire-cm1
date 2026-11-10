@@ -58,7 +58,7 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 
 .bubbleTailSvg{position:absolute;inset:0;width:100%;height:100%;z-index:949;pointer-events:none;overflow:visible}
 .bubbleLayer{position:absolute;inset:0;z-index:950;pointer-events:none}
-.tailHandleLayer{position:absolute;inset:0;z-index:1100;pointer-events:none}.tailHandle{position:absolute;width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%);background:#ffdf55;border:3px solid #4d36a4;box-shadow:0 2px 6px rgba(0,0,0,.28);pointer-events:auto;touch-action:none;cursor:grab;display:grid;place-items:center;font-size:12px;font-weight:900;color:#3d2d79}.tailHandle:active{cursor:grabbing}.tailHandle::after{content:'•';font-size:20px;line-height:1;transform:translateY(-1px)}.tailHandleHint{font-size:11px;line-height:1.3;color:#6d6487;background:#fff8cf;border:1px solid #ead98a;border-radius:8px;padding:7px 8px;margin-top:7px}.tailResetBtn{grid-column:1/-1;border:2px solid #d7d1ea;border-radius:9px;background:#fff;color:#4d388d;padding:7px;font-weight:850;font-size:12px}
+.tailHandleLayer{position:absolute;inset:0;z-index:1100;pointer-events:none}.tailHandleLayer.editing{pointer-events:auto;cursor:crosshair}.tailHandle{position:absolute;width:40px;height:40px;border-radius:50%;transform:translate(-50%,-50%);background:#ffdf55;border:4px solid #4d36a4;box-shadow:0 3px 8px rgba(0,0,0,.35);pointer-events:auto;touch-action:none;cursor:grab;display:grid;place-items:center;font-size:16px;font-weight:900;color:#3d2d79}.tailHandle:active{cursor:grabbing}.tailHandle::after{content:'↕';font-size:18px;line-height:1}.tailHandleHint{font-size:11px;line-height:1.3;color:#6d6487;background:#fff8cf;border:1px solid #ead98a;border-radius:8px;padding:7px 8px;margin-top:7px}.tailResetBtn,.tailEditBtn{grid-column:1/-1;border:2px solid #d7d1ea;border-radius:9px;background:#fff;color:#4d388d;padding:8px;font-weight:850;font-size:12px}.tailEditBtn.active{background:#fff3a8;border-color:#d8b62d;color:#5a4800}.tailEditBadge{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:1200;background:#fff3a8;border:2px solid #6d54b8;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:900;color:#4a347c;pointer-events:none;box-shadow:0 3px 8px rgba(0,0,0,.18)}
 .bubbleLayer .speechBubble{position:absolute;display:block}
 .bubbleOwner{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:#493887;margin-bottom:7px;padding:6px 8px;background:#f6f2ff;border-radius:8px}
 .bubbleEditorEmpty{font-size:12px;line-height:1.35;color:#6a7182;background:#f8f8fb;border-radius:9px;padding:9px}
@@ -246,8 +246,8 @@ const assets=[
 const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function blankPanel(){return{momentId:'',decorId:'village',narration:'',dialogues:[],elements:[]}}
-let state={version:20,current:0,panels:Array.from({length:8},blankPanel)};
-let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0;
+let state={version:21,current:0,panels:Array.from({length:8},blankPanel)};
+let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0,tailEditDialogueId=null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const cur=()=>state.panels[state.current];
@@ -273,7 +273,7 @@ function load(){
     let raw=localStorage.getItem(STORAGE_KEY),fromOld=false;
     if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw){fromOld=true;break}}}
     if(!raw)return;const obj=JSON.parse(raw);
-    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=20;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
+    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=21;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
   }catch(e){}
 }
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
@@ -305,7 +305,7 @@ function renderScene(){
   $('#scene').onclick=ev=>{if(ev.target.id==='scene'||ev.target.id==='sceneBg'||ev.target.classList.contains('sceneShade')){selectedId=null;renderScene();renderInspector()}}
 }
 function renderBubbles(){
-  const p=cur(),host=$('#bubbleLayer');host.innerHTML='';$('#bubbleTailSvg').innerHTML='';$('#tailHandleLayer').innerHTML='';
+  const p=cur(),host=$('#bubbleLayer'),tailLayer=$('#tailHandleLayer');host.innerHTML='';$('#bubbleTailSvg').innerHTML='';tailLayer.innerHTML='';tailLayer.classList.remove('editing');tailLayer.onclick=null;
   p.dialogues.forEach(d=>{if(!String(d.text||'').trim()||!p.elements.some(e=>e.id===d.speakerId))return;const b=document.createElement('div');b.className='speechBubble '+(d.type==='thought'?'thought':'');b.dataset.dialogueId=d.id;b.dataset.speakerId=d.speakerId;b.textContent=d.text;host.appendChild(b)});
   queueBubblePosition();renderBubbleLibraryStatus();
 }
@@ -382,19 +382,22 @@ function dialogueTipPoint(d,speakerRect,bubbleRect,sceneRect){
   return speakerTipPoint(speakerRect,bubbleRect);
 }
 function renderTailHandle(d,tip,sceneRect){
-  const layer=$('#tailHandleLayer');if(!layer||!d||d.speakerId!==selectedId)return;
-  const h=document.createElement('div');h.className='tailHandle';h.title='Fais glisser cette poignée jusqu’à la bouche du personnage';h.style.left=tip.x+'px';h.style.top=tip.y+'px';h.dataset.dialogueId=d.id;
-  h.addEventListener('pointerdown',startTailDrag);layer.appendChild(h)
+  const layer=$('#tailHandleLayer');if(!layer||!d||tailEditDialogueId!==d.id)return;
+  layer.classList.add('editing');
+  const h=document.createElement('button');h.type='button';h.className='tailHandle';h.title='Déplace ce point jusqu’à la bouche du personnage';h.setAttribute('aria-label','Poignée de la queue de bulle');h.style.left=tip.x+'px';h.style.top=tip.y+'px';h.dataset.dialogueId=d.id;
+  h.addEventListener('pointerdown',startTailDrag);layer.appendChild(h);
+  const badge=document.createElement('div');badge.className='tailEditBadge';badge.textContent='🎯 Clique près de la bouche ou déplace le point jaune';layer.appendChild(badge);
+  layer.onclick=ev=>{if(ev.target!==layer)return;const r=$('#scene').getBoundingClientRect();d.tx=clamp((ev.clientX-r.left)/r.width*100,0,100);d.ty=clamp((ev.clientY-r.top)/r.height*100,0,100);queueBubblePosition();scheduleSave()};
 }
 function startTailDrag(ev){
-  ev.preventDefault();ev.stopPropagation();const dialogueId=ev.currentTarget.dataset.dialogueId,d=cur().dialogues.find(x=>x.id===dialogueId);if(!d)return;
-  const scene=$('#scene');
+  ev.preventDefault();ev.stopPropagation();const handle=ev.currentTarget,dialogueId=handle.dataset.dialogueId,d=cur().dialogues.find(x=>x.id===dialogueId);if(!d)return;
+  const scene=$('#scene');try{handle.setPointerCapture(ev.pointerId)}catch(e){}
   const move=mv=>{mv.preventDefault?.();const r=scene.getBoundingClientRect();d.tx=clamp((mv.clientX-r.left)/r.width*100,0,100);d.ty=clamp((mv.clientY-r.top)/r.height*100,0,100);queueBubblePosition();scheduleSave()};
-  const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);renderScene();renderInspector();scheduleSave()};
+  const up=mv=>{try{handle.releasePointerCapture(mv.pointerId)}catch(e){};window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);queueBubblePosition();renderInspector();scheduleSave()};
   window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',up,{once:true})
 }
 function positionAllBubbles(){
-  const scene=$('#scene'),sceneRect=scene.getBoundingClientRect();if(!sceneRect.width||!sceneRect.height)return;const svg=$('#bubbleTailSvg');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);
+  const scene=$('#scene'),sceneRect=scene.getBoundingClientRect();if(!sceneRect.width||!sceneRect.height)return;const svg=$('#bubbleTailSvg');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);const tailLayer=$('#tailHandleLayer');if(tailLayer){tailLayer.innerHTML='';tailLayer.classList.remove('editing');tailLayer.onclick=null;}
   const narr=$('#narrationPreview');let narrRect=null;if(narr&&narr.textContent.trim()&&narr.offsetParent!==null)narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
   const people=[...document.querySelectorAll('.sceneEl')].map(x=>relRect(x.getBoundingClientRect(),sceneRect));const occupied=[];
   for(const b of $$('#bubbleLayer .speechBubble')){
@@ -415,16 +418,17 @@ function renderBubbleEditor(){
   }
   const a=assetMap[e.assetId],d=dialogueForSpeaker(p,e.id);
   if(!d){host.innerHTML=`<div class="bubbleOwner">🧍 ${escapeHTML(a.label)}</div><button class="addBubbleBtn" id="addBubbleToSelected">💬 Ajouter une bulle à ce personnage</button>`+bubbleRosterHTML(p);$('#addBubbleToSelected').onclick=()=>{const nd={id:uid(),speakerId:e.id,text:'',type:'speech'};p.dialogues.push(nd);renderScene();renderInspector();scheduleSave();setTimeout(()=>$('#bubbleInput')?.focus(),0)};bindBubbleRoster();return}
-  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser la queue</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint">🟡 <strong>Queue réglable :</strong> fais glisser la poignée jaune dans la vignette jusqu’à la bouche de ce personnage.</div>`+bubbleRosterHTML(p,e.id);
+  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailEditBtn ${tailEditDialogueId===d.id?'active':''}" id="editTail">${tailEditDialogueId===d.id?'✓ Terminer le réglage':'🎯 Régler la queue'}</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser la queue</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint">🎯 <strong>Pour viser la bouche :</strong> clique sur « Régler la queue », puis clique directement à l’endroit voulu dans la vignette ou déplace le gros point jaune.</div>`+bubbleRosterHTML(p,e.id);
   $('#bubbleInput').addEventListener('input',ev=>{d.text=ev.target.value;renderBubbles();renderThumbs();scheduleSave()});
   $('#kindSpeech').onclick=()=>{d.type='speech';renderScene();renderInspector();scheduleSave()};$('#kindThought').onclick=()=>{d.type='thought';renderScene();renderInspector();scheduleSave()};
-  $('#resetTail').onclick=()=>{d.tx=null;d.ty=null;renderScene();renderInspector();scheduleSave();toast('Queue replacée automatiquement')};
+  $('#editTail').onclick=()=>{tailEditDialogueId=tailEditDialogueId===d.id?null:d.id;renderScene();renderInspector();toast(tailEditDialogueId?'Mode réglage de la queue activé':'Réglage terminé')};
+  $('#resetTail').onclick=()=>{d.tx=null;d.ty=null;tailEditDialogueId=d.id;renderScene();renderInspector();scheduleSave();toast('Queue replacée automatiquement — ajuste-la si besoin')};
   $('#deleteBubble').onclick=()=>{p.dialogues=p.dialogues.filter(x=>x.id!==d.id);renderAll();scheduleSave();toast('Bulle supprimée')};bindBubbleRoster()
 }
 function bubbleRosterHTML(p,current=''){
   if(!p.dialogues.length)return'';return `<div class="bubbleRoster"><div class="bubbleRosterTitle">Personnages qui parlent dans cette case</div>${p.dialogues.map(d=>{const e=p.elements.find(x=>x.id===d.speakerId),a=e&&assetMap[e.assetId];if(!e||!a)return'';return `<div class="bubbleRosterItem">${d.type==='thought'?'☁️':'💬'} ${escapeHTML(a.label)}${d.speakerId===current?' ✓':''}<button type="button" data-select-speaker="${d.speakerId}">Sélectionner</button></div>`}).join('')}</div>`
 }
-function bindBubbleRoster(){$$('[data-select-speaker]').forEach(b=>b.onclick=()=>{selectedId=b.dataset.selectSpeaker;renderScene();renderInspector()})}
+function bindBubbleRoster(){$$('[data-select-speaker]').forEach(b=>b.onclick=()=>{selectedId=b.dataset.selectSpeaker;tailEditDialogueId=null;renderScene();renderInspector()})}
 function renderInspector(){
   const p=cur(),host=$('#selectionTools');$('#inspectorPanelNum').textContent=`n° ${state.current+1} / 8`;$('#narrationInput').value=p.narration||'';renderBubbleEditor();
   const e=getSelected();if(!e){host.innerHTML='<div class="emptyInspector">Clique sur un personnage dans la vignette pour le modifier.</div>';return}const a=assetMap[e.assetId];const d=e.kind==='character'?dialogueForSpeaker(p,e.id):null;
@@ -443,10 +447,10 @@ function renderThumbs(){
 }
 function renderAll(){renderMomentSelect();renderDecorLibrary();renderScene();renderInspector();renderThumbs();$('#panelNum').textContent=state.current+1;$('#momentHint').textContent=momentTips[cur().momentId]||momentTips['']}
 function changeMoment(id){const p=cur(),old=momentById(p.momentId),m=momentById(id),shouldReplace=!p.narration||p.narration===old.narration;p.momentId=id;if(shouldReplace)p.narration=m.narration;if(m.decors?.length&&!m.decors.includes(p.decorId))p.decorId=m.decors[0];renderAll();scheduleSave();switchTab('characters')}
-function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
+function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;tailEditDialogueId=null;renderAll();scheduleSave()}
 function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
 function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
-function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:20,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:21,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
 function staticScene(panel){
   const box=document.createElement('div');box.className='staticScene';box._panel=panel;
   const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
