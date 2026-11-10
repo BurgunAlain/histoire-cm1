@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- BUILD: 2026-11-09-v13-studio-bd -->
+<!-- BUILD: 2026-11-10-v14-multibulles -->
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -55,6 +55,20 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
   body.printBW #printArea{filter:grayscale(1) contrast(1.07)}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
+
+.bubbleTailSvg{position:absolute;inset:0;width:100%;height:100%;z-index:949;pointer-events:none;overflow:visible}
+.bubbleLayer{position:absolute;inset:0;z-index:950;pointer-events:none}
+.bubbleLayer .speechBubble{position:absolute;display:block}
+.bubbleOwner{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:#493887;margin-bottom:7px;padding:6px 8px;background:#f6f2ff;border-radius:8px}
+.bubbleEditorEmpty{font-size:12px;line-height:1.35;color:#6a7182;background:#f8f8fb;border-radius:9px;padding:9px}
+.bubbleEditorActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.bubbleKindBtn{border:2px solid #ddddec;border-radius:9px;background:#fff;padding:7px;font-weight:850;font-size:12px}
+.bubbleKindBtn.active{border-color:#6a4bbb;background:#f0ebff;color:#493887}
+.bubbleDeleteBtn{grid-column:1/-1;border:2px solid #efc8c8;border-radius:9px;background:#fff;color:#b52828;padding:7px;font-weight:850;font-size:12px}
+.addBubbleBtn{width:100%;border:2px solid #8c73d1;border-radius:10px;background:#f0ebff;color:#463481;padding:10px;font-weight:900}
+.bubbleRoster{margin-top:9px;border-top:1px solid #e1dfeb;padding-top:7px}.bubbleRosterTitle{font-size:11px;font-weight:900;color:#777e8e;margin-bottom:5px}.bubbleRosterItem{display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 6px;border-radius:7px;background:#faf9fd;margin:4px 0}.bubbleRosterItem button{margin-left:auto;border:1px solid #d4cee9;background:#fff;border-radius:7px;padding:3px 6px;font-size:10px;font-weight:800;color:#4d388d}
+.sceneEl.speaker::after{content:'💬';}
+
 </style>
 </head>
 <body>
@@ -90,11 +104,8 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
         <div class="decorGrid" id="decorLibrary"></div>
       </div>
       <div class="tabPane" id="tab-bubbles">
-        <div class="hint">La bulle suit automatiquement le personnage qui parle. Le premier personnage ajouté devient le parleur, mais tu peux en choisir un autre.</div>
-        <div class="bubbleChoice">
-          <button class="bubbleTypeBtn active" data-bubble="speech"><span class="bubbleIcon">💬</span>Dialogue</button>
-          <button class="bubbleTypeBtn" data-bubble="thought"><span class="bubbleIcon">☁️</span>Pensée</button>
-        </div>
+        <div class="hint"><strong>Plusieurs personnages peuvent parler.</strong><br>1. Clique sur un personnage dans la vignette.<br>2. Ajoute sa bulle dans le panneau de droite.<br>3. Clique sur un autre personnage et recommence.<br><br>Chaque bulle reste attachée à son personnage et se replace automatiquement quand tu le déplaces.</div>
+        <div id="bubbleLibraryStatus" class="hint">Aucune bulle dans cette vignette.</div>
       </div>
     </aside>
 
@@ -114,10 +125,11 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
           <div class="emptyScene" id="emptyScene">Choisis un moment puis ajoute tes personnages.</div>
           <div class="narration" id="narrationPreview"></div>
           <div class="sceneElements" id="sceneElements"></div>
-          <div class="speechBubble" id="speechBubble"><span id="bubbleTextPreview"></span><span class="speechTail tail-left" id="speechTail"></span></div>
+          <svg class="bubbleTailSvg" id="bubbleTailSvg" aria-hidden="true"></svg>
+          <div class="bubbleLayer" id="bubbleLayer"></div>
         </div>
       </div>
-      <div class="tipBar"><strong>Astuce :</strong> déplace les personnages directement dans la case. Le personnage marqué 💬 est celui auquel la bulle est attachée.</div>
+      <div class="tipBar"><strong>Astuce :</strong> déplace les personnages directement dans la case. Chaque personnage marqué 💬 possède sa propre bulle : plusieurs personnages peuvent parler dans la même vignette.</div>
     </section>
 
     <aside class="panelBox inspector">
@@ -128,8 +140,8 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
           <div class="body"><textarea id="narrationInput" placeholder="Raconte ce qui se passe dans cette vignette..."></textarea></div>
         </div>
         <div class="editBlock">
-          <h3>💬 Texte de la bulle <button class="speakSmall" id="readBubble" title="Lire la bulle">🔊</button></h3>
-          <div class="body"><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense le personnage..."></textarea></div>
+          <h3>💬 Bulles des personnages <button class="speakSmall" id="readBubble" title="Lire la bulle du personnage sélectionné">🔊</button></h3>
+          <div class="body" id="bubbleEditor"><div class="bubbleEditorEmpty">Sélectionne un personnage pour lui ajouter une bulle.</div></div>
         </div>
         <div class="editBlock">
           <h3>🧍 Élément sélectionné</h3>
@@ -172,7 +184,8 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 
 <script>
 'use strict';
-const STORAGE_KEY='histoireCM1_bdMartin_studio_v13';
+const STORAGE_KEY='histoireCM1_bdMartin_studio_v14';
+const OLD_STORAGE_KEYS=['histoireCM1_bdMartin_studio_v13'];
 const decors={
   village:{label:"Près de l’église",src:'decor_village_eglise.png'},
   fields:{label:'Champs du village',src:'decor_champs_village.png'},
@@ -230,110 +243,194 @@ const assets=[
 ];
 const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function blankPanel(){return{momentId:'',decorId:'village',narration:'',bubble:'',bubbleType:'speech',speakerId:null,elements:[]}}
-let state={version:13,current:0,panels:Array.from({length:8},blankPanel)};
-let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null;
+function blankPanel(){return{momentId:'',decorId:'village',narration:'',dialogues:[],elements:[]}}
+let state={version:14,current:0,panels:Array.from({length:8},blankPanel)};
+let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const cur=()=>state.panels[state.current];
 function momentById(id){return moments.find(m=>m.id===id)||moments[0]}
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),1600)}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),1800)}
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>save(false),180)}
 function save(show=true){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));$('#saveState').textContent='Sauvegardé ✓';if(show)toast('BD sauvegardée sur cet appareil ✓');setTimeout(()=>$('#saveState').textContent='Sauvegarde automatique active',1200)}catch(e){$('#saveState').textContent='Sauvegarde locale indisponible';if(show)toast('Impossible de sauvegarder localement')}}
-function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;const obj=JSON.parse(raw);if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.version=13;state.current=clamp(Number(state.current)||0,0,7);toast('BD précédente reprise ✓')}}catch(e){}}
+function migratePanel(p){
+  if(!p||typeof p!=='object')return blankPanel();
+  if(!Array.isArray(p.elements))p.elements=[];
+  if(!Array.isArray(p.dialogues))p.dialogues=[];
+  if(p.bubble&&p.speakerId&&!p.dialogues.some(d=>d.speakerId===p.speakerId)){
+    p.dialogues.push({id:uid(),speakerId:p.speakerId,text:String(p.bubble),type:p.bubbleType==='thought'?'thought':'speech'});
+  }
+  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>({id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech'}));
+  const seen=new Set();p.dialogues=p.dialogues.filter(d=>!seen.has(d.speakerId)&&(seen.add(d.speakerId),true));
+  delete p.bubble;delete p.bubbleType;delete p.speakerId;
+  if(!p.decorId)p.decorId='village';if(typeof p.narration!=='string')p.narration='';if(typeof p.momentId!=='string')p.momentId='';
+  return p;
+}
+function load(){
+  try{
+    let raw=localStorage.getItem(STORAGE_KEY),fromOld=false;
+    if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw){fromOld=true;break}}}
+    if(!raw)return;const obj=JSON.parse(raw);
+    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=14;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
+  }catch(e){}
+}
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function switchTab(name){$$('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$$('.tabPane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name))}
 function renderMomentSelect(){const sel=$('#momentSelect');sel.innerHTML=moments.map(m=>`<option value="${m.id}">${escapeHTML(m.label)}</option>`).join('');sel.value=cur().momentId||''}
 function renderCharacterLibrary(){
-  const host=$('#characterLibrary');host.innerHTML='';
-  const groups=[...new Set(assets.map(a=>a.group))];
+  const host=$('#characterLibrary');host.innerHTML='';const groups=[...new Set(assets.map(a=>a.group))];
   for(const g of groups){const section=document.createElement('section');section.className='assetGroup';section.innerHTML=`<h3>${escapeHTML(g)}</h3><div class="assetGrid"></div>`;const grid=section.querySelector('.assetGrid');assets.filter(a=>a.group===g).forEach(a=>{const b=document.createElement('button');b.className='assetCard';b.type='button';b.title='Ajouter '+a.label;b.innerHTML=`<span class="plus">+</span><img src="${a.src}" alt=""><span>${escapeHTML(a.label)}</span>`;b.addEventListener('click',()=>addAsset(a.id));grid.appendChild(b)});host.appendChild(section)}
 }
 function renderDecorLibrary(){
-  const host=$('#decorLibrary');host.innerHTML='';const m=momentById(cur().momentId);const allowed=m.decors||['village'];
-  const keys=showAllDecors?Object.keys(decors):allowed;
+  const host=$('#decorLibrary');host.innerHTML='';const m=momentById(cur().momentId);const allowed=m.decors||['village'];const keys=showAllDecors?Object.keys(decors):allowed;
   keys.forEach(k=>{const d=decors[k];if(!d)return;const b=document.createElement('button');b.className='decorCard'+(cur().decorId===k?' active':'');b.type='button';b.innerHTML=`${allowed.includes(k)?'<span class="recommended">Adapté</span>':''}<img src="${d.src}" alt=""><b>${escapeHTML(d.label)}</b>`;b.addEventListener('click',()=>{cur().decorId=k;renderAll();scheduleSave()});host.appendChild(b)})
 }
 function addAsset(assetId){
-  const a=assetMap[assetId];if(!a)return;const p=cur();const n=p.elements.length;
-  const el={id:uid(),assetId:a.id,kind:a.kind,x:10+(n%4)*18,y:a.kind==='object'?68:46+(n%2)*5,w:a.w,z:n+1,flip:false};
-  p.elements.push(el);selectedId=el.id;if(a.kind==='character'&&!p.speakerId)p.speakerId=el.id;renderAll();scheduleSave();toast(a.label+' ajouté')
+  const a=assetMap[assetId];if(!a)return;const p=cur();const n=p.elements.length;const el={id:uid(),assetId:a.id,kind:a.kind,x:10+(n%4)*18,y:a.kind==='object'?68:46+(n%2)*5,w:a.w,z:n+1,flip:false};
+  p.elements.push(el);normalizeZ(p);selectedId=el.id;renderAll();scheduleSave();toast(a.label+' ajouté')
 }
 function getSelected(){return cur().elements.find(e=>e.id===selectedId)||null}
+function dialogueForSpeaker(panel,speakerId){return panel.dialogues.find(d=>d.speakerId===speakerId)||null}
+function hasBubble(panel,speakerId){return !!dialogueForSpeaker(panel,speakerId)}
+function hasAnyTextBubble(panel){return panel.dialogues.some(d=>String(d.text||'').trim())}
+function normalizeZ(panel=cur()){panel.elements.slice().sort((a,b)=>(a.z||0)-(b.z||0)).forEach((e,i)=>e.z=i+1)}
 function renderScene(){
-  const p=cur(),bg=decors[p.decorId]||decors.village;$('#sceneBg').src=bg.src;$('#narrationPreview').textContent=p.narration||'';$('#bubbleTextPreview').textContent=p.bubble||'';
-  const empty=$('#emptyScene');empty.classList.toggle('hidden',!!(p.momentId||p.elements.length||p.narration||p.bubble));
-  const layer=$('#sceneElements');layer.innerHTML='';
-  [...p.elements].sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const d=document.createElement('div');d.className='sceneEl '+(e.kind==='object'?'object ':'')+(e.id===selectedId?'selected ':'')+(e.id===p.speakerId?'speaker ':'');d.dataset.id=e.id;d.style.left=e.x+'%';d.style.top=e.y+'%';d.style.width=e.w+'%';d.style.zIndex=String(30+e.z);d.style.transform=e.flip?'scaleX(-1)':'';d.innerHTML=`<img src="${a.src}" alt="${escapeHTML(a.label)}">`;d.addEventListener('pointerdown',startDrag);d.addEventListener('click',ev=>{ev.stopPropagation();selectedId=e.id;renderScene();renderInspector()});layer.appendChild(d)});
-  $('#speechBubble').classList.toggle('thought',p.bubbleType==='thought');positionBubble();
+  const p=cur(),bg=decors[p.decorId]||decors.village;$('#sceneBg').src=bg.src;$('#narrationPreview').textContent=p.narration||'';
+  $('#emptyScene').classList.toggle('hidden',!!(p.momentId||p.elements.length||p.narration||hasAnyTextBubble(p)));
+  const layer=$('#sceneElements');layer.innerHTML='';normalizeZ(p);
+  [...p.elements].sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const d=document.createElement('div');d.className='sceneEl '+(e.kind==='object'?'object ':'')+(e.id===selectedId?'selected ':'')+(hasBubble(p,e.id)?'speaker ':'');d.dataset.id=e.id;d.style.left=e.x+'%';d.style.top=e.y+'%';d.style.width=e.w+'%';d.style.zIndex=String(30+e.z);d.style.transform=e.flip?'scaleX(-1)':'';d.innerHTML=`<img src="${a.src}" alt="${escapeHTML(a.label)}">`;d.addEventListener('pointerdown',startDrag);d.addEventListener('click',ev=>{ev.stopPropagation();selectedId=e.id;renderScene();renderInspector()});layer.appendChild(d)});
+  renderBubbles();
   $('#scene').onclick=ev=>{if(ev.target.id==='scene'||ev.target.id==='sceneBg'||ev.target.classList.contains('sceneShade')){selectedId=null;renderScene();renderInspector()}}
 }
-function positionBubble(){
-  const p=cur(),bubble=$('#speechBubble'),tail=$('#speechTail');if(!p.bubble||!p.speakerId){bubble.style.display='none';return}const sp=p.elements.find(e=>e.id===p.speakerId);if(!sp){bubble.style.display='none';return}bubble.style.display='block';
-  const cx=sp.x+sp.w/2, headY=sp.y+3;const bw=36;let left=cx<50?sp.x+sp.w+3:sp.x-bw-3;left=clamp(left,2,98-bw);let top=headY-25;if(top<18)top=Math.min(63,sp.y+10);top=clamp(top,18,66);bubble.style.left=left+'%';bubble.style.top=top+'%';
-  const bubbleCenter=left+bw/2;const speakerOnRight=cx>bubbleCenter;tail.className='speechTail '+(speakerOnRight?'tail-right':'tail-left');
+function renderBubbles(){
+  const p=cur(),host=$('#bubbleLayer');host.innerHTML='';$('#bubbleTailSvg').innerHTML='';
+  p.dialogues.forEach(d=>{if(!String(d.text||'').trim()||!p.elements.some(e=>e.id===d.speakerId))return;const b=document.createElement('div');b.className='speechBubble '+(d.type==='thought'?'thought':'');b.dataset.dialogueId=d.id;b.dataset.speakerId=d.speakerId;b.textContent=d.text;host.appendChild(b)});
+  queueBubblePosition();renderBubbleLibraryStatus();
+}
+function queueBubblePosition(){if(bubbleRAF)cancelAnimationFrame(bubbleRAF);bubbleRAF=requestAnimationFrame(()=>{bubbleRAF=0;positionAllBubbles()})}
+function relRect(r,scene){return{x:r.left-scene.left,y:r.top-scene.top,w:r.width,h:r.height,right:r.right-scene.left,bottom:r.bottom-scene.top}}
+function overlapArea(a,b){const w=Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x)),h=Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));return w*h}
+function clampCandidate(c,bw,bh,sw,sh,minY){return{x:clamp(c.x,8,Math.max(8,sw-bw-8)),y:clamp(c.y,minY,Math.max(minY,sh-bh-8)),w:bw,h:bh}}
+function chooseBubbleRect(sceneRect,speakerRect,bw,bh,narrRect,occupied,otherPeople){
+  const sw=sceneRect.width,sh=sceneRect.height,headX=speakerRect.x+speakerRect.w/2,headY=speakerRect.y+Math.min(24,speakerRect.h*.14);const minY=narrRect?Math.min(sh-bh-8,narrRect.bottom+8):8;
+  const raw=[
+    {x:headX-bw/2,y:speakerRect.y-bh-15},
+    {x:speakerRect.right+12,y:speakerRect.y-bh*.28},
+    {x:speakerRect.x-bw-12,y:speakerRect.y-bh*.28},
+    {x:headX+14,y:speakerRect.y-bh-12},
+    {x:headX-bw-14,y:speakerRect.y-bh-12},
+    {x:speakerRect.right+10,y:speakerRect.y+speakerRect.h*.08},
+    {x:speakerRect.x-bw-10,y:speakerRect.y+speakerRect.h*.08}
+  ];
+  let best=null,bestScore=Infinity;
+  for(const c0 of raw){
+    const overflow=Math.max(0,-c0.x)+Math.max(0,c0.x+bw-sw)+Math.max(0,minY-c0.y)+Math.max(0,c0.y+bh-sh);const c=clampCandidate(c0,bw,bh,sw,sh,minY);
+    let score=overflow*800+overlapArea(c,speakerRect)*300;
+    if(narrRect)score+=overlapArea(c,narrRect)*250;
+    for(const o of occupied)score+=overlapArea(c,o)*220;
+    for(const person of otherPeople)score+=overlapArea(c,person)*35;
+    const dx=(c.x+c.w/2)-headX,dy=(c.y+c.h/2)-headY;score+=Math.hypot(dx,dy)*.35;
+    if(score<bestScore){bestScore=score;best=c}
+  }
+  return best||clampCandidate({x:headX-bw/2,y:speakerRect.y-bh-15},bw,bh,sw,sh,minY)
+}
+function nearestEdgeBase(rect,tip){
+  const cx=rect.x+rect.w/2,cy=rect.y+rect.h/2,dx=tip.x-cx,dy=tip.y-cy;let p1,p2;
+  if(Math.abs(dx/Math.max(1,rect.w))>Math.abs(dy/Math.max(1,rect.h))){const x=dx>0?rect.x+rect.w:rect.x;const y=clamp(tip.y,rect.y+12,rect.y+rect.h-12);p1={x,y:y-8};p2={x,y:y+8}}
+  else{const y=dy>0?rect.y+rect.h:rect.y;const x=clamp(tip.x,rect.x+14,rect.x+rect.w-14);p1={x:x-9,y};p2={x:x+9,y}}
+  return{p1,p2,center:{x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2}}
+}
+function drawTail(svg,rect,head,type){
+  const ns='http://www.w3.org/2000/svg',base=nearestEdgeBase(rect,head);
+  if(type==='thought'){
+    [0.38,0.72].forEach((t,i)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',String(base.center.x+(head.x-base.center.x)*t));c.setAttribute('cy',String(base.center.y+(head.y-base.center.y)*t));c.setAttribute('r',String(i?4.2:6));c.setAttribute('fill','#fff');c.setAttribute('stroke','#222');c.setAttribute('stroke-width','2.5');svg.appendChild(c)})
+  }else{
+    const poly=document.createElementNS(ns,'polygon');poly.setAttribute('points',`${base.p1.x},${base.p1.y} ${base.p2.x},${base.p2.y} ${head.x},${head.y}`);poly.setAttribute('fill','#fff');poly.setAttribute('stroke','#222');poly.setAttribute('stroke-width','2.5');poly.setAttribute('stroke-linejoin','round');svg.appendChild(poly)
+  }
+}
+function positionAllBubbles(){
+  const scene=$('#scene'),sceneRect=scene.getBoundingClientRect();if(!sceneRect.width||!sceneRect.height)return;const svg=$('#bubbleTailSvg');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);
+  const narr=$('#narrationPreview');let narrRect=null;if(narr&&narr.textContent.trim()&&narr.offsetParent!==null)narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
+  const people=[...document.querySelectorAll('.sceneEl')].map(x=>relRect(x.getBoundingClientRect(),sceneRect));const occupied=[];
+  for(const b of $$('#bubbleLayer .speechBubble')){
+    const spDom=$(`.sceneEl[data-id="${b.dataset.speakerId}"]`);if(!spDom)continue;const sp=relRect(spDom.getBoundingClientRect(),sceneRect);const br=b.getBoundingClientRect();const bw=br.width,bh=br.height;const otherPeople=people.filter(r=>r!==sp);const chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);const head={x:sp.x+sp.w/2,y:sp.y+Math.min(24,sp.h*.14)};drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
+  }
 }
 function startDrag(ev){
   ev.preventDefault();ev.stopPropagation();const id=ev.currentTarget.dataset.id;selectedId=id;const e=cur().elements.find(x=>x.id===id);if(!e)return;renderInspector();renderScene();
   const rect=$('#scene').getBoundingClientRect(),startX=ev.clientX,startY=ev.clientY,ox=e.x,oy=e.y;
-  const move=mv=>{e.x=clamp(ox+(mv.clientX-startX)/rect.width*100,0,100-e.w);e.y=clamp(oy+(mv.clientY-startY)/rect.height*100,17,89);const dom=$(`.sceneEl[data-id="${id}"]`);if(dom){dom.style.left=e.x+'%';dom.style.top=e.y+'%'}positionBubble();renderThumbs();scheduleSave()};
+  const move=mv=>{mv.preventDefault?.();e.x=clamp(ox+(mv.clientX-startX)/rect.width*100,0,100-e.w);e.y=clamp(oy+(mv.clientY-startY)/rect.height*100,17,89);const dom=$(`.sceneEl[data-id="${id}"]`);if(dom){dom.style.left=e.x+'%';dom.style.top=e.y+'%'}queueBubblePosition();renderThumbs();scheduleSave()};
   const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);renderAll()};window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',up,{once:true})
 }
+function renderBubbleLibraryStatus(){const el=$('#bubbleLibraryStatus');if(!el)return;const p=cur(),items=p.dialogues.filter(d=>p.elements.some(e=>e.id===d.speakerId));if(!items.length){el.innerHTML='Aucune bulle dans cette vignette.';return}el.innerHTML=`<strong>${items.length} personnage${items.length>1?'s':''} parle${items.length>1?'nt':''}.</strong><br>${items.map(d=>{const e=p.elements.find(x=>x.id===d.speakerId),a=e&&assetMap[e.assetId];return '• '+escapeHTML(a?a.label:'Personnage')+(d.text?' : « '+escapeHTML(d.text.slice(0,35))+(d.text.length>35?'…':'')+' »':'')}).join('<br>')}`}
+function renderBubbleEditor(){
+  const p=cur(),host=$('#bubbleEditor'),e=getSelected();if(!host)return;
+  if(!e||e.kind!=='character'){
+    const count=p.dialogues.length;host.innerHTML=`<div class="bubbleEditorEmpty">Sélectionne un personnage dans la vignette pour ${count?'ajouter ou modifier sa bulle':'lui ajouter une bulle'}. ${count?`<strong>${count} personnage${count>1?'s ont':' a'} déjà une bulle.</strong>`:''}</div>`+bubbleRosterHTML(p);bindBubbleRoster();return
+  }
+  const a=assetMap[e.assetId],d=dialogueForSpeaker(p,e.id);
+  if(!d){host.innerHTML=`<div class="bubbleOwner">🧍 ${escapeHTML(a.label)}</div><button class="addBubbleBtn" id="addBubbleToSelected">💬 Ajouter une bulle à ce personnage</button>`+bubbleRosterHTML(p);$('#addBubbleToSelected').onclick=()=>{const nd={id:uid(),speakerId:e.id,text:'',type:'speech'};p.dialogues.push(nd);renderScene();renderInspector();scheduleSave();setTimeout(()=>$('#bubbleInput')?.focus(),0)};bindBubbleRoster();return}
+  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div>`+bubbleRosterHTML(p,e.id);
+  $('#bubbleInput').addEventListener('input',ev=>{d.text=ev.target.value;renderBubbles();renderThumbs();scheduleSave()});
+  $('#kindSpeech').onclick=()=>{d.type='speech';renderScene();renderInspector();scheduleSave()};$('#kindThought').onclick=()=>{d.type='thought';renderScene();renderInspector();scheduleSave()};
+  $('#deleteBubble').onclick=()=>{p.dialogues=p.dialogues.filter(x=>x.id!==d.id);renderAll();scheduleSave();toast('Bulle supprimée')};bindBubbleRoster()
+}
+function bubbleRosterHTML(p,current=''){
+  if(!p.dialogues.length)return'';return `<div class="bubbleRoster"><div class="bubbleRosterTitle">Personnages qui parlent dans cette case</div>${p.dialogues.map(d=>{const e=p.elements.find(x=>x.id===d.speakerId),a=e&&assetMap[e.assetId];if(!e||!a)return'';return `<div class="bubbleRosterItem">${d.type==='thought'?'☁️':'💬'} ${escapeHTML(a.label)}${d.speakerId===current?' ✓':''}<button type="button" data-select-speaker="${d.speakerId}">Sélectionner</button></div>`}).join('')}</div>`
+}
+function bindBubbleRoster(){$$('[data-select-speaker]').forEach(b=>b.onclick=()=>{selectedId=b.dataset.selectSpeaker;renderScene();renderInspector()})}
 function renderInspector(){
-  const p=cur(),host=$('#selectionTools');$('#inspectorPanelNum').textContent=`n° ${state.current+1} / 8`;$('#narrationInput').value=p.narration||'';$('#bubbleInput').value=p.bubble||'';
-  const e=getSelected();if(!e){host.innerHTML='<div class="emptyInspector">Clique sur un personnage dans la vignette pour le modifier.</div>';return}const a=assetMap[e.assetId];host.innerHTML=`<div class="selectedInfo"><img class="selectedThumb" src="${a.src}" alt=""><div><div class="selectedName">${escapeHTML(a.label)}</div><div class="tiny">${e.kind==='character'?'personnage':'objet'}</div></div></div><div class="rowBtns">${e.kind==='character'?'<button class="toolBtn speakerBtn" id="makeSpeaker">💬 Faire parler ce personnage</button>':''}<button class="toolBtn" id="toFront">⬆ Premier plan</button><button class="toolBtn" id="toBack">⬇ Arrière-plan</button><button class="toolBtn" id="duplicateEl">⧉ Dupliquer</button><button class="toolBtn danger" id="deleteEl">🗑 Supprimer</button><button class="toolBtn" id="alignOne">↧ Aligner au sol</button><button class="toolBtn" id="flipEl">↔ Retourner</button></div><div class="rangeRow"><span>Petit</span><input id="sizeRange" type="range" min="6" max="32" step="1" value="${e.w}"><span>Grand</span></div>`;
-  $('#makeSpeaker')?.addEventListener('click',()=>{p.speakerId=e.id;renderAll();scheduleSave();toast('La bulle suivra maintenant ce personnage')});
-  $('#toFront').onclick=()=>{e.z=Math.max(0,...p.elements.map(x=>x.z))+1;renderAll();scheduleSave();toast('Passé au premier plan')};
-  $('#toBack').onclick=()=>{e.z=Math.min(0,...p.elements.map(x=>x.z))-1;renderAll();scheduleSave();toast("Passé à l’arrière-plan")};
-  $('#duplicateEl').onclick=()=>{const copy={...e,id:uid(),x:clamp(e.x+6,0,100-e.w),y:clamp(e.y+2,17,89),z:Math.max(...p.elements.map(x=>x.z))+1};p.elements.push(copy);selectedId=copy.id;renderAll();scheduleSave();toast('Copie créée : utile pour faire un groupe de villageois')};
-  $('#deleteEl').onclick=()=>{p.elements=p.elements.filter(x=>x.id!==e.id);if(p.speakerId===e.id){const first=p.elements.find(x=>x.kind==='character');p.speakerId=first?first.id:null}selectedId=null;renderAll();scheduleSave()};
-  $('#alignOne').onclick=()=>{alignElementToGround(e);renderAll();scheduleSave()};
-  $('#flipEl').onclick=()=>{e.flip=!e.flip;renderAll();scheduleSave()};
+  const p=cur(),host=$('#selectionTools');$('#inspectorPanelNum').textContent=`n° ${state.current+1} / 8`;$('#narrationInput').value=p.narration||'';renderBubbleEditor();
+  const e=getSelected();if(!e){host.innerHTML='<div class="emptyInspector">Clique sur un personnage dans la vignette pour le modifier.</div>';return}const a=assetMap[e.assetId];const d=e.kind==='character'?dialogueForSpeaker(p,e.id):null;
+  host.innerHTML=`<div class="selectedInfo"><img class="selectedThumb" src="${a.src}" alt=""><div><div class="selectedName">${escapeHTML(a.label)}</div><div class="tiny">${e.kind==='character'?'personnage':'objet'}</div></div></div><div class="rowBtns">${e.kind==='character'?`<button class="toolBtn speakerBtn" id="bubbleShortcut">${d?'💬 Modifier sa bulle':'💬 Faire parler ce personnage'}</button>`:''}<button class="toolBtn" id="toFront">⬆ Premier plan</button><button class="toolBtn" id="toBack">⬇ Arrière-plan</button><button class="toolBtn" id="duplicateEl">⧉ Dupliquer</button><button class="toolBtn danger" id="deleteEl">🗑 Supprimer</button><button class="toolBtn" id="alignOne">↧ Aligner au sol</button><button class="toolBtn" id="flipEl">↔ Retourner</button></div><div class="rangeRow"><span>Petit</span><input id="sizeRange" type="range" min="6" max="32" step="1" value="${e.w}"><span>Grand</span></div>`;
+  $('#bubbleShortcut')?.addEventListener('click',()=>{if(!dialogueForSpeaker(p,e.id))p.dialogues.push({id:uid(),speakerId:e.id,text:'',type:'speech'});renderScene();renderInspector();setTimeout(()=>$('#bubbleInput')?.focus(),0);scheduleSave()});
+  $('#toFront').onclick=()=>{const ordered=p.elements.slice().sort((a,b)=>a.z-b.z).filter(x=>x.id!==e.id);ordered.push(e);ordered.forEach((x,i)=>x.z=i+1);renderAll();scheduleSave();toast('Passé au premier plan')};
+  $('#toBack').onclick=()=>{const ordered=p.elements.slice().sort((a,b)=>a.z-b.z).filter(x=>x.id!==e.id);ordered.unshift(e);ordered.forEach((x,i)=>x.z=i+1);renderAll();scheduleSave();toast("Passé à l’arrière-plan")};
+  $('#duplicateEl').onclick=()=>{const maxZ=Math.max(0,...p.elements.map(x=>x.z||0));const copy={...e,id:uid(),x:clamp(e.x+6,0,100-e.w),y:clamp(e.y+2,17,89),z:maxZ+1};p.elements.push(copy);normalizeZ(p);selectedId=copy.id;renderAll();scheduleSave();toast('Copie créée (sans bulle)')};
+  $('#deleteEl').onclick=()=>{p.elements=p.elements.filter(x=>x.id!==e.id);p.dialogues=p.dialogues.filter(d=>d.speakerId!==e.id);normalizeZ(p);selectedId=null;renderAll();scheduleSave()};
+  $('#alignOne').onclick=()=>{alignElementToGround(e);renderAll();scheduleSave()};$('#flipEl').onclick=()=>{e.flip=!e.flip;renderAll();scheduleSave()};
   $('#sizeRange').addEventListener('input',ev=>{e.w=Number(ev.target.value);e.x=clamp(e.x,0,100-e.w);renderScene();renderThumbs();scheduleSave()})
 }
 function alignElementToGround(e){const scene=$('#scene').getBoundingClientRect();const dom=$(`.sceneEl[data-id="${e.id}"]`);if(dom){const r=dom.getBoundingClientRect();const hPct=r.height/scene.height*100;e.y=clamp(97-hPct,17,89)}else e.y=62}
 function renderThumbs(){
-  const host=$('#thumbs');host.innerHTML='';state.panels.forEach((p,i)=>{const b=document.createElement('button');b.className='thumb'+(i===state.current?' active':'')+(!p.momentId&&!p.elements.length&&!p.narration&&!p.bubble?' empty':'');b.type='button';b.innerHTML=`<span class="thumbNum">${i+1}</span>`;const d=decors[p.decorId]||decors.village;const bg=document.createElement('img');bg.className='miniBg';bg.src=d.src;b.appendChild(bg);p.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='miniEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=Math.max(15,e.y-5)+'%';im.style.width=e.w+'%';im.style.transform=e.flip?'scaleX(-1)':'';b.appendChild(im)});b.addEventListener('click',()=>{state.current=i;selectedId=null;renderAll();scheduleSave()});host.appendChild(b)})
+  const host=$('#thumbs');host.innerHTML='';state.panels.forEach((p,i)=>{const empty=!p.momentId&&!p.elements.length&&!p.narration&&!hasAnyTextBubble(p);const b=document.createElement('button');b.className='thumb'+(i===state.current?' active':'')+(empty?' empty':'');b.type='button';b.innerHTML=`<span class="thumbNum">${i+1}</span>`;const d=decors[p.decorId]||decors.village;const bg=document.createElement('img');bg.className='miniBg';bg.src=d.src;b.appendChild(bg);p.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='miniEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=Math.max(15,e.y-5)+'%';im.style.width=e.w+'%';im.style.transform=e.flip?'scaleX(-1)':'';b.appendChild(im)});b.addEventListener('click',()=>{state.current=i;selectedId=null;renderAll();scheduleSave()});host.appendChild(b)})
 }
-function renderAll(){renderMomentSelect();renderDecorLibrary();renderScene();renderInspector();renderThumbs();$('#panelNum').textContent=state.current+1;$('#momentHint').textContent=momentTips[cur().momentId]||momentTips[''];$$('.bubbleTypeBtn').forEach(b=>b.classList.toggle('active',b.dataset.bubble===cur().bubbleType))}
-function changeMoment(id){
-  const p=cur(),old=momentById(p.momentId);const m=momentById(id);const shouldReplace=!p.narration||p.narration===old.narration;p.momentId=id;if(shouldReplace)p.narration=m.narration;if(m.decors?.length&&!m.decors.includes(p.decorId))p.decorId=m.decors[0];renderAll();scheduleSave();switchTab('characters')
-}
-function setBubbleType(type){cur().bubbleType=type;renderAll();scheduleSave()}
+function renderAll(){renderMomentSelect();renderDecorLibrary();renderScene();renderInspector();renderThumbs();$('#panelNum').textContent=state.current+1;$('#momentHint').textContent=momentTips[cur().momentId]||momentTips['']}
+function changeMoment(id){const p=cur(),old=momentById(p.momentId),m=momentById(id),shouldReplace=!p.narration||p.narration===old.narration;p.momentId=id;if(shouldReplace)p.narration=m.narration;if(m.decors?.length&&!m.decors.includes(p.decorId))p.decorId=m.decors[0];renderAll();scheduleSave();switchTab('characters')}
 function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
 function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
 function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
-function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:13,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:14,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function modelBubblePlacement(panel,d,index){const sp=panel.elements.find(e=>e.id===d.speakerId);if(!sp)return null;const bw=32,cx=sp.x+sp.w/2;let left=clamp(cx-bw/2,2,98-bw),top=sp.y-27-index*2;if(top<19){left=clamp(cx<50?sp.x+sp.w+2:sp.x-bw-2,2,98-bw);top=clamp(sp.y+1+index*3,19,67)}else top=clamp(top,19,67);return{left,top,bw,cx}}
 function staticScene(panel){
   const box=document.createElement('div');box.className='staticScene';const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
   if(panel.narration){const n=document.createElement('div');n.className='staticNarration';n.textContent=panel.narration;box.appendChild(n)}
   panel.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='staticEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=e.y+'%';im.style.width=e.w+'%';im.style.zIndex=String(10+e.z);im.style.transform=e.flip?'scaleX(-1)':'';box.appendChild(im)});
-  if(panel.bubble&&panel.speakerId){const sp=panel.elements.find(e=>e.id===panel.speakerId);if(sp){const cx=sp.x+sp.w/2,bw=36;let left=cx<50?sp.x+sp.w+3:sp.x-bw-3;left=clamp(left,2,98-bw);let top=clamp(sp.y-22,18,66);const s=document.createElement('div');s.className='staticBubble '+(panel.bubbleType==='thought'?'thought ':'')+(cx>left+bw/2?'tailR':'tailL');s.textContent=panel.bubble;s.style.left=left+'%';s.style.top=top+'%';box.appendChild(s)}}
-  if(!panel.momentId&&!panel.elements.length&&!panel.narration&&!panel.bubble){const em=document.createElement('div');em.className='previewEmpty';em.textContent='Vignette à compléter';box.appendChild(em)}return box
+  panel.dialogues.filter(d=>String(d.text||'').trim()).forEach((d,i)=>{const pos=modelBubblePlacement(panel,d,i);if(!pos)return;const s=document.createElement('div');s.className='staticBubble '+(d.type==='thought'?'thought ':'')+(pos.cx>pos.left+pos.bw/2?'tailR':'tailL');s.textContent=d.text;s.style.left=pos.left+'%';s.style.top=pos.top+'%';box.appendChild(s)});
+  if(!panel.momentId&&!panel.elements.length&&!panel.narration&&!hasAnyTextBubble(panel)){const em=document.createElement('div');em.className='previewEmpty';em.textContent='Vignette à compléter';box.appendChild(em)}return box
 }
 function buildPreview(){const host=$('#previewGrid');host.innerHTML='';state.panels.forEach((p,i)=>{const card=document.createElement('div');card.className='previewPanel';card.appendChild(staticScene(p));const meta=document.createElement('div');meta.className='previewMeta';meta.textContent=`Vignette ${i+1} — ${momentById(p.momentId).label.replace('— Choisir un moment —','à compléter')}`;card.appendChild(meta);host.appendChild(card)});$('#previewModal').classList.add('show')}
 function buildPrint(){const host=$('#printGrid');host.innerHTML='';state.panels.forEach(p=>{const card=document.createElement('div');card.className='printPanel';card.appendChild(staticScene(p));host.appendChild(card)})}
 function printBD(bw=false){buildPrint();document.body.classList.toggle('printBW',bw);window.print();setTimeout(()=>document.body.classList.remove('printBW'),700)}
-function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Le premier personnage ajouté devient celui qui parle. Pour changer, sélectionne un personnage puis clique sur <strong>Faire parler ce personnage</strong>.</li><li>Écris le cartouche de narration et, si tu le souhaites, une bulle.</li><li>Passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Déplacer un personnage</h3><p>Pose le doigt ou la souris sur lui et fais-le glisser. La bulle suit automatiquement le personnage qui parle.</p><h3>Premier plan / arrière-plan</h3><p>Sélectionne un personnage puis utilise les deux boutons. Ils modifient réellement l’ordre d’affichage des personnages.</p><h3>Dupliquer</h3><p>Le bouton <strong>Dupliquer</strong> crée une copie du personnage sélectionné. C’est pratique pour former un groupe de villageois sans chercher plusieurs fois le même dessin.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc. Tu peux afficher tous les décors si tu veux volontairement sortir de ces propositions.</p>`}$('#helpModal').classList.add('show')}
+function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>La bulle suit son personnage</h3><p>Chaque bulle est reliée à son personnage. Quand tu le déplaces, sa bulle est recalculée à partir de sa position réelle et sa queue pointe vers sa tête.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
 function speakText(text){if(!('speechSynthesis'in window)||!text)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);currentUtter=u;u.lang='fr-FR';u.rate=.92;window.speechSynthesis.speak(u)}
+function selectedDialogue(){const e=getSelected();return e?dialogueForSpeaker(cur(),e.id):null}
 
 // Événements
 $$('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 $('#momentSelect').addEventListener('change',e=>changeMoment(e.target.value));
 $('#showAllDecors').addEventListener('change',e=>{showAllDecors=e.target.checked;renderDecorLibrary()});
-$$('.bubbleTypeBtn').forEach(b=>b.addEventListener('click',()=>setBubbleType(b.dataset.bubble)));
-$('#narrationInput').addEventListener('input',e=>{cur().narration=e.target.value;$('#narrationPreview').textContent=e.target.value;renderThumbs();scheduleSave()});
-$('#bubbleInput').addEventListener('input',e=>{cur().bubble=e.target.value;$('#bubbleTextPreview').textContent=e.target.value;positionBubble();renderThumbs();scheduleSave()});
+$('#narrationInput').addEventListener('input',e=>{cur().narration=e.target.value;$('#narrationPreview').textContent=e.target.value;queueBubblePosition();renderThumbs();scheduleSave()});
 $('#prevPanel').addEventListener('click',()=>changePanel(-1));$('#nextPanel').addEventListener('click',()=>changePanel(1));
 $('#clearPanel').addEventListener('click',clearCurrent);$('#alignAll').addEventListener('click',alignAll);
 $('#newBD').addEventListener('click',newBD);$('#saveBtn').addEventListener('click',()=>save(true));$('#helpBtn').addEventListener('click',()=>showHelp('help'));$('#instructionsBtn').addEventListener('click',()=>showHelp('instructions'));
-$('#previewBtn').addEventListener('click',buildPreview);$('#printBtn').addEventListener('click',()=>{$('#previewModal').classList.add('show');buildPreview()});$('#printColor').addEventListener('click',()=>printBD(false));$('#printBW').addEventListener('click',()=>printBD(true));
+$('#previewBtn').addEventListener('click',buildPreview);$('#printBtn').addEventListener('click',()=>{buildPreview()});$('#printColor').addEventListener('click',()=>printBD(false));$('#printBW').addEventListener('click',()=>printBD(true));
 $$('[data-close]').forEach(b=>b.addEventListener('click',()=>$('#'+b.dataset.close).classList.remove('show')));$$('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
-$('#readNarration').addEventListener('click',()=>speakText(cur().narration));$('#readBubble').addEventListener('click',()=>speakText(cur().bubble));$('#readScene').addEventListener('click',()=>speakText([cur().narration,cur().bubble].filter(Boolean).join('. ')));$('#readHelp').addEventListener('click',()=>speakText($('#helpContent').innerText));
-window.addEventListener('beforeunload',()=>save(false));
-window.addEventListener('resize',()=>positionBubble());
+$('#readNarration').addEventListener('click',()=>speakText(cur().narration));$('#readBubble').addEventListener('click',()=>{const d=selectedDialogue();if(d)speakText(d.text);else speakText(cur().dialogues.map(x=>x.text).filter(Boolean).join('. '))});$('#readScene').addEventListener('click',()=>speakText([cur().narration,...cur().dialogues.map(d=>d.text)].filter(Boolean).join('. ')));$('#readHelp').addEventListener('click',()=>speakText($('#helpContent').innerText));
+window.addEventListener('beforeunload',()=>save(false));window.addEventListener('resize',queueBubblePosition);
 
 renderCharacterLibrary();load();renderAll();
+
 </script>
 </body>
 </html>

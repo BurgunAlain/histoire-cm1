@@ -1,35 +1,15 @@
-ATELIER BD — LA VIE DE MARTIN — V13 STUDIO
+ATELIER BD — LA VIE DE MARTIN — V14
 
-Dossier GitHub : bd-martin/
-URL : https://burgunalain.github.io/histoire-cm1/bd-martin/
+Nouveautés :
+- plusieurs personnages peuvent parler dans la même vignette ;
+- une bulle maximum par personnage ;
+- chaque bulle est liée à son personnage ;
+- position recalculée pendant le déplacement ;
+- queue de bulle orientée vers la tête ;
+- dialogues et pensées ;
+- migration automatique de la bulle unique de la V13 ;
+- premier plan / arrière-plan réécrits avec un ordre de calques normalisé ;
+- Dupliquer crée une copie visuelle sans dupliquer la parole.
 
-Cette version remplace l’ancienne version de l’atelier BD.
-
-Principales fonctions :
-- 8 vignettes indépendantes ;
-- sauvegarde automatique locale dans le navigateur ;
-- choix du moment et décors adaptés automatiquement ;
-- personnages déplaçables à la souris ou au doigt ;
-- véritable premier plan / arrière-plan ;
-- duplication d’un personnage ;
-- redimensionnement, retournement, alignement au sol ;
-- premier personnage ajouté = personnage parlant ;
-- possibilité de choisir ensuite un autre personnage parlant ;
-- bulle attachée automatiquement au personnage parlant ;
-- cartouche narratif en haut ;
-- bulle de dialogue ou de pensée ;
-- aperçu des 8 cases ;
-- impression couleur ou noir et blanc ;
-- lecture vocale des textes.
-
-IMPORTANT :
-Martin est un enfant du village au Moyen Âge. Ce n’est pas saint Martin.
-Les anciennes poses floues « Martin qui prie » et « Martin qui aide » ont été retirées volontairement.
-
-Pour mettre à jour GitHub :
-1. ouvrir le dossier bd-martin dans le dépôt ;
-2. remplacer son contenu par les fichiers de ce ZIP ;
-3. conserver le nom du dossier bd-martin ;
-4. attendre le redéploiement GitHub Pages puis faire Ctrl+F5.
-
-Le QR existant reste valable car l’URL ne change pas.
+URL inchangée :
+https://burgunalain.github.io/histoire-cm1/bd-martin/
