@@ -58,6 +58,7 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 
 .bubbleTailSvg{position:absolute;inset:0;width:100%;height:100%;z-index:949;pointer-events:none;overflow:visible}
 .bubbleLayer{position:absolute;inset:0;z-index:950;pointer-events:none}
+.tailHandleLayer{position:absolute;inset:0;z-index:1100;pointer-events:none}.tailHandle{position:absolute;width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%);background:#ffdf55;border:3px solid #4d36a4;box-shadow:0 2px 6px rgba(0,0,0,.28);pointer-events:auto;touch-action:none;cursor:grab;display:grid;place-items:center;font-size:12px;font-weight:900;color:#3d2d79}.tailHandle:active{cursor:grabbing}.tailHandle::after{content:'•';font-size:20px;line-height:1;transform:translateY(-1px)}.tailHandleHint{font-size:11px;line-height:1.3;color:#6d6487;background:#fff8cf;border:1px solid #ead98a;border-radius:8px;padding:7px 8px;margin-top:7px}.tailResetBtn{grid-column:1/-1;border:2px solid #d7d1ea;border-radius:9px;background:#fff;color:#4d388d;padding:7px;font-weight:850;font-size:12px}
 .bubbleLayer .speechBubble{position:absolute;display:block}
 .bubbleOwner{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:#493887;margin-bottom:7px;padding:6px 8px;background:#f6f2ff;border-radius:8px}
 .bubbleEditorEmpty{font-size:12px;line-height:1.35;color:#6a7182;background:#f8f8fb;border-radius:9px;padding:9px}
@@ -127,6 +128,7 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
           <div class="sceneElements" id="sceneElements"></div>
           <svg class="bubbleTailSvg" id="bubbleTailSvg" aria-hidden="true"></svg>
           <div class="bubbleLayer" id="bubbleLayer"></div>
+          <div class="tailHandleLayer" id="tailHandleLayer"></div>
         </div>
       </div>
       <div class="tipBar"><strong>Astuce :</strong> déplace les personnages directement dans la case. Chaque personnage marqué 💬 possède sa propre bulle : plusieurs personnages peuvent parler dans la même vignette.</div>
@@ -244,7 +246,7 @@ const assets=[
 const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function blankPanel(){return{momentId:'',decorId:'village',narration:'',dialogues:[],elements:[]}}
-let state={version:19,current:0,panels:Array.from({length:8},blankPanel)};
+let state={version:20,current:0,panels:Array.from({length:8},blankPanel)};
 let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -260,7 +262,7 @@ function migratePanel(p){
   if(p.bubble&&p.speakerId&&!p.dialogues.some(d=>d.speakerId===p.speakerId)){
     p.dialogues.push({id:uid(),speakerId:p.speakerId,text:String(p.bubble),type:p.bubbleType==='thought'?'thought':'speech'});
   }
-  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>({id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech',bx:Number.isFinite(Number(d.bx))?Number(d.bx):null,by:Number.isFinite(Number(d.by))?Number(d.by):null}));
+  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>({id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech',bx:Number.isFinite(Number(d.bx))?Number(d.bx):null,by:Number.isFinite(Number(d.by))?Number(d.by):null,tx:Number.isFinite(Number(d.tx))?Number(d.tx):null,ty:Number.isFinite(Number(d.ty))?Number(d.ty):null}));
   const seen=new Set();p.dialogues=p.dialogues.filter(d=>!seen.has(d.speakerId)&&(seen.add(d.speakerId),true));
   delete p.bubble;delete p.bubbleType;delete p.speakerId;
   if(!p.decorId)p.decorId='village';if(typeof p.narration!=='string')p.narration='';if(typeof p.momentId!=='string')p.momentId='';
@@ -271,7 +273,7 @@ function load(){
     let raw=localStorage.getItem(STORAGE_KEY),fromOld=false;
     if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw){fromOld=true;break}}}
     if(!raw)return;const obj=JSON.parse(raw);
-    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=19;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
+    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=20;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
   }catch(e){}
 }
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
@@ -303,7 +305,7 @@ function renderScene(){
   $('#scene').onclick=ev=>{if(ev.target.id==='scene'||ev.target.id==='sceneBg'||ev.target.classList.contains('sceneShade')){selectedId=null;renderScene();renderInspector()}}
 }
 function renderBubbles(){
-  const p=cur(),host=$('#bubbleLayer');host.innerHTML='';$('#bubbleTailSvg').innerHTML='';
+  const p=cur(),host=$('#bubbleLayer');host.innerHTML='';$('#bubbleTailSvg').innerHTML='';$('#tailHandleLayer').innerHTML='';
   p.dialogues.forEach(d=>{if(!String(d.text||'').trim()||!p.elements.some(e=>e.id===d.speakerId))return;const b=document.createElement('div');b.className='speechBubble '+(d.type==='thought'?'thought':'');b.dataset.dialogueId=d.id;b.dataset.speakerId=d.speakerId;b.textContent=d.text;host.appendChild(b)});
   queueBubblePosition();renderBubbleLibraryStatus();
 }
@@ -373,12 +375,30 @@ function drawTail(svg,rect,head,type){
     svg.appendChild(poly);
   }
 }
+function dialogueTipPoint(d,speakerRect,bubbleRect,sceneRect){
+  if(d&&Number.isFinite(Number(d.tx))&&Number.isFinite(Number(d.ty))){
+    return{x:clamp(Number(d.tx)/100*sceneRect.width,3,sceneRect.width-3),y:clamp(Number(d.ty)/100*sceneRect.height,3,sceneRect.height-3)};
+  }
+  return speakerTipPoint(speakerRect,bubbleRect);
+}
+function renderTailHandle(d,tip,sceneRect){
+  const layer=$('#tailHandleLayer');if(!layer||!d||d.speakerId!==selectedId)return;
+  const h=document.createElement('div');h.className='tailHandle';h.title='Fais glisser cette poignée jusqu’à la bouche du personnage';h.style.left=tip.x+'px';h.style.top=tip.y+'px';h.dataset.dialogueId=d.id;
+  h.addEventListener('pointerdown',startTailDrag);layer.appendChild(h)
+}
+function startTailDrag(ev){
+  ev.preventDefault();ev.stopPropagation();const dialogueId=ev.currentTarget.dataset.dialogueId,d=cur().dialogues.find(x=>x.id===dialogueId);if(!d)return;
+  const scene=$('#scene');
+  const move=mv=>{mv.preventDefault?.();const r=scene.getBoundingClientRect();d.tx=clamp((mv.clientX-r.left)/r.width*100,0,100);d.ty=clamp((mv.clientY-r.top)/r.height*100,0,100);queueBubblePosition();scheduleSave()};
+  const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);renderScene();renderInspector();scheduleSave()};
+  window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',up,{once:true})
+}
 function positionAllBubbles(){
   const scene=$('#scene'),sceneRect=scene.getBoundingClientRect();if(!sceneRect.width||!sceneRect.height)return;const svg=$('#bubbleTailSvg');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);
   const narr=$('#narrationPreview');let narrRect=null;if(narr&&narr.textContent.trim()&&narr.offsetParent!==null)narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
   const people=[...document.querySelectorAll('.sceneEl')].map(x=>relRect(x.getBoundingClientRect(),sceneRect));const occupied=[];
   for(const b of $$('#bubbleLayer .speechBubble')){
-    const spDom=$(`.sceneEl[data-id="${b.dataset.speakerId}"]`);if(!spDom)continue;const sp=relRect(spDom.getBoundingClientRect(),sceneRect);const br=b.getBoundingClientRect();const bw=br.width,bh=br.height;const otherPeople=people.filter(r=>r!==sp);const chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);const d=cur().dialogues.find(x=>x.id===b.dataset.dialogueId);if(d){d.bx=chosen.x/sceneRect.width*100;d.by=chosen.y/sceneRect.height*100}const head=speakerTipPoint(sp,chosen);drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
+    const spDom=$(`.sceneEl[data-id="${b.dataset.speakerId}"]`);if(!spDom)continue;const sp=relRect(spDom.getBoundingClientRect(),sceneRect);const br=b.getBoundingClientRect();const bw=br.width,bh=br.height;const otherPeople=people.filter(r=>r!==sp);const chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);const d=cur().dialogues.find(x=>x.id===b.dataset.dialogueId);if(d){d.bx=chosen.x/sceneRect.width*100;d.by=chosen.y/sceneRect.height*100}const head=dialogueTipPoint(d,sp,chosen,sceneRect);drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech');renderTailHandle(d,head,sceneRect)
   }
 }
 function startDrag(ev){
@@ -395,9 +415,10 @@ function renderBubbleEditor(){
   }
   const a=assetMap[e.assetId],d=dialogueForSpeaker(p,e.id);
   if(!d){host.innerHTML=`<div class="bubbleOwner">🧍 ${escapeHTML(a.label)}</div><button class="addBubbleBtn" id="addBubbleToSelected">💬 Ajouter une bulle à ce personnage</button>`+bubbleRosterHTML(p);$('#addBubbleToSelected').onclick=()=>{const nd={id:uid(),speakerId:e.id,text:'',type:'speech'};p.dialogues.push(nd);renderScene();renderInspector();scheduleSave();setTimeout(()=>$('#bubbleInput')?.focus(),0)};bindBubbleRoster();return}
-  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div>`+bubbleRosterHTML(p,e.id);
+  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser la queue</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint">🟡 <strong>Queue réglable :</strong> fais glisser la poignée jaune dans la vignette jusqu’à la bouche de ce personnage.</div>`+bubbleRosterHTML(p,e.id);
   $('#bubbleInput').addEventListener('input',ev=>{d.text=ev.target.value;renderBubbles();renderThumbs();scheduleSave()});
   $('#kindSpeech').onclick=()=>{d.type='speech';renderScene();renderInspector();scheduleSave()};$('#kindThought').onclick=()=>{d.type='thought';renderScene();renderInspector();scheduleSave()};
+  $('#resetTail').onclick=()=>{d.tx=null;d.ty=null;renderScene();renderInspector();scheduleSave();toast('Queue replacée automatiquement')};
   $('#deleteBubble').onclick=()=>{p.dialogues=p.dialogues.filter(x=>x.id!==d.id);renderAll();scheduleSave();toast('Bulle supprimée')};bindBubbleRoster()
 }
 function bubbleRosterHTML(p,current=''){
@@ -425,7 +446,7 @@ function changeMoment(id){const p=cur(),old=momentById(p.momentId),m=momentById(
 function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
 function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
 function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
-function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:19,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:20,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
 function staticScene(panel){
   const box=document.createElement('div');box.className='staticScene';box._panel=panel;
   const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
@@ -454,7 +475,7 @@ function positionStaticBubbles(box){
       chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);
     }
     b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);
-    const head=speakerTipPoint(sp,chosen);
+    const head=dialogueTipPoint(d,sp,chosen,sceneRect);
     drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
   }
 }
@@ -474,7 +495,7 @@ function printBD(bw=false){
   scheduleStaticLayouts(area);
   setTimeout(()=>{area.setAttribute('style',old);window.print();setTimeout(()=>document.body.classList.remove('printBW'),700)},140)
 }
-function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>La bulle suit son personnage</h3><p>Chaque bulle est reliée à son personnage. Quand tu le déplaces, sa bulle est recalculée à partir de sa position réelle et sa queue pointe vers sa tête. L’aperçu et l’impression conservent ensuite exactement cette mise en page.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
+function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>La bulle suit son personnage</h3><p>Chaque bulle reste liée à son personnage. Quand tu le déplaces, la bulle suit sa position. Pour régler précisément la queue, sélectionne le personnage puis <strong>fais glisser la poignée jaune jusqu’à sa bouche</strong>. L’aperçu et l’impression conservent exactement ce réglage.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
 function speakText(text){if(!('speechSynthesis'in window)||!text)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);currentUtter=u;u.lang='fr-FR';u.rate=.92;window.speechSynthesis.speak(u)}
 function selectedDialogue(){const e=getSelected();return e?dialogueForSpeaker(cur(),e.id):null}
 
