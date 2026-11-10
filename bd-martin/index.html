@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- BUILD: 2026-11-10-v23-manual-fixed-tail-base -->
+<!-- BUILD: 2026-11-10-v23-manual-fixed-tail-base-thought-circles -->
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -371,20 +371,33 @@ function reflowBubbleText(d){
   placeBaseAtAngle(d,center);
 }
 function bubbleGraphic(d,interactive=false){
-  const g=svgNode('g',{'data-dialogue-id':d.id,'data-geometry':JSON.stringify([d.bx,d.by,d.bw,d.bh,d.baseLeft,d.baseRight,d.tx,d.ty,d.lines])});
+  const g=svgNode('g',{'data-dialogue-id':d.id,'data-bubble-type':d.type,'data-geometry':JSON.stringify([d.bx,d.by,d.bw,d.bh,d.baseLeft,d.baseRight,d.tx,d.ty,d.lines])});
   const x=d.bx*10,y=d.by*5.625,w=d.bw*10,h=d.bh*5.625;
   const a={x:d.baseLeft.x*10,y:d.baseLeft.y*5.625},b={x:d.baseRight.x*10,y:d.baseRight.y*5.625},t={x:d.tx*10,y:d.ty*5.625};
   const ellipse={cx:x+w/2,cy:y+h/2,rx:w/2,ry:h/2};
-  const points=`${a.x},${a.y} ${b.x},${b.y} ${t.x},${t.y}`;
-  const id='bubbleUnion'+(++graphicSerial),defs=svgNode('defs');
-  // Draw the union: neither the triangle base nor the covered ellipse arc is stroked.
-  for(const [name,shape] of [['body',svgNode('polygon',{points,fill:'black'})],['tail',svgNode('ellipse',{...ellipse,fill:'black'})]]){
-    const mask=svgNode('mask',{id:id+name,maskUnits:'userSpaceOnUse',x:-1000,y:-1000,width:3000,height:2563,'mask-type':'luminance'});
-    mask.append(svgNode('rect',{x:-1000,y:-1000,width:3000,height:2563,fill:'white'}),shape);defs.append(mask);
-  }
-  g.append(defs,svgNode('polygon',{points,fill:'#fff'}),svgNode('ellipse',{...ellipse,fill:'#fff'}));
   const stroke={fill:'none',stroke:'#222','stroke-width':3,'stroke-linejoin':'round'};
-  g.append(svgNode('ellipse',{...ellipse,...stroke,mask:`url(#${id}body)`,'stroke-dasharray':d.type==='thought'?'7 5':'none'}),svgNode('polyline',{points:`${a.x},${a.y} ${t.x},${t.y} ${b.x},${b.y}`,...stroke,mask:`url(#${id}tail)`}));
+  if(d.type==='thought'){
+    // The saved attachment and mouth point also define the thought trail.
+    // It is one shared drawing in all modes, without any triangle or body cutout.
+    const anchor={x:(a.x+b.x)/2,y:(a.y+b.y)/2},dx=anchor.x-t.x,dy=anchor.y-t.y;
+    const length=Math.hypot(dx,dy),scale=Math.min(1,length/90);
+    if(length>.001){
+      [[0,3.5],[.42,7],[.82,10]].forEach(([fraction,radius],i)=>{
+        g.append(svgNode('circle',{'data-thought-ring':i,cx:t.x+dx*fraction,cy:t.y+dy*fraction,r:radius*scale,fill:'#fff',stroke:'#222','stroke-width':2.5*scale}));
+      });
+    }
+    g.append(svgNode('ellipse',{...ellipse,...stroke,fill:'#fff','stroke-dasharray':'7 5'}));
+  }else{
+    const points=`${a.x},${a.y} ${b.x},${b.y} ${t.x},${t.y}`;
+    const id='bubbleUnion'+(++graphicSerial),defs=svgNode('defs');
+    // Draw the union: neither the triangle base nor the covered ellipse arc is stroked.
+    for(const [name,shape] of [['body',svgNode('polygon',{points,fill:'black'})],['tail',svgNode('ellipse',{...ellipse,fill:'black'})]]){
+      const mask=svgNode('mask',{id:id+name,maskUnits:'userSpaceOnUse',x:-1000,y:-1000,width:3000,height:2563,'mask-type':'luminance'});
+      mask.append(svgNode('rect',{x:-1000,y:-1000,width:3000,height:2563,fill:'white'}),shape);defs.append(mask);
+    }
+    g.append(defs,svgNode('polygon',{points,fill:'#fff'}),svgNode('ellipse',{...ellipse,fill:'#fff'}));
+    g.append(svgNode('ellipse',{...ellipse,...stroke,mask:`url(#${id}body)`,'stroke-dasharray':'none'}),svgNode('polyline',{points:`${a.x},${a.y} ${t.x},${t.y} ${b.x},${b.y}`,...stroke,mask:`url(#${id}tail)`}));
+  }
   const body=svgNode('g',interactive?{class:'bubbleBody',role:'button',tabindex:0,'aria-label':'Déplacer la bulle : '+(d.text||'bulle vide')}:{class:'bubbleContent'});
   body.append(svgNode('ellipse',{...ellipse,fill:'transparent'}));
   const text=svgNode('text',{x:x+w/2,y:y+h/2-(d.lines.length-1)*10.5+6,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':18,'font-weight':800,fill:'#27324a','pointer-events':'none'});
@@ -426,7 +439,7 @@ function renderTailHandles(){
   const length=Math.hypot(right.x-left.x,right.y-left.y)||1,extra=Math.max(0,(56-length)/2),ux=(right.x-left.x)/length,uy=(right.y-left.y)/length;
   // Offset the grips when the fixed join is small on screen. Dots show the true endpoints.
   for(const h of layer.querySelectorAll('.tailHandle')){
-    const key=h.dataset.point,pt=key==='tip'?{x:d.tx,y:d.ty}:d[key],sign=key==='baseLeft'?-1:key==='baseRight'?1:0;
+    const key=h.dataset.point;const label=d.type==='thought'?(key==='tip'?'Petit rond près du personnage':key==='baseLeft'?'Départ des ronds — poignée gauche':'Départ des ronds — poignée droite'):(key==='tip'?'Pointe du triangle':key==='baseLeft'?'Extrémité gauche de la base du triangle':'Extrémité droite de la base du triangle');h.title=label;h.setAttribute('aria-label',label);const pt=key==='tip'?{x:d.tx,y:d.ty}:d[key],sign=key==='baseLeft'?-1:key==='baseRight'?1:0;
     const x=clamp(pt.x*rect.width/100+sign*ux*extra,16,rect.width-16),y=clamp(pt.y*rect.height/100+sign*uy*extra,16,rect.height-16);
     const hp={x:x/rect.width*100,y:y/rect.height*100};h.dataset.offsetX=hp.x-pt.x;h.dataset.offsetY=hp.y-pt.y;h.style.left=hp.x+'%';h.style.top=hp.y+'%';
     guides.append(svgNode('line',{x1:pt.x*10,y1:pt.y*5.625,x2:hp.x*10,y2:hp.y*5.625,stroke:'#6943bd','stroke-width':1.5,'vector-effect':'non-scaling-stroke'}),svgNode('circle',{cx:pt.x*10,cy:pt.y*5.625,r:3*1000/rect.width,fill:'#6943bd'}));
@@ -476,10 +489,10 @@ function renderBubbleEditor(){
   }
   const a=assetMap[e.assetId],d=dialogueForSpeaker(p,e.id);
   if(!d){host.innerHTML=`<div class="bubbleOwner">🧍 ${escapeHTML(a.label)}</div><button class="addBubbleBtn" id="addBubbleToSelected">💬 Ajouter une bulle à ce personnage</button>`+bubbleRosterHTML(p);$('#addBubbleToSelected').onclick=()=>{const nd={id:uid(),speakerId:e.id,text:'',type:'speech'};p.dialogues.push(nd);renderScene();renderInspector();scheduleSave();setTimeout(()=>$('#bubbleInput')?.focus(),0)};bindBubbleRoster();return}
-  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser la queue</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint"><strong>Glisse la bulle</strong> pour la placer. Les poignées jaunes <strong>G / D</strong> règlent la petite jonction sur son contour, à largeur fixe ; la poignée bleue règle la <strong>pointe</strong>. La pointe reste en place quand tu déplaces la bulle. Flèches du clavier : réglage fin.</div>`+bubbleRosterHTML(p,e.id);
+  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser ${d.type==='thought'?'les ronds':'la queue'}</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint"><strong>Glisse la bulle</strong> pour la placer. ${d.type==='thought'?'Les petits ronds grossissent vers la bulle. <strong>G / D</strong> déplacent leur point de départ ; la poignée bleue place le plus petit rond près de la tête.':'Les poignées jaunes <strong>G / D</strong> règlent la petite jonction sur son contour, à largeur fixe ; la poignée bleue règle la <strong>pointe</strong>.'} Le point près du personnage reste en place quand tu déplaces la bulle. Flèches du clavier : réglage fin.</div>`+bubbleRosterHTML(p,e.id);
   $('#bubbleInput').addEventListener('input',ev=>{d.text=ev.target.value;reflowBubbleText(d);renderBubbles();renderThumbs();scheduleSave()});
   $('#kindSpeech').onclick=()=>{d.type='speech';renderScene();renderInspector();scheduleSave()};$('#kindThought').onclick=()=>{d.type='thought';renderScene();renderInspector();scheduleSave()};
-  $('#resetTail').onclick=()=>{ensureBubbleGeometry(d);resetTailGeometry(d);renderBubbles();scheduleSave();toast('Queue réinitialisée — ajuste les trois poignées')};
+  $('#resetTail').onclick=()=>{ensureBubbleGeometry(d);resetTailGeometry(d);renderBubbles();scheduleSave();toast(d.type==='thought'?'Ronds réinitialisés — ajuste les poignées':'Queue réinitialisée — ajuste les trois poignées')};
   $('#deleteBubble').onclick=()=>{p.dialogues=p.dialogues.filter(x=>x.id!==d.id);renderAll();scheduleSave();toast('Bulle supprimée')};bindBubbleRoster()
 }
 function bubbleRosterHTML(p,current=''){
