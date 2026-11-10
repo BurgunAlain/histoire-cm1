@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- BUILD: 2026-11-10-v14-multibulles -->
+<!-- BUILD: 2026-11-10-v16-wysiwyg-bulles -->
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -36,7 +36,7 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 .inspector{display:flex;flex-direction:column}.inspectorBody{padding:10px;overflow:auto;max-height:calc(100vh - 164px)}.editBlock{border:1px solid #d8d9e8;border-radius:11px;margin-bottom:10px;overflow:hidden}.editBlock h3{margin:0;padding:8px 10px;background:#f0ebfb;color:#493887;font-size:14px;display:flex;align-items:center;gap:7px}.editBlock .body{padding:9px}.editBlock textarea{width:100%;min-height:75px;border:2px solid #d8d9e8;border-radius:9px;padding:8px;resize:vertical;line-height:1.25}.rowBtns{display:grid;grid-template-columns:1fr 1fr;gap:7px}.toolBtn{border:2px solid #d8d9e8;border-radius:10px;background:#fff;padding:9px 6px;font-weight:850;font-size:12px}.toolBtn:hover{border-color:#775ac4}.toolBtn.danger{color:#b52828;border-color:#efc8c8}.toolBtn.speakerBtn{grid-column:1/-1;background:#f0ebff;border-color:#8c73d1;color:#463481}.selectedInfo{display:flex;align-items:center;gap:8px;margin-bottom:8px;background:#faf9fd;border-radius:9px;padding:7px}.selectedThumb{width:45px;height:45px;object-fit:contain}.selectedName{font-weight:900;font-size:13px}.rangeRow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin-top:8px;font-size:12px}.rangeRow input{width:100%}.smallToggle{display:flex;gap:7px;align-items:center;font-size:12px;margin-top:8px}.smallToggle input{width:18px;height:18px}.emptyInspector{font-size:13px;color:#6d7486;background:#f8f8fb;border-radius:10px;padding:11px}
 .filmstrip{margin:0 10px 10px;background:#fff;border:1px solid #d6d9e7;border-radius:15px;box-shadow:var(--shadow);display:grid;grid-template-columns:155px 1fr 220px;gap:10px;align-items:center;padding:9px}.filmTitle{background:linear-gradient(#7153bc,#5a3ba7);color:#fff;border-radius:11px;padding:12px;font-weight:900;line-height:1.15}.thumbs{display:grid;grid-template-columns:repeat(8,minmax(70px,1fr));gap:7px;min-width:0}.thumb{position:relative;border:3px solid #d8dce8;border-radius:10px;background:#eef1f5;aspect-ratio:4/3;overflow:hidden;padding:0}.thumb.active{border-color:#653fc7;box-shadow:0 0 0 2px #d8cfff}.thumbNum{position:absolute;z-index:30;top:2px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;color:#3f3482;display:grid;place-items:center;font-weight:900;font-size:12px;border:1px solid #bbb}.thumb .miniBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.thumb .miniEl{position:absolute;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}.thumb.empty::after{content:'+';position:absolute;inset:0;display:grid;place-items:center;font-size:33px;color:#9ea6b4;font-weight:900}.bottomActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bigAction{border:0;border-radius:11px;padding:12px 8px;font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.14)}.bigAction.preview{background:#39b74e;color:#fff}.bigAction.print{background:#f1e8ff;color:#4b3298;border:2px solid #8e72d4}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:2000;background:#2e3548;color:#fff;border-radius:999px;padding:10px 16px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;bottom:30px}
-.modal{position:fixed;inset:0;background:rgba(24,28,42,.72);z-index:1500;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalCard{background:#fff;width:min(1100px,96vw);max-height:92vh;overflow:auto;border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.34)}.modalHead{position:sticky;top:0;z-index:5;background:#5b3baa;color:#fff;padding:11px 14px;display:flex;align-items:center;gap:10px}.modalHead h2{margin:0;font-size:20px;flex:1}.closeBtn{border:0;border-radius:9px;background:#fff;color:#4a327e;font-weight:900;padding:7px 10px}.modalBody{padding:14px}.previewGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.previewPanel{border:3px solid #2f3548;border-radius:8px;overflow:hidden;background:#fff}.staticScene{position:relative;aspect-ratio:16/9;overflow:hidden;background:#ddd}.staticScene .sceneBg{z-index:0}.staticScene .staticEl{position:absolute;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}.staticNarration{position:absolute;z-index:50;top:2.5%;left:2.5%;right:2.5%;background:#fff0a4;border:2px solid #222;border-radius:4px;padding:6px 9px;font:700 italic 13px/1.15 Georgia,serif}.staticBubble{position:absolute;z-index:60;width:36%;background:#fff;border:2px solid #222;border-radius:50%;padding:8px;text-align:center;font-size:12px;font-weight:800;line-height:1.1}.staticBubble.thought{border-style:dashed}.staticBubble.tailL::after,.staticBubble.tailR::after{content:'';position:absolute;bottom:-14px;width:0;height:0;border-style:solid}.staticBubble.tailL::after{left:18%;border-width:14px 12px 0 0;border-color:#222 transparent transparent transparent}.staticBubble.tailR::after{right:18%;border-width:14px 0 0 12px;border-color:#222 transparent transparent transparent}.previewEmpty{display:grid;place-items:center;height:100%;font-weight:800;color:#788092}.previewMeta{font-size:11px;padding:5px 7px;color:#657084;font-weight:800}
+.modal{position:fixed;inset:0;background:rgba(24,28,42,.72);z-index:1500;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalCard{background:#fff;width:min(1100px,96vw);max-height:92vh;overflow:auto;border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.34)}.modalHead{position:sticky;top:0;z-index:5;background:#5b3baa;color:#fff;padding:11px 14px;display:flex;align-items:center;gap:10px}.modalHead h2{margin:0;font-size:20px;flex:1}.closeBtn{border:0;border-radius:9px;background:#fff;color:#4a327e;font-weight:900;padding:7px 10px}.modalBody{padding:14px}.previewGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.previewPanel{border:3px solid #2f3548;border-radius:8px;overflow:hidden;background:#fff}.staticScene{position:relative;aspect-ratio:16/9;overflow:hidden;background:#ddd}.staticScene .sceneBg{z-index:0}.staticScene .staticEl{position:absolute;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}.staticNarration{position:absolute;z-index:50;top:2.5%;left:2.5%;right:2.5%;background:#fff0a4;border:2px solid #222;border-radius:4px;padding:6px 9px;font:700 italic 13px/1.15 Georgia,serif}.staticBubble{position:absolute;z-index:60;width:36%;background:#fff;border:2px solid #222;border-radius:50%;padding:8px;text-align:center;font-size:12px;font-weight:800;line-height:1.1;box-sizing:border-box}.staticBubble.thought{border-style:dashed}.staticTailSvg{position:absolute;inset:0;width:100%;height:100%;z-index:59;pointer-events:none;overflow:visible}.previewEmpty{display:grid;place-items:center;height:100%;font-weight:800;color:#788092}.previewMeta{font-size:11px;padding:5px 7px;color:#657084;font-weight:800}
 .helpText{line-height:1.55}.helpText h3{color:#513a98}.helpText ul{padding-left:20px}.speakSmall{border:0;border-radius:8px;background:#eee9fb;color:#49388a;padding:5px 7px;font-weight:900}
 #printArea{display:none}
 @media(max-width:1180px){.workspace{grid-template-columns:245px minmax(390px,1fr) 265px}.assetCard{min-height:105px}.assetCard img{height:70px}.brand h1{font-size:26px}.topBtn{padding:8px 9px}.filmstrip{grid-template-columns:125px 1fr 180px}}
@@ -184,8 +184,8 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 
 <script>
 'use strict';
-const STORAGE_KEY='histoireCM1_bdMartin_studio_v14';
-const OLD_STORAGE_KEYS=['histoireCM1_bdMartin_studio_v13'];
+const STORAGE_KEY='histoireCM1_bdMartin_studio_v16';
+const OLD_STORAGE_KEYS=['histoireCM1_bdMartin_studio_v15','histoireCM1_bdMartin_studio_v14','histoireCM1_bdMartin_studio_v13'];
 const decors={
   village:{label:"Près de l’église",src:'decor_village_eglise.png'},
   fields:{label:'Champs du village',src:'decor_champs_village.png'},
@@ -244,7 +244,7 @@ const assets=[
 const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function blankPanel(){return{momentId:'',decorId:'village',narration:'',dialogues:[],elements:[]}}
-let state={version:14,current:0,panels:Array.from({length:8},blankPanel)};
+let state={version:16,current:0,panels:Array.from({length:8},blankPanel)};
 let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -260,7 +260,7 @@ function migratePanel(p){
   if(p.bubble&&p.speakerId&&!p.dialogues.some(d=>d.speakerId===p.speakerId)){
     p.dialogues.push({id:uid(),speakerId:p.speakerId,text:String(p.bubble),type:p.bubbleType==='thought'?'thought':'speech'});
   }
-  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>({id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech'}));
+  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>({id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech',bx:Number.isFinite(Number(d.bx))?Number(d.bx):null,by:Number.isFinite(Number(d.by))?Number(d.by):null}));
   const seen=new Set();p.dialogues=p.dialogues.filter(d=>!seen.has(d.speakerId)&&(seen.add(d.speakerId),true));
   delete p.bubble;delete p.bubbleType;delete p.speakerId;
   if(!p.decorId)p.decorId='village';if(typeof p.narration!=='string')p.narration='';if(typeof p.momentId!=='string')p.momentId='';
@@ -271,7 +271,7 @@ function load(){
     let raw=localStorage.getItem(STORAGE_KEY),fromOld=false;
     if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw){fromOld=true;break}}}
     if(!raw)return;const obj=JSON.parse(raw);
-    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=14;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
+    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=16;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
   }catch(e){}
 }
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
@@ -353,7 +353,7 @@ function positionAllBubbles(){
   const narr=$('#narrationPreview');let narrRect=null;if(narr&&narr.textContent.trim()&&narr.offsetParent!==null)narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
   const people=[...document.querySelectorAll('.sceneEl')].map(x=>relRect(x.getBoundingClientRect(),sceneRect));const occupied=[];
   for(const b of $$('#bubbleLayer .speechBubble')){
-    const spDom=$(`.sceneEl[data-id="${b.dataset.speakerId}"]`);if(!spDom)continue;const sp=relRect(spDom.getBoundingClientRect(),sceneRect);const br=b.getBoundingClientRect();const bw=br.width,bh=br.height;const otherPeople=people.filter(r=>r!==sp);const chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);const head={x:sp.x+sp.w/2,y:sp.y+Math.min(24,sp.h*.14)};drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
+    const spDom=$(`.sceneEl[data-id="${b.dataset.speakerId}"]`);if(!spDom)continue;const sp=relRect(spDom.getBoundingClientRect(),sceneRect);const br=b.getBoundingClientRect();const bw=br.width,bh=br.height;const otherPeople=people.filter(r=>r!==sp);const chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);const d=cur().dialogues.find(x=>x.id===b.dataset.dialogueId);if(d){d.bx=chosen.x/sceneRect.width*100;d.by=chosen.y/sceneRect.height*100}const head={x:sp.x+sp.w/2,y:sp.y+Math.min(24,sp.h*.14)};drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
   }
 }
 function startDrag(ev){
@@ -400,19 +400,56 @@ function changeMoment(id){const p=cur(),old=momentById(p.momentId),m=momentById(
 function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
 function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
 function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
-function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:14,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
-function modelBubblePlacement(panel,d,index){const sp=panel.elements.find(e=>e.id===d.speakerId);if(!sp)return null;const bw=32,cx=sp.x+sp.w/2;let left=clamp(cx-bw/2,2,98-bw),top=sp.y-27-index*2;if(top<19){left=clamp(cx<50?sp.x+sp.w+2:sp.x-bw-2,2,98-bw);top=clamp(sp.y+1+index*3,19,67)}else top=clamp(top,19,67);return{left,top,bw,cx}}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:16,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
 function staticScene(panel){
-  const box=document.createElement('div');box.className='staticScene';const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
+  const box=document.createElement('div');box.className='staticScene';box._panel=panel;
+  const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
   if(panel.narration){const n=document.createElement('div');n.className='staticNarration';n.textContent=panel.narration;box.appendChild(n)}
-  panel.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='staticEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=e.y+'%';im.style.width=e.w+'%';im.style.zIndex=String(10+e.z);im.style.transform=e.flip?'scaleX(-1)':'';box.appendChild(im)});
-  panel.dialogues.filter(d=>String(d.text||'').trim()).forEach((d,i)=>{const pos=modelBubblePlacement(panel,d,i);if(!pos)return;const s=document.createElement('div');s.className='staticBubble '+(d.type==='thought'?'thought ':'')+(pos.cx>pos.left+pos.bw/2?'tailR':'tailL');s.textContent=d.text;s.style.left=pos.left+'%';s.style.top=pos.top+'%';box.appendChild(s)});
-  if(!panel.momentId&&!panel.elements.length&&!panel.narration&&!hasAnyTextBubble(panel)){const em=document.createElement('div');em.className='previewEmpty';em.textContent='Vignette à compléter';box.appendChild(em)}return box
+  panel.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='staticEl';im.dataset.id=e.id;im.src=a.src;im.alt=a.label;im.style.left=e.x+'%';im.style.top=e.y+'%';im.style.width=e.w+'%';im.style.zIndex=String(10+e.z);im.style.transform=e.flip?'scaleX(-1)':'';box.appendChild(im)});
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('staticTailSvg');box.appendChild(svg);
+  panel.dialogues.filter(d=>String(d.text||'').trim()&&panel.elements.some(e=>e.id===d.speakerId)).forEach(d=>{const b=document.createElement('div');b.className='staticBubble '+(d.type==='thought'?'thought':'');b.dataset.speakerId=d.speakerId;b.dataset.dialogueId=d.id;b.textContent=d.text;box.appendChild(b)});
+  if(!panel.momentId&&!panel.elements.length&&!panel.narration&&!hasAnyTextBubble(panel)){const em=document.createElement('div');em.className='previewEmpty';em.textContent='Vignette à compléter';box.appendChild(em)}
+  return box
 }
-function buildPreview(){const host=$('#previewGrid');host.innerHTML='';state.panels.forEach((p,i)=>{const card=document.createElement('div');card.className='previewPanel';card.appendChild(staticScene(p));const meta=document.createElement('div');meta.className='previewMeta';meta.textContent=`Vignette ${i+1} — ${momentById(p.momentId).label.replace('— Choisir un moment —','à compléter')}`;card.appendChild(meta);host.appendChild(card)});$('#previewModal').classList.add('show')}
+function positionStaticBubbles(box){
+  const panel=box._panel,sceneRect=box.getBoundingClientRect();if(!panel||!sceneRect.width||!sceneRect.height)return;
+  const svg=box.querySelector('.staticTailSvg');if(!svg)return;svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);
+  const narr=box.querySelector('.staticNarration');let narrRect=null;if(narr&&narr.textContent.trim())narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
+  const personMap=new Map([...box.querySelectorAll('.staticEl')].map(el=>[el.dataset.id,relRect(el.getBoundingClientRect(),sceneRect)]));
+  const occupied=[];
+  for(const b of box.querySelectorAll('.staticBubble')){
+    const sp=personMap.get(b.dataset.speakerId);if(!sp)continue;
+    const d=panel.dialogues.find(x=>x.id===b.dataset.dialogueId);
+    const br=b.getBoundingClientRect(),bw=br.width,bh=br.height;
+    let chosen;
+    if(d&&Number.isFinite(Number(d.bx))&&Number.isFinite(Number(d.by))){
+      chosen=clampCandidate({x:Number(d.bx)/100*sceneRect.width,y:Number(d.by)/100*sceneRect.height},bw,bh,sceneRect.width,sceneRect.height,0);
+    }else{
+      const otherPeople=[...personMap.entries()].filter(([id])=>id!==b.dataset.speakerId).map(([,r])=>r);
+      chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);
+    }
+    b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);
+    const head={x:sp.x+sp.w/2,y:sp.y+Math.min(24,sp.h*.14)};
+    drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
+  }
+}
+function scheduleStaticLayouts(root=document){
+  const run=()=>root.querySelectorAll('.staticScene').forEach(positionStaticBubbles);
+  requestAnimationFrame(()=>requestAnimationFrame(run));setTimeout(run,80);
+  root.querySelectorAll('.staticScene img').forEach(img=>{if(!img.complete)img.addEventListener('load',run,{once:true})})
+}
+function buildPreview(){
+  const host=$('#previewGrid');host.innerHTML='';state.panels.forEach((p,i)=>{const card=document.createElement('div');card.className='previewPanel';card.appendChild(staticScene(p));const meta=document.createElement('div');meta.className='previewMeta';meta.textContent=`Vignette ${i+1} — ${momentById(p.momentId).label.replace('— Choisir un moment —','à compléter')}`;card.appendChild(meta);host.appendChild(card)});
+  $('#previewModal').classList.add('show');scheduleStaticLayouts($('#previewModal'))
+}
 function buildPrint(){const host=$('#printGrid');host.innerHTML='';state.panels.forEach(p=>{const card=document.createElement('div');card.className='printPanel';card.appendChild(staticScene(p));host.appendChild(card)})}
-function printBD(bw=false){buildPrint();document.body.classList.toggle('printBW',bw);window.print();setTimeout(()=>document.body.classList.remove('printBW'),700)}
-function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>La bulle suit son personnage</h3><p>Chaque bulle est reliée à son personnage. Quand tu le déplaces, sa bulle est recalculée à partir de sa position réelle et sa queue pointe vers sa tête.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
+function printBD(bw=false){
+  buildPrint();document.body.classList.toggle('printBW',bw);
+  const area=$('#printArea'),old=area.getAttribute('style')||'';area.style.cssText='display:block;position:fixed;left:-220vw;top:0;width:194mm;visibility:hidden;';
+  scheduleStaticLayouts(area);
+  setTimeout(()=>{area.setAttribute('style',old);window.print();setTimeout(()=>document.body.classList.remove('printBW'),700)},140)
+}
+function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>La bulle suit son personnage</h3><p>Chaque bulle est reliée à son personnage. Quand tu le déplaces, sa bulle est recalculée à partir de sa position réelle et sa queue pointe vers sa tête. L’aperçu et l’impression conservent ensuite exactement cette mise en page.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
 function speakText(text){if(!('speechSynthesis'in window)||!text)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);currentUtter=u;u.lang='fr-FR';u.rate=.92;window.speechSynthesis.speak(u)}
 function selectedDialogue(){const e=getSelected();return e?dialogueForSpeaker(cur(),e.id):null}
 
