@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- BUILD: 2026-11-10-v17-tail-text-fix -->
+<!-- BUILD: 2026-11-10-v18-bubble-link -->
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -244,7 +244,7 @@ const assets=[
 const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function blankPanel(){return{momentId:'',decorId:'village',narration:'',dialogues:[],elements:[]}}
-let state={version:17,current:0,panels:Array.from({length:8},blankPanel)};
+let state={version:18,current:0,panels:Array.from({length:8},blankPanel)};
 let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -271,7 +271,7 @@ function load(){
     let raw=localStorage.getItem(STORAGE_KEY),fromOld=false;
     if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw){fromOld=true;break}}}
     if(!raw)return;const obj=JSON.parse(raw);
-    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=16;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
+    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=18;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
   }catch(e){}
 }
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
@@ -360,7 +360,15 @@ function drawTail(svg,rect,head,type){
   if(type==='thought'){
     [0.38,0.72].forEach((t,i)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',String(base.center.x+(head.x-base.center.x)*t));c.setAttribute('cy',String(base.center.y+(head.y-base.center.y)*t));c.setAttribute('r',String(i?4.2:6));c.setAttribute('fill','#fff');c.setAttribute('stroke','#222');c.setAttribute('stroke-width','2.5');svg.appendChild(c)})
   }else{
-    const poly=document.createElementNS(ns,'polygon');poly.setAttribute('points',`${base.p1.x},${base.p1.y} ${base.p2.x},${base.p2.y} ${head.x},${head.y}`);poly.setAttribute('fill','#fff');poly.setAttribute('stroke','#222');poly.setAttribute('stroke-width','2.5');poly.setAttribute('stroke-linejoin','round');svg.appendChild(poly)
+    const link=document.createElementNS(ns,'line');
+    link.setAttribute('x1',String(head.x));link.setAttribute('y1',String(head.y));
+    link.setAttribute('x2',String(base.center.x));link.setAttribute('y2',String(base.center.y));
+    link.setAttribute('stroke','#222');link.setAttribute('stroke-width','2.8');link.setAttribute('stroke-linecap','round');
+    svg.appendChild(link);
+    const dot=document.createElementNS(ns,'circle');
+    dot.setAttribute('cx',String(head.x));dot.setAttribute('cy',String(head.y));dot.setAttribute('r','2.7');
+    dot.setAttribute('fill','#fff');dot.setAttribute('stroke','#222');dot.setAttribute('stroke-width','2');
+    svg.appendChild(dot)
   }
 }
 function positionAllBubbles(){
@@ -415,7 +423,7 @@ function changeMoment(id){const p=cur(),old=momentById(p.momentId),m=momentById(
 function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
 function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
 function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
-function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:17,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:18,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
 function staticScene(panel){
   const box=document.createElement('div');box.className='staticScene';box._panel=panel;
   const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
