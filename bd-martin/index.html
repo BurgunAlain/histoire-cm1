@@ -1,1 +1,339 @@
+<!doctype html>
+<!-- BUILD: 2026-11-09-v13-studio-bd -->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Atelier BD — La vie de Martin</title>
+<style>
+:root{
+  --purple:#5c3cab;--purple2:#7656c8;--ink:#27324a;--soft:#f4f1fb;--cream:#fff9ed;--line:#d8d6e8;
+  --yellow:#fff0a8;--green:#30a64a;--red:#d84b4b;--blue:#4f89d8;--shadow:0 7px 22px rgba(49,39,88,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:#eef2f7}
+button,select,textarea,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid #8eb7ff;outline-offset:2px}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:linear-gradient(135deg,#4f2f99,#6e4abb 58%,#5935a0);color:#fff;display:flex;align-items:center;gap:16px;padding:10px 16px;box-shadow:0 3px 12px rgba(36,20,77,.28);position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}.brandMark{font-size:34px}.brand h1{font-size:clamp(21px,2.2vw,35px);line-height:1;margin:0;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.badge{border:2px solid rgba(255,255,255,.75);border-radius:999px;padding:6px 13px;font-weight:800;white-space:nowrap}
+.topActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.topBtn{border:0;border-radius:11px;background:#fff;color:#342665;padding:9px 13px;font-weight:850;box-shadow:0 2px 0 rgba(0,0,0,.12)}.topBtn.primary{background:#ffe36d}.topBtn:hover{transform:translateY(-1px)}
+.workspace{display:grid;grid-template-columns:280px minmax(420px,1fr) 300px;gap:10px;padding:10px;flex:1;min-height:0}
+.panelBox{background:#fff;border:1px solid #d6d9e7;border-radius:15px;box-shadow:var(--shadow);min-width:0;overflow:hidden}.panelTitle{background:linear-gradient(#7153bc,#5a3ba7);color:#fff;font-weight:900;padding:10px 12px;display:flex;align-items:center;gap:8px;font-size:18px}.panelTitle .grow{flex:1}.tiny{font-size:12px;font-weight:700;opacity:.9}
+.library{display:flex;flex-direction:column;min-height:620px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:9px;background:#f8f6fd;border-bottom:1px solid var(--line)}.tab{border:2px solid #d8d1ef;border-radius:12px;background:#fff;padding:10px 6px;font-weight:850;color:#3b3471}.tab.active{background:#ffe77c;border-color:#d5a500;color:#2c2f55}.tabPane{display:none;padding:10px;overflow:auto;max-height:calc(100vh - 210px)}.tabPane.active{display:block}
+.fieldLabel{display:block;font-weight:900;margin:0 0 6px}.momentSelect,.decorSelect{width:100%;padding:9px 10px;border:2px solid #d8d9e8;border-radius:10px;background:#fff;margin-bottom:8px}.hint{font-size:12px;line-height:1.35;color:#676f82;background:#f7f8fb;border-radius:10px;padding:8px;margin-bottom:10px}.compat{display:flex;align-items:center;gap:7px;font-size:12px;margin:8px 0 10px}.compat input{width:18px;height:18px}
+.assetGroup{margin:4px 0 12px}.assetGroup h3{font-size:14px;margin:7px 0;background:#eee8fb;padding:6px 8px;border-radius:8px;color:#493986}.assetGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.assetCard{position:relative;border:2px solid #ddddec;border-radius:11px;background:#fff;padding:5px;min-height:116px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;overflow:hidden}.assetCard:hover{border-color:#8a6fd1;background:#fbf9ff}.assetCard img{max-width:100%;height:82px;object-fit:contain;pointer-events:none}.assetCard span{font-size:11px;line-height:1.1;font-weight:850;text-align:center}.assetCard .plus{position:absolute;right:5px;top:4px;background:#5d42af;color:#fff;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-weight:900}
+.decorGrid{display:grid;grid-template-columns:1fr;gap:8px}.decorCard{border:3px solid transparent;border-radius:11px;overflow:hidden;background:#f4f5fa;padding:0;text-align:left;position:relative}.decorCard.active{border-color:#6546bc}.decorCard img{display:block;width:100%;aspect-ratio:16/8;object-fit:cover}.decorCard b{display:block;padding:6px 8px;font-size:12px}.recommended{position:absolute;top:6px;left:6px;background:#ffe572;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:900}
+.objectGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.objectCard{border:2px solid #ddddec;border-radius:11px;background:#fff;padding:8px}.objectCard img{width:100%;height:95px;object-fit:contain}.objectCard b{display:block;font-size:12px;text-align:center}
+.bubbleChoice{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bubbleTypeBtn{border:2px solid #ddddec;border-radius:12px;background:#fff;padding:12px 8px;font-weight:900}.bubbleTypeBtn.active{border-color:#6042b6;background:#f0ebff}.bubbleIcon{font-size:34px;display:block;margin-bottom:4px}
+.stageCol{display:flex;flex-direction:column;min-width:0;gap:9px}.sceneBar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fff;border:1px solid #d6d9e7;border-radius:13px;box-shadow:var(--shadow)}.sceneBar .count{font-weight:900}.sceneBar .spacer{flex:1}.navBtn{width:40px;height:36px;border:0;border-radius:10px;background:#eee9fb;color:#4e3698;font-size:23px;font-weight:900}.statusDot{font-size:12px;color:#657084}
+.sceneWrap{background:#fff;border:1px solid #d6d9e7;border-radius:15px;padding:9px;box-shadow:var(--shadow);min-width:0}.scene{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:4px solid #24314d;border-radius:8px;background:#dce8ef;touch-action:none;user-select:none}.sceneBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}.sceneShade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,.06),rgba(0,0,0,.02))}.narration{position:absolute;left:2.5%;right:2.5%;top:2.5%;z-index:900;background:linear-gradient(#fff3b5,#ffe991);border:2px solid #302a23;border-radius:5px;padding:7px 11px;font-family:Georgia,serif;font-weight:700;font-style:italic;font-size:clamp(12px,1.65vw,21px);line-height:1.15;box-shadow:0 2px 4px rgba(0,0,0,.15);pointer-events:none;max-height:25%;overflow:hidden}.narration:empty{display:none}
+.sceneElements{position:absolute;inset:0;z-index:20}.sceneEl{position:absolute;transform-origin:center bottom;touch-action:none;cursor:grab;filter:drop-shadow(0 3px 2px rgba(0,0,0,.18));display:block}.sceneEl:active{cursor:grabbing}.sceneEl.selected{outline:3px dashed #ffdc43;outline-offset:3px}.sceneEl.speaker::after{content:'💬';position:absolute;right:-13px;top:-17px;width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid #4c36a0;display:grid;place-items:center;font-size:15px;box-shadow:0 2px 4px rgba(0,0,0,.2)}.sceneEl img{width:100%;height:auto;object-fit:contain;display:block;pointer-events:none}.sceneEl.object{filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}
+.speechBubble{position:absolute;z-index:1000;width:36%;min-width:155px;max-width:300px;background:#fff;border:3px solid #222;border-radius:50%;padding:12px 15px;text-align:center;font-weight:800;line-height:1.15;font-size:clamp(11px,1.4vw,18px);box-shadow:0 3px 6px rgba(0,0,0,.13);pointer-events:none;transform:translateZ(0)}.speechBubble.thought{border-style:dashed;border-width:3px;border-radius:48%}.speechBubble:empty{display:none}.speechTail{position:absolute;width:0;height:0;border-style:solid}.tail-left{left:12%;bottom:-24px;border-width:24px 19px 0 0;border-color:#222 transparent transparent transparent}.tail-left::after{content:'';position:absolute;left:4px;top:-23px;border-style:solid;border-width:19px 15px 0 0;border-color:#fff transparent transparent transparent}.tail-right{right:12%;bottom:-24px;border-width:24px 0 0 19px;border-color:#222 transparent transparent transparent}.tail-right::after{content:'';position:absolute;right:4px;top:-23px;border-style:solid;border-width:19px 0 0 15px;border-color:#fff transparent transparent transparent}.thought .speechTail{width:14px;height:14px;border:3px solid #222;border-radius:50%;background:#fff;bottom:-20px}.thought .speechTail::after{content:'';position:absolute;width:7px;height:7px;border:2px solid #222;border-radius:50%;background:#fff;bottom:-12px}.thought .tail-left{left:18%;border-width:3px}.thought .tail-right{right:18%;border-width:3px}
+.emptyScene{position:absolute;inset:0;z-index:5;display:grid;place-items:center;color:#fff;text-shadow:0 2px 4px #000;background:rgba(31,46,58,.15);font-weight:900;font-size:22px;text-align:center;padding:30px}.emptyScene.hidden{display:none}
+.tipBar{padding:7px 10px;background:#fffaf0;border:1px solid #eadcb9;border-radius:10px;font-size:12px;color:#6c5b31}.tipBar strong{color:#463475}
+.inspector{display:flex;flex-direction:column}.inspectorBody{padding:10px;overflow:auto;max-height:calc(100vh - 164px)}.editBlock{border:1px solid #d8d9e8;border-radius:11px;margin-bottom:10px;overflow:hidden}.editBlock h3{margin:0;padding:8px 10px;background:#f0ebfb;color:#493887;font-size:14px;display:flex;align-items:center;gap:7px}.editBlock .body{padding:9px}.editBlock textarea{width:100%;min-height:75px;border:2px solid #d8d9e8;border-radius:9px;padding:8px;resize:vertical;line-height:1.25}.rowBtns{display:grid;grid-template-columns:1fr 1fr;gap:7px}.toolBtn{border:2px solid #d8d9e8;border-radius:10px;background:#fff;padding:9px 6px;font-weight:850;font-size:12px}.toolBtn:hover{border-color:#775ac4}.toolBtn.danger{color:#b52828;border-color:#efc8c8}.toolBtn.speakerBtn{grid-column:1/-1;background:#f0ebff;border-color:#8c73d1;color:#463481}.selectedInfo{display:flex;align-items:center;gap:8px;margin-bottom:8px;background:#faf9fd;border-radius:9px;padding:7px}.selectedThumb{width:45px;height:45px;object-fit:contain}.selectedName{font-weight:900;font-size:13px}.rangeRow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin-top:8px;font-size:12px}.rangeRow input{width:100%}.smallToggle{display:flex;gap:7px;align-items:center;font-size:12px;margin-top:8px}.smallToggle input{width:18px;height:18px}.emptyInspector{font-size:13px;color:#6d7486;background:#f8f8fb;border-radius:10px;padding:11px}
+.filmstrip{margin:0 10px 10px;background:#fff;border:1px solid #d6d9e7;border-radius:15px;box-shadow:var(--shadow);display:grid;grid-template-columns:155px 1fr 220px;gap:10px;align-items:center;padding:9px}.filmTitle{background:linear-gradient(#7153bc,#5a3ba7);color:#fff;border-radius:11px;padding:12px;font-weight:900;line-height:1.15}.thumbs{display:grid;grid-template-columns:repeat(8,minmax(70px,1fr));gap:7px;min-width:0}.thumb{position:relative;border:3px solid #d8dce8;border-radius:10px;background:#eef1f5;aspect-ratio:4/3;overflow:hidden;padding:0}.thumb.active{border-color:#653fc7;box-shadow:0 0 0 2px #d8cfff}.thumbNum{position:absolute;z-index:30;top:2px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;color:#3f3482;display:grid;place-items:center;font-weight:900;font-size:12px;border:1px solid #bbb}.thumb .miniBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.thumb .miniEl{position:absolute;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}.thumb.empty::after{content:'+';position:absolute;inset:0;display:grid;place-items:center;font-size:33px;color:#9ea6b4;font-weight:900}.bottomActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bigAction{border:0;border-radius:11px;padding:12px 8px;font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.14)}.bigAction.preview{background:#39b74e;color:#fff}.bigAction.print{background:#f1e8ff;color:#4b3298;border:2px solid #8e72d4}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:2000;background:#2e3548;color:#fff;border-radius:999px;padding:10px 16px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;bottom:30px}
+.modal{position:fixed;inset:0;background:rgba(24,28,42,.72);z-index:1500;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalCard{background:#fff;width:min(1100px,96vw);max-height:92vh;overflow:auto;border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.34)}.modalHead{position:sticky;top:0;z-index:5;background:#5b3baa;color:#fff;padding:11px 14px;display:flex;align-items:center;gap:10px}.modalHead h2{margin:0;font-size:20px;flex:1}.closeBtn{border:0;border-radius:9px;background:#fff;color:#4a327e;font-weight:900;padding:7px 10px}.modalBody{padding:14px}.previewGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.previewPanel{border:3px solid #2f3548;border-radius:8px;overflow:hidden;background:#fff}.staticScene{position:relative;aspect-ratio:16/9;overflow:hidden;background:#ddd}.staticScene .sceneBg{z-index:0}.staticScene .staticEl{position:absolute;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}.staticNarration{position:absolute;z-index:50;top:2.5%;left:2.5%;right:2.5%;background:#fff0a4;border:2px solid #222;border-radius:4px;padding:6px 9px;font:700 italic 13px/1.15 Georgia,serif}.staticBubble{position:absolute;z-index:60;width:36%;background:#fff;border:2px solid #222;border-radius:50%;padding:8px;text-align:center;font-size:12px;font-weight:800;line-height:1.1}.staticBubble.thought{border-style:dashed}.staticBubble.tailL::after,.staticBubble.tailR::after{content:'';position:absolute;bottom:-14px;width:0;height:0;border-style:solid}.staticBubble.tailL::after{left:18%;border-width:14px 12px 0 0;border-color:#222 transparent transparent transparent}.staticBubble.tailR::after{right:18%;border-width:14px 0 0 12px;border-color:#222 transparent transparent transparent}.previewEmpty{display:grid;place-items:center;height:100%;font-weight:800;color:#788092}.previewMeta{font-size:11px;padding:5px 7px;color:#657084;font-weight:800}
+.helpText{line-height:1.55}.helpText h3{color:#513a98}.helpText ul{padding-left:20px}.speakSmall{border:0;border-radius:8px;background:#eee9fb;color:#49388a;padding:5px 7px;font-weight:900}
+#printArea{display:none}
+@media(max-width:1180px){.workspace{grid-template-columns:245px minmax(390px,1fr) 265px}.assetCard{min-height:105px}.assetCard img{height:70px}.brand h1{font-size:26px}.topBtn{padding:8px 9px}.filmstrip{grid-template-columns:125px 1fr 180px}}
+@media(max-width:930px){.topbar{position:relative}.workspace{grid-template-columns:1fr}.library,.inspector{min-height:0}.tabPane,.inspectorBody{max-height:none}.scene{min-height:430px;aspect-ratio:auto}.filmstrip{grid-template-columns:1fr}.thumbs{overflow-x:auto;grid-template-columns:repeat(8,110px)}.filmTitle{display:none}.bottomActions{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.badge{display:none}.topActions{display:none}.workspace{padding:6px}.scene{min-height:360px}.previewGrid{grid-template-columns:1fr}.filmstrip{margin:0 6px 6px}.speechBubble{min-width:125px;padding:9px;font-size:12px}}
+@media print{
+  @page{size:A4 portrait;margin:8mm}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  #printArea h1{font:900 20px/1.1 Georgia,serif;margin:0 0 7mm;text-align:center}
+  .printGrid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+  .printPanel{border:2px solid #111;break-inside:avoid;background:#fff}
+  .printPanel .staticScene{aspect-ratio:16/9}
+  .printPanel .staticNarration{font-size:10px;padding:4px 6px}
+  .printPanel .staticBubble{font-size:9px;padding:5px;border-width:1.5px}
+  body.printBW #printArea{filter:grayscale(1) contrast(1.07)}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brandMark">📖</div><h1>Atelier BD — La vie de Martin</h1></div>
+    <div class="badge">Histoire — CM1</div>
+    <div class="topActions">
+      <button class="topBtn" id="newBD">🗎 Nouvelle BD</button>
+      <button class="topBtn" id="helpBtn">❔ Aide</button>
+      <button class="topBtn" id="instructionsBtn">ℹ️ Consignes</button>
+      <button class="topBtn primary" id="saveBtn">💾 Sauvegarder</button>
+    </div>
+  </header>
 
+  <main class="workspace">
+    <aside class="panelBox library">
+      <div class="panelTitle">📚 Bibliothèque</div>
+      <div class="tabs">
+        <button class="tab active" data-tab="characters">👥 Personnages</button>
+        <button class="tab" data-tab="decors">🖼️ Décors</button>
+        <button class="tab" data-tab="bubbles">💬 Bulles</button>
+      </div>
+      <div class="tabPane active" id="tab-characters">
+        <label class="fieldLabel" for="momentSelect">Moment de l'histoire</label>
+        <select class="momentSelect" id="momentSelect"></select>
+        <div class="hint" id="momentHint">Choisis d'abord le moment raconté dans cette vignette. Les décors adaptés seront proposés automatiquement.</div>
+        <div id="characterLibrary"></div>
+      </div>
+      <div class="tabPane" id="tab-decors">
+        <label class="fieldLabel">Décors adaptés à ce moment</label>
+        <label class="compat"><input type="checkbox" id="showAllDecors"> Afficher aussi les autres décors</label>
+        <div class="decorGrid" id="decorLibrary"></div>
+      </div>
+      <div class="tabPane" id="tab-bubbles">
+        <div class="hint">La bulle suit automatiquement le personnage qui parle. Le premier personnage ajouté devient le parleur, mais tu peux en choisir un autre.</div>
+        <div class="bubbleChoice">
+          <button class="bubbleTypeBtn active" data-bubble="speech"><span class="bubbleIcon">💬</span>Dialogue</button>
+          <button class="bubbleTypeBtn" data-bubble="thought"><span class="bubbleIcon">☁️</span>Pensée</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="stageCol">
+      <div class="sceneBar">
+        <button class="navBtn" id="prevPanel" aria-label="Vignette précédente">‹</button>
+        <div class="count">Vignette <span id="panelNum">1</span> / 8</div>
+        <div class="statusDot" id="saveState">Sauvegarde automatique active</div>
+        <div class="spacer"></div>
+        <button class="speakSmall" id="readScene" title="Lire le cartouche et la bulle">🔊 Lire</button>
+        <button class="navBtn" id="nextPanel" aria-label="Vignette suivante">›</button>
+      </div>
+      <div class="sceneWrap">
+        <div class="scene" id="scene" aria-label="Zone de création de la vignette">
+          <img class="sceneBg" id="sceneBg" alt="Décor de la vignette">
+          <div class="sceneShade"></div>
+          <div class="emptyScene" id="emptyScene">Choisis un moment puis ajoute tes personnages.</div>
+          <div class="narration" id="narrationPreview"></div>
+          <div class="sceneElements" id="sceneElements"></div>
+          <div class="speechBubble" id="speechBubble"><span id="bubbleTextPreview"></span><span class="speechTail tail-left" id="speechTail"></span></div>
+        </div>
+      </div>
+      <div class="tipBar"><strong>Astuce :</strong> déplace les personnages directement dans la case. Le personnage marqué 💬 est celui auquel la bulle est attachée.</div>
+    </section>
+
+    <aside class="panelBox inspector">
+      <div class="panelTitle"><span>🎬 Ma case</span><span class="grow"></span><span class="tiny" id="inspectorPanelNum">n° 1 / 8</span></div>
+      <div class="inspectorBody">
+        <div class="editBlock">
+          <h3>🟨 Cartouche de narration <button class="speakSmall" id="readNarration" title="Lire le cartouche">🔊</button></h3>
+          <div class="body"><textarea id="narrationInput" placeholder="Raconte ce qui se passe dans cette vignette..."></textarea></div>
+        </div>
+        <div class="editBlock">
+          <h3>💬 Texte de la bulle <button class="speakSmall" id="readBubble" title="Lire la bulle">🔊</button></h3>
+          <div class="body"><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense le personnage..."></textarea></div>
+        </div>
+        <div class="editBlock">
+          <h3>🧍 Élément sélectionné</h3>
+          <div class="body" id="selectionTools">
+            <div class="emptyInspector">Clique sur un personnage dans la vignette pour le modifier.</div>
+          </div>
+        </div>
+        <div class="editBlock">
+          <h3>🧰 Actions de la vignette</h3>
+          <div class="body rowBtns">
+            <button class="toolBtn" id="clearPanel">🗑️ Réinitialiser la case</button>
+            <button class="toolBtn" id="alignAll">↧ Aligner au sol</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <section class="filmstrip">
+    <div class="filmTitle">▦ Mes cases<br><span class="tiny">8 vignettes</span></div>
+    <div class="thumbs" id="thumbs"></div>
+    <div class="bottomActions">
+      <button class="bigAction preview" id="previewBtn">▶ Prévisualiser ma BD</button>
+      <button class="bigAction print" id="printBtn">🖨️ Imprimer</button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-label="Aide">
+  <div class="modalCard"><div class="modalHead"><h2 id="helpTitle">Aide</h2><button class="speakSmall" id="readHelp">🔊</button><button class="closeBtn" data-close="helpModal">Fermer</button></div><div class="modalBody helpText" id="helpContent"></div></div>
+</div>
+
+<div class="modal" id="previewModal" role="dialog" aria-modal="true" aria-label="Aperçu de la BD">
+  <div class="modalCard"><div class="modalHead"><h2>Aperçu de ma BD</h2><button class="closeBtn" data-close="previewModal">Fermer</button></div><div class="modalBody"><div class="previewGrid" id="previewGrid"></div><div style="display:flex;gap:9px;justify-content:center;margin-top:14px"><button class="bigAction print" id="printColor">Imprimer en couleur</button><button class="bigAction print" id="printBW">Imprimer en noir et blanc</button></div></div></div>
+</div>
+
+<div id="printArea"><h1>La vie de Martin — notre bande dessinée</h1><div class="printGrid" id="printGrid"></div></div>
+
+<script>
+'use strict';
+const STORAGE_KEY='histoireCM1_bdMartin_studio_v13';
+const decors={
+  village:{label:"Près de l’église",src:'decor_village_eglise.png'},
+  fields:{label:'Champs du village',src:'decor_champs_village.png'},
+  home:{label:'Maison de Martin',src:'decor_maison_interieur.png'},
+  church:{label:"Intérieur de l’église",src:'decor_eglise_interieur.png'},
+  porch:{label:"Entrée / parvis de l’église",src:'decor_eglise_entree.png'},
+  cemetery:{label:'Cimetière',src:'decor_cimetiere.png'}
+};
+const moments=[
+  {id:'',label:'— Choisir un moment —',narration:'',decors:['village']},
+  {id:'bell',label:'La cloche sonne le matin',narration:"Le matin, la cloche de l’église sonne et rythme la journée de Martin.",decors:['village','home']},
+  {id:'cross',label:'Martin fait le signe de croix',narration:'Avant de partir, Martin et sa famille font le signe de croix.',decors:['home']},
+  {id:'prayMother',label:'Martin dit une prière avec sa mère',narration:'Martin répète une prière avec sa mère avant de commencer la journée.',decors:['home']},
+  {id:'fields',label:'Martin aide ses parents dans les champs',narration:'Martin aide ses parents à travailler dans les champs.',decors:['fields']},
+  {id:'evening',label:'Martin prie le soir avec sa famille',narration:'Le soir, après le repas, la famille prie encore à la lumière d’une bougie.',decors:['home']},
+  {id:'sunday',label:'Le dimanche, le village va à l’église',narration:'Le dimanche, tout le village se retrouve à l’église.',decors:['porch','church']},
+  {id:'jesus',label:'Le prêtre raconte la vie de Jésus',narration:'Le prêtre raconte la vie de Jésus et explique comment bien se comporter.',decors:['church']},
+  {id:'baptism',label:'Le baptême d’un bébé',narration:'La cloche sonne pour le baptême d’un bébé du village.',decors:['church']},
+  {id:'wedding',label:'Un mariage au village',narration:'Un mariage est célébré à l’église et rassemble les habitants du village.',decors:['church','porch']},
+  {id:'funeral',label:'Un habitant est accompagné au cimetière',narration:'Quand un habitant meurt, le village l’accompagne jusqu’au cimetière.',decors:['cemetery']},
+  {id:'christmas',label:'La fête de Noël',narration:'À Noël, les chrétiens célèbrent la naissance de Jésus.',decors:['church','home']},
+  {id:'easter',label:'La fête de Pâques',narration:'À Pâques, les chrétiens célèbrent le retour à la vie de Jésus selon leur religion.',decors:['church']},
+  {id:'allsaints',label:'La Toussaint au cimetière',narration:'À la Toussaint, les habitants vont se recueillir sur les tombes du cimetière.',decors:['cemetery']},
+  {id:'weekday',label:"Martin va à l’église en semaine",narration:"Martin va parfois à l’église en semaine pour apprendre des prières et écouter le prêtre.",decors:['church']}
+ ];
+const momentTips={
+  '':"Choisis d'abord le moment raconté dans cette vignette. Les décors adaptés seront proposés automatiquement.",
+  bell:"Décor conseillé : le village près de l'église. Martin peut être seul ou avec sa famille.",
+  cross:"Cette scène se déroule à la maison, avant de partir.",
+  prayMother:"Place Martin avec sa mère dans la maison. Inutile de multiplier les personnages.",
+  fields:"Utilise le décor des champs avec Martin et un ou deux parents.",
+  evening:"La scène se déroule dans la maison, le soir. Un petit groupe familial suffit.",
+  sunday:"Choisis l'entrée de l'église ou son intérieur, avec quelques villageois.",
+  jesus:"Le prêtre et quelques habitants suffisent pour montrer l'écoute à l'église.",
+  baptism:"Utilise l'intérieur de l'église avec le bébé, sa famille et le prêtre.",
+  wedding:"Utilise les mariés, le prêtre et quelques villageois, à l'intérieur ou à l'entrée de l'église.",
+  funeral:"Pour l'enterrement, privilégie Martin et les personnages en deuil au cimetière. Le texte source n'impose pas la présence du prêtre.",
+  christmas:"Noël reste volontairement à l'intérieur de l'église ou dans la maison : pas de parvis en plein soleil.",
+  easter:"Pâques se déroule dans l'église : un décor intérieur évite les incohérences de saison.",
+  allsaints:"La Toussaint se déroule au cimetière, dans une ambiance de recueillement.",
+  weekday:"Martin vient à l'église en semaine pour écouter et apprendre des prières."
+};
+const assets=[
+  {id:'martin',label:'Martin — debout',src:'perso_martin.png',group:'Martin',kind:'character',w:14},
+  {id:'martinTalk',label:'Martin — qui parle',src:'perso_martin_parle.png',group:'Martin',kind:'character',w:15},
+  {id:'mother',label:'Mère de Martin',src:'perso_mere.png',group:'Famille de Martin',kind:'character',w:17},
+  {id:'father',label:'Père de Martin',src:'perso_pere.png',group:'Famille de Martin',kind:'character',w:17},
+  {id:'priest',label:'Le prêtre',src:'perso_pretre.png',group:'Église et village',kind:'character',w:17},
+  {id:'villagerM',label:'Un villageois',src:'perso_villageois_homme.png',group:'Église et village',kind:'character',w:16},
+  {id:'villagerF',label:'Une villageoise',src:'perso_villageoise.png',group:'Église et village',kind:'character',w:16},
+  {id:'baby',label:'Un bébé',src:'perso_bebe.png',group:'Cérémonies',kind:'character',w:12},
+  {id:'married',label:'Les mariés',src:'perso_maries.png',group:'Cérémonies',kind:'character',w:25},
+  {id:'mournerM',label:'Un homme en deuil',src:'perso_endeuill_homme.png',group:'Cérémonies',kind:'character',w:16},
+  {id:'mournerF',label:'Une femme en deuil',src:'perso_endeuill_femme.png',group:'Cérémonies',kind:'character',w:16}
+];
+const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
+function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function blankPanel(){return{momentId:'',decorId:'village',narration:'',bubble:'',bubbleType:'speech',speakerId:null,elements:[]}}
+let state={version:13,current:0,panels:Array.from({length:8},blankPanel)};
+let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const cur=()=>state.panels[state.current];
+function momentById(id){return moments.find(m=>m.id===id)||moments[0]}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),1600)}
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>save(false),180)}
+function save(show=true){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));$('#saveState').textContent='Sauvegardé ✓';if(show)toast('BD sauvegardée sur cet appareil ✓');setTimeout(()=>$('#saveState').textContent='Sauvegarde automatique active',1200)}catch(e){$('#saveState').textContent='Sauvegarde locale indisponible';if(show)toast('Impossible de sauvegarder localement')}}
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;const obj=JSON.parse(raw);if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.version=13;state.current=clamp(Number(state.current)||0,0,7);toast('BD précédente reprise ✓')}}catch(e){}}
+function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function switchTab(name){$$('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$$('.tabPane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name))}
+function renderMomentSelect(){const sel=$('#momentSelect');sel.innerHTML=moments.map(m=>`<option value="${m.id}">${escapeHTML(m.label)}</option>`).join('');sel.value=cur().momentId||''}
+function renderCharacterLibrary(){
+  const host=$('#characterLibrary');host.innerHTML='';
+  const groups=[...new Set(assets.map(a=>a.group))];
+  for(const g of groups){const section=document.createElement('section');section.className='assetGroup';section.innerHTML=`<h3>${escapeHTML(g)}</h3><div class="assetGrid"></div>`;const grid=section.querySelector('.assetGrid');assets.filter(a=>a.group===g).forEach(a=>{const b=document.createElement('button');b.className='assetCard';b.type='button';b.title='Ajouter '+a.label;b.innerHTML=`<span class="plus">+</span><img src="${a.src}" alt=""><span>${escapeHTML(a.label)}</span>`;b.addEventListener('click',()=>addAsset(a.id));grid.appendChild(b)});host.appendChild(section)}
+}
+function renderDecorLibrary(){
+  const host=$('#decorLibrary');host.innerHTML='';const m=momentById(cur().momentId);const allowed=m.decors||['village'];
+  const keys=showAllDecors?Object.keys(decors):allowed;
+  keys.forEach(k=>{const d=decors[k];if(!d)return;const b=document.createElement('button');b.className='decorCard'+(cur().decorId===k?' active':'');b.type='button';b.innerHTML=`${allowed.includes(k)?'<span class="recommended">Adapté</span>':''}<img src="${d.src}" alt=""><b>${escapeHTML(d.label)}</b>`;b.addEventListener('click',()=>{cur().decorId=k;renderAll();scheduleSave()});host.appendChild(b)})
+}
+function addAsset(assetId){
+  const a=assetMap[assetId];if(!a)return;const p=cur();const n=p.elements.length;
+  const el={id:uid(),assetId:a.id,kind:a.kind,x:10+(n%4)*18,y:a.kind==='object'?68:46+(n%2)*5,w:a.w,z:n+1,flip:false};
+  p.elements.push(el);selectedId=el.id;if(a.kind==='character'&&!p.speakerId)p.speakerId=el.id;renderAll();scheduleSave();toast(a.label+' ajouté')
+}
+function getSelected(){return cur().elements.find(e=>e.id===selectedId)||null}
+function renderScene(){
+  const p=cur(),bg=decors[p.decorId]||decors.village;$('#sceneBg').src=bg.src;$('#narrationPreview').textContent=p.narration||'';$('#bubbleTextPreview').textContent=p.bubble||'';
+  const empty=$('#emptyScene');empty.classList.toggle('hidden',!!(p.momentId||p.elements.length||p.narration||p.bubble));
+  const layer=$('#sceneElements');layer.innerHTML='';
+  [...p.elements].sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const d=document.createElement('div');d.className='sceneEl '+(e.kind==='object'?'object ':'')+(e.id===selectedId?'selected ':'')+(e.id===p.speakerId?'speaker ':'');d.dataset.id=e.id;d.style.left=e.x+'%';d.style.top=e.y+'%';d.style.width=e.w+'%';d.style.zIndex=String(30+e.z);d.style.transform=e.flip?'scaleX(-1)':'';d.innerHTML=`<img src="${a.src}" alt="${escapeHTML(a.label)}">`;d.addEventListener('pointerdown',startDrag);d.addEventListener('click',ev=>{ev.stopPropagation();selectedId=e.id;renderScene();renderInspector()});layer.appendChild(d)});
+  $('#speechBubble').classList.toggle('thought',p.bubbleType==='thought');positionBubble();
+  $('#scene').onclick=ev=>{if(ev.target.id==='scene'||ev.target.id==='sceneBg'||ev.target.classList.contains('sceneShade')){selectedId=null;renderScene();renderInspector()}}
+}
+function positionBubble(){
+  const p=cur(),bubble=$('#speechBubble'),tail=$('#speechTail');if(!p.bubble||!p.speakerId){bubble.style.display='none';return}const sp=p.elements.find(e=>e.id===p.speakerId);if(!sp){bubble.style.display='none';return}bubble.style.display='block';
+  const cx=sp.x+sp.w/2, headY=sp.y+3;const bw=36;let left=cx<50?sp.x+sp.w+3:sp.x-bw-3;left=clamp(left,2,98-bw);let top=headY-25;if(top<18)top=Math.min(63,sp.y+10);top=clamp(top,18,66);bubble.style.left=left+'%';bubble.style.top=top+'%';
+  const bubbleCenter=left+bw/2;const speakerOnRight=cx>bubbleCenter;tail.className='speechTail '+(speakerOnRight?'tail-right':'tail-left');
+}
+function startDrag(ev){
+  ev.preventDefault();ev.stopPropagation();const id=ev.currentTarget.dataset.id;selectedId=id;const e=cur().elements.find(x=>x.id===id);if(!e)return;renderInspector();renderScene();
+  const rect=$('#scene').getBoundingClientRect(),startX=ev.clientX,startY=ev.clientY,ox=e.x,oy=e.y;
+  const move=mv=>{e.x=clamp(ox+(mv.clientX-startX)/rect.width*100,0,100-e.w);e.y=clamp(oy+(mv.clientY-startY)/rect.height*100,17,89);const dom=$(`.sceneEl[data-id="${id}"]`);if(dom){dom.style.left=e.x+'%';dom.style.top=e.y+'%'}positionBubble();renderThumbs();scheduleSave()};
+  const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);renderAll()};window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',up,{once:true})
+}
+function renderInspector(){
+  const p=cur(),host=$('#selectionTools');$('#inspectorPanelNum').textContent=`n° ${state.current+1} / 8`;$('#narrationInput').value=p.narration||'';$('#bubbleInput').value=p.bubble||'';
+  const e=getSelected();if(!e){host.innerHTML='<div class="emptyInspector">Clique sur un personnage dans la vignette pour le modifier.</div>';return}const a=assetMap[e.assetId];host.innerHTML=`<div class="selectedInfo"><img class="selectedThumb" src="${a.src}" alt=""><div><div class="selectedName">${escapeHTML(a.label)}</div><div class="tiny">${e.kind==='character'?'personnage':'objet'}</div></div></div><div class="rowBtns">${e.kind==='character'?'<button class="toolBtn speakerBtn" id="makeSpeaker">💬 Faire parler ce personnage</button>':''}<button class="toolBtn" id="toFront">⬆ Premier plan</button><button class="toolBtn" id="toBack">⬇ Arrière-plan</button><button class="toolBtn" id="duplicateEl">⧉ Dupliquer</button><button class="toolBtn danger" id="deleteEl">🗑 Supprimer</button><button class="toolBtn" id="alignOne">↧ Aligner au sol</button><button class="toolBtn" id="flipEl">↔ Retourner</button></div><div class="rangeRow"><span>Petit</span><input id="sizeRange" type="range" min="6" max="32" step="1" value="${e.w}"><span>Grand</span></div>`;
+  $('#makeSpeaker')?.addEventListener('click',()=>{p.speakerId=e.id;renderAll();scheduleSave();toast('La bulle suivra maintenant ce personnage')});
+  $('#toFront').onclick=()=>{e.z=Math.max(0,...p.elements.map(x=>x.z))+1;renderAll();scheduleSave();toast('Passé au premier plan')};
+  $('#toBack').onclick=()=>{e.z=Math.min(0,...p.elements.map(x=>x.z))-1;renderAll();scheduleSave();toast("Passé à l’arrière-plan")};
+  $('#duplicateEl').onclick=()=>{const copy={...e,id:uid(),x:clamp(e.x+6,0,100-e.w),y:clamp(e.y+2,17,89),z:Math.max(...p.elements.map(x=>x.z))+1};p.elements.push(copy);selectedId=copy.id;renderAll();scheduleSave();toast('Copie créée : utile pour faire un groupe de villageois')};
+  $('#deleteEl').onclick=()=>{p.elements=p.elements.filter(x=>x.id!==e.id);if(p.speakerId===e.id){const first=p.elements.find(x=>x.kind==='character');p.speakerId=first?first.id:null}selectedId=null;renderAll();scheduleSave()};
+  $('#alignOne').onclick=()=>{alignElementToGround(e);renderAll();scheduleSave()};
+  $('#flipEl').onclick=()=>{e.flip=!e.flip;renderAll();scheduleSave()};
+  $('#sizeRange').addEventListener('input',ev=>{e.w=Number(ev.target.value);e.x=clamp(e.x,0,100-e.w);renderScene();renderThumbs();scheduleSave()})
+}
+function alignElementToGround(e){const scene=$('#scene').getBoundingClientRect();const dom=$(`.sceneEl[data-id="${e.id}"]`);if(dom){const r=dom.getBoundingClientRect();const hPct=r.height/scene.height*100;e.y=clamp(97-hPct,17,89)}else e.y=62}
+function renderThumbs(){
+  const host=$('#thumbs');host.innerHTML='';state.panels.forEach((p,i)=>{const b=document.createElement('button');b.className='thumb'+(i===state.current?' active':'')+(!p.momentId&&!p.elements.length&&!p.narration&&!p.bubble?' empty':'');b.type='button';b.innerHTML=`<span class="thumbNum">${i+1}</span>`;const d=decors[p.decorId]||decors.village;const bg=document.createElement('img');bg.className='miniBg';bg.src=d.src;b.appendChild(bg);p.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='miniEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=Math.max(15,e.y-5)+'%';im.style.width=e.w+'%';im.style.transform=e.flip?'scaleX(-1)':'';b.appendChild(im)});b.addEventListener('click',()=>{state.current=i;selectedId=null;renderAll();scheduleSave()});host.appendChild(b)})
+}
+function renderAll(){renderMomentSelect();renderDecorLibrary();renderScene();renderInspector();renderThumbs();$('#panelNum').textContent=state.current+1;$('#momentHint').textContent=momentTips[cur().momentId]||momentTips[''];$$('.bubbleTypeBtn').forEach(b=>b.classList.toggle('active',b.dataset.bubble===cur().bubbleType))}
+function changeMoment(id){
+  const p=cur(),old=momentById(p.momentId);const m=momentById(id);const shouldReplace=!p.narration||p.narration===old.narration;p.momentId=id;if(shouldReplace)p.narration=m.narration;if(m.decors?.length&&!m.decors.includes(p.decorId))p.decorId=m.decors[0];renderAll();scheduleSave();switchTab('characters')
+}
+function setBubbleType(type){cur().bubbleType=type;renderAll();scheduleSave()}
+function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
+function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
+function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:13,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function staticScene(panel){
+  const box=document.createElement('div');box.className='staticScene';const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
+  if(panel.narration){const n=document.createElement('div');n.className='staticNarration';n.textContent=panel.narration;box.appendChild(n)}
+  panel.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='staticEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=e.y+'%';im.style.width=e.w+'%';im.style.zIndex=String(10+e.z);im.style.transform=e.flip?'scaleX(-1)':'';box.appendChild(im)});
+  if(panel.bubble&&panel.speakerId){const sp=panel.elements.find(e=>e.id===panel.speakerId);if(sp){const cx=sp.x+sp.w/2,bw=36;let left=cx<50?sp.x+sp.w+3:sp.x-bw-3;left=clamp(left,2,98-bw);let top=clamp(sp.y-22,18,66);const s=document.createElement('div');s.className='staticBubble '+(panel.bubbleType==='thought'?'thought ':'')+(cx>left+bw/2?'tailR':'tailL');s.textContent=panel.bubble;s.style.left=left+'%';s.style.top=top+'%';box.appendChild(s)}}
+  if(!panel.momentId&&!panel.elements.length&&!panel.narration&&!panel.bubble){const em=document.createElement('div');em.className='previewEmpty';em.textContent='Vignette à compléter';box.appendChild(em)}return box
+}
+function buildPreview(){const host=$('#previewGrid');host.innerHTML='';state.panels.forEach((p,i)=>{const card=document.createElement('div');card.className='previewPanel';card.appendChild(staticScene(p));const meta=document.createElement('div');meta.className='previewMeta';meta.textContent=`Vignette ${i+1} — ${momentById(p.momentId).label.replace('— Choisir un moment —','à compléter')}`;card.appendChild(meta);host.appendChild(card)});$('#previewModal').classList.add('show')}
+function buildPrint(){const host=$('#printGrid');host.innerHTML='';state.panels.forEach(p=>{const card=document.createElement('div');card.className='printPanel';card.appendChild(staticScene(p));host.appendChild(card)})}
+function printBD(bw=false){buildPrint();document.body.classList.toggle('printBW',bw);window.print();setTimeout(()=>document.body.classList.remove('printBW'),700)}
+function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Le premier personnage ajouté devient celui qui parle. Pour changer, sélectionne un personnage puis clique sur <strong>Faire parler ce personnage</strong>.</li><li>Écris le cartouche de narration et, si tu le souhaites, une bulle.</li><li>Passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Déplacer un personnage</h3><p>Pose le doigt ou la souris sur lui et fais-le glisser. La bulle suit automatiquement le personnage qui parle.</p><h3>Premier plan / arrière-plan</h3><p>Sélectionne un personnage puis utilise les deux boutons. Ils modifient réellement l’ordre d’affichage des personnages.</p><h3>Dupliquer</h3><p>Le bouton <strong>Dupliquer</strong> crée une copie du personnage sélectionné. C’est pratique pour former un groupe de villageois sans chercher plusieurs fois le même dessin.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc. Tu peux afficher tous les décors si tu veux volontairement sortir de ces propositions.</p>`}$('#helpModal').classList.add('show')}
+function speakText(text){if(!('speechSynthesis'in window)||!text)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);currentUtter=u;u.lang='fr-FR';u.rate=.92;window.speechSynthesis.speak(u)}
+
+// Événements
+$$('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+$('#momentSelect').addEventListener('change',e=>changeMoment(e.target.value));
+$('#showAllDecors').addEventListener('change',e=>{showAllDecors=e.target.checked;renderDecorLibrary()});
+$$('.bubbleTypeBtn').forEach(b=>b.addEventListener('click',()=>setBubbleType(b.dataset.bubble)));
+$('#narrationInput').addEventListener('input',e=>{cur().narration=e.target.value;$('#narrationPreview').textContent=e.target.value;renderThumbs();scheduleSave()});
+$('#bubbleInput').addEventListener('input',e=>{cur().bubble=e.target.value;$('#bubbleTextPreview').textContent=e.target.value;positionBubble();renderThumbs();scheduleSave()});
+$('#prevPanel').addEventListener('click',()=>changePanel(-1));$('#nextPanel').addEventListener('click',()=>changePanel(1));
+$('#clearPanel').addEventListener('click',clearCurrent);$('#alignAll').addEventListener('click',alignAll);
+$('#newBD').addEventListener('click',newBD);$('#saveBtn').addEventListener('click',()=>save(true));$('#helpBtn').addEventListener('click',()=>showHelp('help'));$('#instructionsBtn').addEventListener('click',()=>showHelp('instructions'));
+$('#previewBtn').addEventListener('click',buildPreview);$('#printBtn').addEventListener('click',()=>{$('#previewModal').classList.add('show');buildPreview()});$('#printColor').addEventListener('click',()=>printBD(false));$('#printBW').addEventListener('click',()=>printBD(true));
+$$('[data-close]').forEach(b=>b.addEventListener('click',()=>$('#'+b.dataset.close).classList.remove('show')));$$('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
+$('#readNarration').addEventListener('click',()=>speakText(cur().narration));$('#readBubble').addEventListener('click',()=>speakText(cur().bubble));$('#readScene').addEventListener('click',()=>speakText([cur().narration,cur().bubble].filter(Boolean).join('. ')));$('#readHelp').addEventListener('click',()=>speakText($('#helpContent').innerText));
+window.addEventListener('beforeunload',()=>save(false));
+window.addEventListener('resize',()=>positionBubble());
+
+renderCharacterLibrary();load();renderAll();
+</script>
+</body>
+</html>
