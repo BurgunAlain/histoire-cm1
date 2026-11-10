@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- BUILD: 2026-11-10-v19-speech-tail -->
+<!-- BUILD: 2026-11-10-v23-manual-fixed-tail-base -->
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -16,7 +16,7 @@ button,select,textarea,input{font:inherit}
 button{cursor:pointer}
 button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid #8eb7ff;outline-offset:2px}
 .app{min-height:100vh;display:flex;flex-direction:column}
-.topbar{background:linear-gradient(135deg,#4f2f99,#6e4abb 58%,#5935a0);color:#fff;display:flex;align-items:center;gap:16px;padding:10px 16px;box-shadow:0 3px 12px rgba(36,20,77,.28);position:sticky;top:0;z-index:50}
+.topbar{background:linear-gradient(135deg,#4f2f99,#6e4abb 58%,#5935a0);color:#fff;display:flex;align-items:center;gap:16px;padding:10px 16px;box-shadow:0 3px 12px rgba(36,20,77,.28);position:sticky;top:0;z-index:1300}
 .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}.brandMark{font-size:34px}.brand h1{font-size:clamp(21px,2.2vw,35px);line-height:1;margin:0;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.badge{border:2px solid rgba(255,255,255,.75);border-radius:999px;padding:6px 13px;font-weight:800;white-space:nowrap}
 .topActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.topBtn{border:0;border-radius:11px;background:#fff;color:#342665;padding:9px 13px;font-weight:850;box-shadow:0 2px 0 rgba(0,0,0,.12)}.topBtn.primary{background:#ffe36d}.topBtn:hover{transform:translateY(-1px)}
 .workspace{display:grid;grid-template-columns:280px minmax(420px,1fr) 300px;gap:10px;padding:10px;flex:1;min-height:0}
@@ -30,18 +30,17 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 .stageCol{display:flex;flex-direction:column;min-width:0;gap:9px}.sceneBar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fff;border:1px solid #d6d9e7;border-radius:13px;box-shadow:var(--shadow)}.sceneBar .count{font-weight:900}.sceneBar .spacer{flex:1}.navBtn{width:40px;height:36px;border:0;border-radius:10px;background:#eee9fb;color:#4e3698;font-size:23px;font-weight:900}.statusDot{font-size:12px;color:#657084}
 .sceneWrap{background:#fff;border:1px solid #d6d9e7;border-radius:15px;padding:9px;box-shadow:var(--shadow);min-width:0}.scene{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:4px solid #24314d;border-radius:8px;background:#dce8ef;touch-action:none;user-select:none}.sceneBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}.sceneShade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,.06),rgba(0,0,0,.02))}.narration{position:absolute;left:2.5%;right:2.5%;top:2.5%;z-index:900;background:linear-gradient(#fff3b5,#ffe991);border:2px solid #302a23;border-radius:5px;padding:7px 11px;font-family:Georgia,serif;font-weight:700;font-style:italic;font-size:clamp(12px,1.65vw,21px);line-height:1.15;box-shadow:0 2px 4px rgba(0,0,0,.15);pointer-events:none;max-height:25%;overflow:hidden}.narration:empty{display:none}
 .sceneElements{position:absolute;inset:0;z-index:20}.sceneEl{position:absolute;transform-origin:center bottom;touch-action:none;cursor:grab;filter:drop-shadow(0 3px 2px rgba(0,0,0,.18));display:block}.sceneEl:active{cursor:grabbing}.sceneEl.selected{outline:3px dashed #ffdc43;outline-offset:3px}.sceneEl.speaker::after{content:'💬';position:absolute;right:-13px;top:-17px;width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid #4c36a0;display:grid;place-items:center;font-size:15px;box-shadow:0 2px 4px rgba(0,0,0,.2)}.sceneEl img{width:100%;height:auto;object-fit:contain;display:block;pointer-events:none}.sceneEl.object{filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}
-.speechBubble{position:absolute;z-index:1000;width:36%;min-width:155px;max-width:300px;background:#fff;border:3px solid #222;border-radius:50%;padding:12px 15px;text-align:center;font-weight:800;line-height:1.15;font-size:clamp(11px,1.4vw,18px);box-shadow:0 3px 6px rgba(0,0,0,.13);pointer-events:none;transform:translateZ(0);box-sizing:border-box;overflow-wrap:anywhere;word-break:break-word;hyphens:auto;white-space:normal}.speechBubble.thought{border-style:dashed;border-width:3px;border-radius:48%}.speechBubble:empty{display:none}.speechTail{position:absolute;width:0;height:0;border-style:solid}.tail-left{left:12%;bottom:-24px;border-width:24px 19px 0 0;border-color:#222 transparent transparent transparent}.tail-left::after{content:'';position:absolute;left:4px;top:-23px;border-style:solid;border-width:19px 15px 0 0;border-color:#fff transparent transparent transparent}.tail-right{right:12%;bottom:-24px;border-width:24px 0 0 19px;border-color:#222 transparent transparent transparent}.tail-right::after{content:'';position:absolute;right:4px;top:-23px;border-style:solid;border-width:19px 0 0 15px;border-color:#fff transparent transparent transparent}.thought .speechTail{width:14px;height:14px;border:3px solid #222;border-radius:50%;background:#fff;bottom:-20px}.thought .speechTail::after{content:'';position:absolute;width:7px;height:7px;border:2px solid #222;border-radius:50%;background:#fff;bottom:-12px}.thought .tail-left{left:18%;border-width:3px}.thought .tail-right{right:18%;border-width:3px}
 .emptyScene{position:absolute;inset:0;z-index:5;display:grid;place-items:center;color:#fff;text-shadow:0 2px 4px #000;background:rgba(31,46,58,.15);font-weight:900;font-size:22px;text-align:center;padding:30px}.emptyScene.hidden{display:none}
 .tipBar{padding:7px 10px;background:#fffaf0;border:1px solid #eadcb9;border-radius:10px;font-size:12px;color:#6c5b31}.tipBar strong{color:#463475}
 .inspector{display:flex;flex-direction:column}.inspectorBody{padding:10px;overflow:auto;max-height:calc(100vh - 164px)}.editBlock{border:1px solid #d8d9e8;border-radius:11px;margin-bottom:10px;overflow:hidden}.editBlock h3{margin:0;padding:8px 10px;background:#f0ebfb;color:#493887;font-size:14px;display:flex;align-items:center;gap:7px}.editBlock .body{padding:9px}.editBlock textarea{width:100%;min-height:75px;border:2px solid #d8d9e8;border-radius:9px;padding:8px;resize:vertical;line-height:1.25}.rowBtns{display:grid;grid-template-columns:1fr 1fr;gap:7px}.toolBtn{border:2px solid #d8d9e8;border-radius:10px;background:#fff;padding:9px 6px;font-weight:850;font-size:12px}.toolBtn:hover{border-color:#775ac4}.toolBtn.danger{color:#b52828;border-color:#efc8c8}.toolBtn.speakerBtn{grid-column:1/-1;background:#f0ebff;border-color:#8c73d1;color:#463481}.selectedInfo{display:flex;align-items:center;gap:8px;margin-bottom:8px;background:#faf9fd;border-radius:9px;padding:7px}.selectedThumb{width:45px;height:45px;object-fit:contain}.selectedName{font-weight:900;font-size:13px}.rangeRow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin-top:8px;font-size:12px}.rangeRow input{width:100%}.smallToggle{display:flex;gap:7px;align-items:center;font-size:12px;margin-top:8px}.smallToggle input{width:18px;height:18px}.emptyInspector{font-size:13px;color:#6d7486;background:#f8f8fb;border-radius:10px;padding:11px}
 .filmstrip{margin:0 10px 10px;background:#fff;border:1px solid #d6d9e7;border-radius:15px;box-shadow:var(--shadow);display:grid;grid-template-columns:155px 1fr 220px;gap:10px;align-items:center;padding:9px}.filmTitle{background:linear-gradient(#7153bc,#5a3ba7);color:#fff;border-radius:11px;padding:12px;font-weight:900;line-height:1.15}.thumbs{display:grid;grid-template-columns:repeat(8,minmax(70px,1fr));gap:7px;min-width:0}.thumb{position:relative;border:3px solid #d8dce8;border-radius:10px;background:#eef1f5;aspect-ratio:4/3;overflow:hidden;padding:0}.thumb.active{border-color:#653fc7;box-shadow:0 0 0 2px #d8cfff}.thumbNum{position:absolute;z-index:30;top:2px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;color:#3f3482;display:grid;place-items:center;font-weight:900;font-size:12px;border:1px solid #bbb}.thumb .miniBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.thumb .miniEl{position:absolute;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}.thumb.empty::after{content:'+';position:absolute;inset:0;display:grid;place-items:center;font-size:33px;color:#9ea6b4;font-weight:900}.bottomActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bigAction{border:0;border-radius:11px;padding:12px 8px;font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.14)}.bigAction.preview{background:#39b74e;color:#fff}.bigAction.print{background:#f1e8ff;color:#4b3298;border:2px solid #8e72d4}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:2000;background:#2e3548;color:#fff;border-radius:999px;padding:10px 16px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;bottom:30px}
-.modal{position:fixed;inset:0;background:rgba(24,28,42,.72);z-index:1500;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalCard{background:#fff;width:min(1100px,96vw);max-height:92vh;overflow:auto;border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.34)}.modalHead{position:sticky;top:0;z-index:5;background:#5b3baa;color:#fff;padding:11px 14px;display:flex;align-items:center;gap:10px}.modalHead h2{margin:0;font-size:20px;flex:1}.closeBtn{border:0;border-radius:9px;background:#fff;color:#4a327e;font-weight:900;padding:7px 10px}.modalBody{padding:14px}.previewGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.previewPanel{border:3px solid #2f3548;border-radius:8px;overflow:hidden;background:#fff}.staticScene{position:relative;aspect-ratio:16/9;overflow:hidden;background:#ddd}.staticScene .sceneBg{z-index:0}.staticScene .staticEl{position:absolute;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}.staticNarration{position:absolute;z-index:50;top:2.5%;left:2.5%;right:2.5%;background:#fff0a4;border:2px solid #222;border-radius:4px;padding:6px 9px;font:700 italic 13px/1.15 Georgia,serif}.staticBubble{position:absolute;z-index:60;width:36%;background:#fff;border:2px solid #222;border-radius:50%;padding:8px;text-align:center;font-size:12px;font-weight:800;line-height:1.1;box-sizing:border-box;overflow-wrap:anywhere;word-break:break-word;hyphens:auto;white-space:normal}.staticBubble.thought{border-style:dashed}.staticTailSvg{position:absolute;inset:0;width:100%;height:100%;z-index:61;pointer-events:none;overflow:visible}.previewEmpty{display:grid;place-items:center;height:100%;font-weight:800;color:#788092}.previewMeta{font-size:11px;padding:5px 7px;color:#657084;font-weight:800}
+.modal{position:fixed;inset:0;background:rgba(24,28,42,.72);z-index:1500;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalCard{background:#fff;width:min(1100px,96vw);max-height:92vh;overflow:auto;border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.34)}.modalHead{position:sticky;top:0;z-index:5;background:#5b3baa;color:#fff;padding:11px 14px;display:flex;align-items:center;gap:10px}.modalHead h2{margin:0;font-size:20px;flex:1}.closeBtn{border:0;border-radius:9px;background:#fff;color:#4a327e;font-weight:900;padding:7px 10px}.modalBody{padding:14px}.previewGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.previewPanel{border:3px solid #2f3548;border-radius:8px;overflow:hidden;background:#fff}.staticScene{position:relative;aspect-ratio:16/9;overflow:hidden;background:#ddd}.staticScene .sceneBg{z-index:0}.staticScene .staticEl{position:absolute;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.18))}.staticNarration{position:absolute;z-index:50;top:2.5%;left:2.5%;right:2.5%;background:#fff0a4;border:2px solid #222;border-radius:4px;padding:6px 9px;font:700 italic 13px/1.15 Georgia,serif}.previewEmpty{display:grid;place-items:center;height:100%;font-weight:800;color:#788092}.previewMeta{font-size:11px;padding:5px 7px;color:#657084;font-weight:800}
 .helpText{line-height:1.55}.helpText h3{color:#513a98}.helpText ul{padding-left:20px}.speakSmall{border:0;border-radius:8px;background:#eee9fb;color:#49388a;padding:5px 7px;font-weight:900}
 #printArea{display:none}
 @media(max-width:1180px){.workspace{grid-template-columns:245px minmax(390px,1fr) 265px}.assetCard{min-height:105px}.assetCard img{height:70px}.brand h1{font-size:26px}.topBtn{padding:8px 9px}.filmstrip{grid-template-columns:125px 1fr 180px}}
 @media(max-width:930px){.topbar{position:relative}.workspace{grid-template-columns:1fr}.library,.inspector{min-height:0}.tabPane,.inspectorBody{max-height:none}.scene{min-height:430px;aspect-ratio:auto}.filmstrip{grid-template-columns:1fr}.thumbs{overflow-x:auto;grid-template-columns:repeat(8,110px)}.filmTitle{display:none}.bottomActions{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.badge{display:none}.topActions{display:none}.workspace{padding:6px}.scene{min-height:360px}.previewGrid{grid-template-columns:1fr}.filmstrip{margin:0 6px 6px}.speechBubble{min-width:125px;padding:9px;font-size:12px}}
+@media(max-width:600px){.badge{display:none}.topActions{display:none}.workspace{padding:6px}.scene{min-height:360px}.previewGrid{grid-template-columns:1fr}.filmstrip{margin:0 6px 6px}}
 @media print{
   @page{size:A4 portrait;margin:8mm}
   body>*:not(#printArea){display:none!important}
@@ -50,16 +49,10 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
   .printGrid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
   .printPanel{border:2px solid #111;break-inside:avoid;background:#fff}
   .printPanel .staticScene{aspect-ratio:16/9}
-  .printPanel .staticNarration{font-size:10px;padding:4px 6px}
-  .printPanel .staticBubble{font-size:9px;padding:5px;border-width:1.5px}
   body.printBW #printArea{filter:grayscale(1) contrast(1.07)}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
 
-.bubbleTailSvg{position:absolute;inset:0;width:100%;height:100%;z-index:1001;pointer-events:none;overflow:visible}
-.bubbleLayer{position:absolute;inset:0;z-index:950;pointer-events:none}
-.tailHandleLayer{position:absolute;inset:0;z-index:1100;pointer-events:none}.tailHandleLayer.editing{pointer-events:auto;cursor:crosshair}.tailHandle{position:absolute;width:40px;height:40px;border-radius:50%;transform:translate(-50%,-50%);background:#ffdf55;border:4px solid #4d36a4;box-shadow:0 3px 8px rgba(0,0,0,.35);pointer-events:auto;touch-action:none;cursor:grab;display:grid;place-items:center;font-size:16px;font-weight:900;color:#3d2d79}.tailHandle:active{cursor:grabbing}.tailHandle::after{content:'↕';font-size:18px;line-height:1}.tailHandleHint{font-size:11px;line-height:1.3;color:#6d6487;background:#fff8cf;border:1px solid #ead98a;border-radius:8px;padding:7px 8px;margin-top:7px}.tailResetBtn,.tailEditBtn{grid-column:1/-1;border:2px solid #d7d1ea;border-radius:9px;background:#fff;color:#4d388d;padding:8px;font-weight:850;font-size:12px}.tailEditBtn.active{background:#fff3a8;border-color:#d8b62d;color:#5a4800}.tailEditBadge{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:1200;background:#fff3a8;border:2px solid #6d54b8;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:900;color:#4a347c;pointer-events:none;box-shadow:0 3px 8px rgba(0,0,0,.18)}
-.bubbleLayer .speechBubble{position:absolute;display:block}
 .bubbleOwner{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:#493887;margin-bottom:7px;padding:6px 8px;background:#f6f2ff;border-radius:8px}
 .bubbleEditorEmpty{font-size:12px;line-height:1.35;color:#6a7182;background:#f8f8fb;border-radius:9px;padding:9px}
 .bubbleEditorActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
@@ -70,6 +63,22 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 .bubbleRoster{margin-top:9px;border-top:1px solid #e1dfeb;padding-top:7px}.bubbleRosterTitle{font-size:11px;font-weight:900;color:#777e8e;margin-bottom:5px}.bubbleRosterItem{display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 6px;border-radius:7px;background:#faf9fd;margin:4px 0}.bubbleRosterItem button{margin-left:auto;border:1px solid #d4cee9;background:#fff;border-radius:7px;padding:3px 6px;font-size:10px;font-weight:800;color:#4d388d}
 .sceneEl.speaker::after{content:'💬';}
 
+
+/* The same 16:9 coordinate plane is used in editing, preview and print. */
+.scene{aspect-ratio:16/9!important;min-height:0!important;border:0;outline:4px solid #24314d;outline-offset:-1px}
+.bubbleLayer{position:absolute;inset:0;width:100%;height:100%;z-index:950;pointer-events:none;overflow:visible}
+.bubbleBody{pointer-events:all;cursor:grab;touch-action:none}
+.bubbleBody:active{cursor:grabbing}
+.bubbleSelection{fill:none;stroke:#6943bd;stroke-width:2;stroke-dasharray:6 5;pointer-events:none}
+.tailHandleLayer{position:absolute;inset:0;z-index:1100;pointer-events:none}
+.handleGuides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.tailHandle{position:absolute;width:32px;height:32px;border-radius:50%;transform:translate(-50%,-50%);background:#ffdf55;border:3px solid #4d36a4;box-shadow:0 2px 5px #0005;pointer-events:auto;touch-action:none;cursor:grab;color:#39216f;font-size:12px;font-weight:900;padding:0}
+.tailHandle[data-point="tip"]{background:#bceaff}
+.tailHandleHint{font-size:11px;line-height:1.4;color:#6d6487;background:#fff8cf;border:1px solid #ead98a;border-radius:8px;padding:7px 8px;margin-top:7px}
+.tailResetBtn{grid-column:1/-1;border:2px solid #d7d1ea;border-radius:9px;background:#fff;color:#4d388d;padding:8px;font-weight:850;font-size:12px}
+.narration,.staticNarration{display:none}
+.narrationGraphic{position:absolute;inset:0;width:100%;height:100%;z-index:900;pointer-events:none}
+@media print{.tailHandleLayer,.bubbleSelection{display:none!important}}
 </style>
 </head>
 <body>
@@ -105,7 +114,7 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
         <div class="decorGrid" id="decorLibrary"></div>
       </div>
       <div class="tabPane" id="tab-bubbles">
-        <div class="hint"><strong>Plusieurs personnages peuvent parler.</strong><br>1. Clique sur un personnage dans la vignette.<br>2. Ajoute sa bulle dans le panneau de droite.<br>3. Clique sur un autre personnage et recommence.<br><br>Chaque bulle reste attachée à son personnage et se replace automatiquement quand tu le déplaces.</div>
+        <div class="hint"><strong>Plusieurs personnages peuvent parler.</strong><br>1. Clique sur un personnage dans la vignette.<br>2. Ajoute sa bulle dans le panneau de droite.<br>3. Clique sur un autre personnage et recommence.<br><br>Chaque bulle indique qui parle. Déplace-la directement, puis ajuste ses trois poignées (base courte à largeur fixe). Déplacer le personnage ne change pas la bulle.</div>
         <div id="bubbleLibraryStatus" class="hint">Aucune bulle dans cette vignette.</div>
       </div>
     </aside>
@@ -126,8 +135,7 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
           <div class="emptyScene" id="emptyScene">Choisis un moment puis ajoute tes personnages.</div>
           <div class="narration" id="narrationPreview"></div>
           <div class="sceneElements" id="sceneElements"></div>
-          <svg class="bubbleTailSvg" id="bubbleTailSvg" aria-hidden="true"></svg>
-          <div class="bubbleLayer" id="bubbleLayer"></div>
+          <svg class="bubbleLayer" id="bubbleLayer" viewBox="0 0 1000 562.5" aria-label="Bulles de la vignette"></svg>
           <div class="tailHandleLayer" id="tailHandleLayer"></div>
         </div>
       </div>
@@ -246,8 +254,8 @@ const assets=[
 const assetMap=Object.fromEntries(assets.map(a=>[a.id,a]));
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function blankPanel(){return{momentId:'',decorId:'village',narration:'',dialogues:[],elements:[]}}
-let state={version:22,current:0,panels:Array.from({length:8},blankPanel)};
-let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,bubbleRAF=0,tailEditDialogueId=null;
+let state={version:23,current:0,panels:Array.from({length:8},blankPanel)};
+let selectedId=null,showAllDecors=false,saveTimer=null,currentUtter=null,activeBubbleGesture=null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const cur=()=>state.panels[state.current];
@@ -262,7 +270,14 @@ function migratePanel(p){
   if(p.bubble&&p.speakerId&&!p.dialogues.some(d=>d.speakerId===p.speakerId)){
     p.dialogues.push({id:uid(),speakerId:p.speakerId,text:String(p.bubble),type:p.bubbleType==='thought'?'thought':'speech'});
   }
-  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>({id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech',bx:Number.isFinite(Number(d.bx))?Number(d.bx):null,by:Number.isFinite(Number(d.by))?Number(d.by):null,tx:Number.isFinite(Number(d.tx))?Number(d.tx):null,ty:Number.isFinite(Number(d.ty))?Number(d.ty):null}));
+  p.dialogues=p.dialogues.filter(d=>d&&d.speakerId&&p.elements.some(e=>e.id===d.speakerId&&e.kind==='character')).map(d=>{
+    const next={id:d.id||uid(),speakerId:d.speakerId,text:String(d.text||''),type:d.type==='thought'?'thought':'speech'};
+    for(const key of ['bx','by','bw','bh','tx','ty'])if(typeof d[key]==='number'&&Number.isFinite(d[key]))next[key]=d[key];
+    if([1,2].includes(d.geometryVersion)&&d.baseLeft&&d.baseRight&&Array.isArray(d.lines)){
+      next.geometryVersion=d.geometryVersion;next.baseLeft={...d.baseLeft};next.baseRight={...d.baseRight};next.lines=d.lines.map(String);
+    }
+    ensureBubbleGeometry(next,p.dialogues.indexOf(d));return next;
+  });
   const seen=new Set();p.dialogues=p.dialogues.filter(d=>!seen.has(d.speakerId)&&(seen.add(d.speakerId),true));
   delete p.bubble;delete p.bubbleType;delete p.speakerId;
   if(!p.decorId)p.decorId='village';if(typeof p.narration!=='string')p.narration='';if(typeof p.momentId!=='string')p.momentId='';
@@ -273,7 +288,7 @@ function load(){
     let raw=localStorage.getItem(STORAGE_KEY),fromOld=false;
     if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw){fromOld=true;break}}}
     if(!raw)return;const obj=JSON.parse(raw);
-    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=22;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
+    if(obj&&Array.isArray(obj.panels)&&obj.panels.length===8){state=obj;state.panels=state.panels.map(migratePanel);state.version=23;state.current=clamp(Number(state.current)||0,0,7);if(fromOld)save(false);toast(fromOld?'Ancienne BD reprise et convertie ✓':'BD précédente reprise ✓')}
   }catch(e){}
 }
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
@@ -304,115 +319,148 @@ function renderScene(){
   renderBubbles();
   $('#scene').onclick=ev=>{if(ev.target.id==='scene'||ev.target.id==='sceneBg'||ev.target.classList.contains('sceneShade')){selectedId=null;renderScene();renderInspector()}}
 }
+// Manual bubble engine. Persisted coordinates are percentages of the panel.
+// Canonical SVG units only affect rendering: no DOM measurements or speaker lookup.
+const PLANE={width:1000,height:562.5};
+const svgNS='http://www.w3.org/2000/svg';
+let graphicSerial=0;
+function svgNode(tag,attrs={},text){const n=document.createElementNS(svgNS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n}
+function wrapText(text,width,font='800 18px Arial'){
+  const ctx=wrapText.context||(wrapText.context=document.createElement('canvas').getContext('2d'));ctx.font=font;
+  const lines=[];
+  for(const paragraph of String(text).split('\n')){
+    let line='';
+    for(const word of paragraph.split(/\s+/).filter(Boolean)){
+      const candidate=line?line+' '+word:word;
+      if(ctx.measureText(candidate).width<=width){line=candidate;continue}
+      if(line){lines.push(line);line=''}
+      for(const char of word){if(line&&ctx.measureText(line+char).width>width){lines.push(line);line=''}line+=char}
+    }
+    lines.push(line);
+  }
+  return lines.length?lines:[''];
+}
+function ellipsePoint(d,angle){return{x:d.bx+d.bw/2+Math.cos(angle)*d.bw/2,y:d.by+d.bh/2+Math.sin(angle)*d.bh/2}}
+function baseAngle(d,p){return Math.atan2((p.y-d.by-d.bh/2)/(d.bh/2),(p.x-d.bx-d.bw/2)/(d.bw/2))}
+// Fixed 3% of the panel width (30 canonical units): a short comic-book join.
+// The two base handles move the join together; they never widen it.
+const TAIL_BASE_WIDTH=3;
+function baseCenterAngle(d){const a=baseAngle(d,d.baseLeft),b=baseAngle(d,d.baseRight);return Math.atan2(Math.sin(a)+Math.sin(b),Math.cos(a)+Math.cos(b))}
+function baseHalfAngle(d,angle){
+  const rx=d.bw*PLANE.width/200,ry=d.bh*PLANE.height/200;
+  return Math.asin(Math.min(.98,TAIL_BASE_WIDTH*PLANE.width/100/(2*Math.hypot(rx*Math.sin(angle),ry*Math.cos(angle)))));
+}
+function placeBaseAtAngle(d,angle){const half=baseHalfAngle(d,angle);d.baseLeft=ellipsePoint(d,angle+half);d.baseRight=ellipsePoint(d,angle-half)}
+function resetTailGeometry(d){
+  placeBaseAtAngle(d,Math.PI/2);
+  d.tx=clamp(d.bx+d.bw*.62,0,100);d.ty=clamp(d.by+d.bh+12,0,100);
+}
+function ensureBubbleGeometry(d,index=0){
+  if([1,2].includes(d.geometryVersion)&&[d.bx,d.by,d.bw,d.bh,d.tx,d.ty,d.baseLeft?.x,d.baseLeft?.y,d.baseRight?.x,d.baseRight?.y].every(Number.isFinite)&&d.bw>0&&d.bh>0&&Array.isArray(d.lines)){if(d.geometryVersion===1){placeBaseAtAngle(d,baseCenterAngle(d));d.geometryVersion=2}return;}
+  const oldTip=Number.isFinite(d.tx)&&Number.isFinite(d.ty)?{x:d.tx,y:d.ty}:null;
+  d.bw=36;d.lines=wrapText(d.text,PLANE.width*d.bw/100*.72);
+  d.bh=Math.max(13,((d.lines.length*21+12)/.66)/PLANE.height*100);
+  d.bx=clamp(Number.isFinite(d.bx)?d.bx:8+(index%2)*48,0,100-d.bw);
+  d.by=clamp(Number.isFinite(d.by)?d.by:25+Math.floor(index/2)*18,0,Math.max(0,100-d.bh));
+  resetTailGeometry(d);if(oldTip){d.tx=oldTip.x;d.ty=oldTip.y}d.geometryVersion=2;
+}
+function reflowBubbleText(d){
+  ensureBubbleGeometry(d);const center=baseCenterAngle(d);
+  d.lines=wrapText(d.text,PLANE.width*d.bw/100*.72);
+  d.bh=Math.max(13,((d.lines.length*21+12)/.66)/PLANE.height*100);
+  placeBaseAtAngle(d,center);
+}
+function bubbleGraphic(d,interactive=false){
+  const g=svgNode('g',{'data-dialogue-id':d.id,'data-geometry':JSON.stringify([d.bx,d.by,d.bw,d.bh,d.baseLeft,d.baseRight,d.tx,d.ty,d.lines])});
+  const x=d.bx*10,y=d.by*5.625,w=d.bw*10,h=d.bh*5.625;
+  const a={x:d.baseLeft.x*10,y:d.baseLeft.y*5.625},b={x:d.baseRight.x*10,y:d.baseRight.y*5.625},t={x:d.tx*10,y:d.ty*5.625};
+  const ellipse={cx:x+w/2,cy:y+h/2,rx:w/2,ry:h/2};
+  const points=`${a.x},${a.y} ${b.x},${b.y} ${t.x},${t.y}`;
+  const id='bubbleUnion'+(++graphicSerial),defs=svgNode('defs');
+  // Draw the union: neither the triangle base nor the covered ellipse arc is stroked.
+  for(const [name,shape] of [['body',svgNode('polygon',{points,fill:'black'})],['tail',svgNode('ellipse',{...ellipse,fill:'black'})]]){
+    const mask=svgNode('mask',{id:id+name,maskUnits:'userSpaceOnUse',x:-1000,y:-1000,width:3000,height:2563,'mask-type':'luminance'});
+    mask.append(svgNode('rect',{x:-1000,y:-1000,width:3000,height:2563,fill:'white'}),shape);defs.append(mask);
+  }
+  g.append(defs,svgNode('polygon',{points,fill:'#fff'}),svgNode('ellipse',{...ellipse,fill:'#fff'}));
+  const stroke={fill:'none',stroke:'#222','stroke-width':3,'stroke-linejoin':'round'};
+  g.append(svgNode('ellipse',{...ellipse,...stroke,mask:`url(#${id}body)`,'stroke-dasharray':d.type==='thought'?'7 5':'none'}),svgNode('polyline',{points:`${a.x},${a.y} ${t.x},${t.y} ${b.x},${b.y}`,...stroke,mask:`url(#${id}tail)`}));
+  const body=svgNode('g',interactive?{class:'bubbleBody',role:'button',tabindex:0,'aria-label':'Déplacer la bulle : '+(d.text||'bulle vide')}:{class:'bubbleContent'});
+  body.append(svgNode('ellipse',{...ellipse,fill:'transparent'}));
+  const text=svgNode('text',{x:x+w/2,y:y+h/2-(d.lines.length-1)*10.5+6,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':18,'font-weight':800,fill:'#27324a','pointer-events':'none'});
+  d.lines.forEach((line,i)=>text.append(svgNode('tspan',{x:x+w/2,dy:i?21:0},line)));body.append(text);g.append(body);
+  if(interactive){
+    body.addEventListener('pointerdown',ev=>startBubbleDrag(ev,d));
+    body.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();selectedId=d.speakerId;renderScene();renderInspector()}});
+    if(selectedId===d.speakerId)g.append(svgNode('ellipse',{...ellipse,rx:w/2+5,ry:h/2+5,class:'bubbleSelection'}));
+  }
+  return g;
+}
+function renderNarrationGraphic(host,text){
+  let svg=host.querySelector('.narrationGraphic');if(!svg){svg=svgNode('svg',{class:'narrationGraphic',viewBox:'0 0 1000 562.5'});host.append(svg)}svg.replaceChildren();if(!text)return;
+  const lines=wrapText(text,924,'italic 700 21px Georgia'),h=Math.min(140,lines.length*24+18);
+  const gradientId='cartouche'+(++graphicSerial),gradient=svgNode('linearGradient',{id:gradientId,x2:0,y2:1});gradient.append(svgNode('stop',{offset:0,'stop-color':'#fff3b5'}),svgNode('stop',{offset:1,'stop-color':'#ffe991'}));const gradDefs=svgNode('defs');gradDefs.append(gradient);svg.append(gradDefs,svgNode('rect',{x:25,y:14,width:950,height:h,rx:5,fill:`url(#${gradientId})`,stroke:'#302a23','stroke-width':2}));
+  const clipId='narrationClip'+(++graphicSerial),defs=svgNode('defs'),clip=svgNode('clipPath',{id:clipId});clip.append(svgNode('rect',{x:30,y:16,width:940,height:h-4}));defs.append(clip);svg.append(defs);
+  const t=svgNode('text',{x:38,y:40,'font-family':'Georgia, serif','font-weight':700,'font-style':'italic','font-size':21,fill:'#27324a','clip-path':`url(#${clipId})`});lines.forEach((line,i)=>t.append(svgNode('tspan',{x:38,dy:i?24:0},line)));svg.append(t);
+}
 function renderBubbles(){
-  const p=cur(),host=$('#bubbleLayer'),tailLayer=$('#tailHandleLayer');host.innerHTML='';$('#bubbleTailSvg').innerHTML='';tailLayer.innerHTML='';tailLayer.classList.remove('editing');tailLayer.onclick=null;
-  p.dialogues.forEach(d=>{if(!String(d.text||'').trim()||!p.elements.some(e=>e.id===d.speakerId))return;const b=document.createElement('div');b.className='speechBubble '+(d.type==='thought'?'thought':'');b.dataset.dialogueId=d.id;b.dataset.speakerId=d.speakerId;b.textContent=d.text;host.appendChild(b)});
-  queueBubblePosition();renderBubbleLibraryStatus();
+  const p=cur(),host=$('#bubbleLayer');host.replaceChildren();
+  p.dialogues.forEach((d,i)=>{ensureBubbleGeometry(d,i);if(p.elements.some(e=>e.id===d.speakerId)&&(d.text.trim()||selectedId===d.speakerId))host.append(bubbleGraphic(d,true))});
+  renderTailHandles();renderNarrationGraphic($('#scene'),p.narration);renderBubbleLibraryStatus();
 }
-function queueBubblePosition(){if(bubbleRAF)cancelAnimationFrame(bubbleRAF);bubbleRAF=requestAnimationFrame(()=>{bubbleRAF=0;positionAllBubbles()})}
-function relRect(r,scene){return{x:r.left-scene.left,y:r.top-scene.top,w:r.width,h:r.height,right:r.right-scene.left,bottom:r.bottom-scene.top}}
-function overlapArea(a,b){const w=Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x)),h=Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));return w*h}
-function clampCandidate(c,bw,bh,sw,sh,minY){return{x:clamp(c.x,8,Math.max(8,sw-bw-8)),y:clamp(c.y,minY,Math.max(minY,sh-bh-8)),w:bw,h:bh}}
-function chooseBubbleRect(sceneRect,speakerRect,bw,bh,narrRect,occupied,otherPeople){
-  const sw=sceneRect.width,sh=sceneRect.height,headX=speakerRect.x+speakerRect.w/2,headY=speakerRect.y+Math.min(24,speakerRect.h*.14);const minY=narrRect?Math.min(sh-bh-8,narrRect.bottom+8):8;
-  const raw=[
-    {x:headX-bw/2,y:speakerRect.y-bh-15},
-    {x:speakerRect.right+12,y:speakerRect.y-bh*.28},
-    {x:speakerRect.x-bw-12,y:speakerRect.y-bh*.28},
-    {x:headX+14,y:speakerRect.y-bh-12},
-    {x:headX-bw-14,y:speakerRect.y-bh-12},
-    {x:speakerRect.right+10,y:speakerRect.y+speakerRect.h*.08},
-    {x:speakerRect.x-bw-10,y:speakerRect.y+speakerRect.h*.08}
-  ];
-  let best=null,bestScore=Infinity;
-  for(const c0 of raw){
-    const overflow=Math.max(0,-c0.x)+Math.max(0,c0.x+bw-sw)+Math.max(0,minY-c0.y)+Math.max(0,c0.y+bh-sh);const c=clampCandidate(c0,bw,bh,sw,sh,minY);
-    let score=overflow*800+overlapArea(c,speakerRect)*300;
-    if(narrRect)score+=overlapArea(c,narrRect)*250;
-    for(const o of occupied)score+=overlapArea(c,o)*220;
-    for(const person of otherPeople)score+=overlapArea(c,person)*35;
-    const dx=(c.x+c.w/2)-headX,dy=(c.y+c.h/2)-headY;score+=Math.hypot(dx,dy)*.35;
-    if(score<bestScore){bestScore=score;best=c}
+function queueBubblePosition(){renderBubbles()}
+function renderTailHandles(){
+  const layer=$('#tailHandleLayer'),d=selectedDialogue();
+  if(!d){layer.replaceChildren();delete layer.dataset.dialogueId;return}
+  ensureBubbleGeometry(d);
+  if(layer.dataset.dialogueId!==d.id){
+    layer.replaceChildren(svgNode('svg',{class:'handleGuides',viewBox:'0 0 1000 562.5','aria-hidden':'true'}));layer.dataset.dialogueId=d.id;
+    for(const [key,label,caption] of [['baseLeft','Extrémité gauche de la base du triangle','G'],['baseRight','Extrémité droite de la base du triangle','D'],['tip','Pointe du triangle','●']]){
+      const h=document.createElement('button');h.type='button';h.className='tailHandle';h.dataset.point=key;h.title=label;h.setAttribute('aria-label',label);h.textContent=caption;
+      h.addEventListener('pointerdown',ev=>startHandleDrag(ev,d,key));
+      h.addEventListener('keydown',ev=>{const delta={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[ev.key];if(!delta)return;ev.preventDefault();const pt=key==='tip'?{x:d.tx,y:d.ty}:d[key];setTailPoint(d,key,{x:pt.x+delta[0]*(ev.shiftKey?1:.2),y:pt.y+delta[1]*(ev.shiftKey?1:.2)});renderBubbles();scheduleSave()});layer.append(h);
+    }
   }
-  return best||clampCandidate({x:headX-bw/2,y:speakerRect.y-bh-15},bw,bh,sw,sh,minY)
-}
-function nearestEdgeBase(rect,tip){
-  const cx=rect.x+rect.w/2,cy=rect.y+rect.h/2,dx=tip.x-cx,dy=tip.y-cy;let p1,p2;
-  if(Math.abs(dx/Math.max(1,rect.w))>Math.abs(dy/Math.max(1,rect.h))){const x=dx>0?rect.x+rect.w:rect.x;const y=clamp(tip.y,rect.y+12,rect.y+rect.h-12);p1={x,y:y-8};p2={x,y:y+8}}
-  else{const y=dy>0?rect.y+rect.h:rect.y;const x=clamp(tip.x,rect.x+14,rect.x+rect.w-14);p1={x:x-9,y};p2={x:x+9,y}}
-  return{p1,p2,center:{x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2}}
-}
-
-function speakerTipPoint(speakerRect,bubbleRect){
-  const spCx=speakerRect.x+speakerRect.w/2,bx=bubbleRect.x+bubbleRect.w/2;
-  const bubbleAbove=(bubbleRect.y+bubbleRect.h/2)<(speakerRect.y+speakerRect.h*0.2);
-  const side=bx<spCx?-1:1;
-  // La pointe arrive près de la bouche/joue, mais reste légèrement à l'extérieur du visage.
-  let x=spCx + side*Math.max(4,Math.min(10,speakerRect.w*0.10));
-  let y=speakerRect.y+Math.max(8,Math.min(22,speakerRect.h*0.16));
-  if(bubbleAbove){
-    x=spCx + side*Math.max(3,Math.min(8,speakerRect.w*0.08));
-    y=speakerRect.y+Math.max(5,Math.min(16,speakerRect.h*0.12));
-  }
-  return {x,y};
-}
-function drawTail(svg,rect,head,type){
-  const ns='http://www.w3.org/2000/svg',base=nearestEdgeBase(rect,head);
-  if(type==='thought'){
-    [0.36,0.68].forEach((t,i)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',String(base.center.x+(head.x-base.center.x)*t));c.setAttribute('cy',String(base.center.y+(head.y-base.center.y)*t));c.setAttribute('r',String(i?4.4:6.4));c.setAttribute('fill','#fff');c.setAttribute('stroke','#222');c.setAttribute('stroke-width','2.4');svg.appendChild(c)})
-  }else{
-    // Queue fusionnée à la bulle : la base entre légèrement dans la bulle et n'a pas de trait noir.
-    // Le remplissage blanc masque le contour de la bulle à la jonction ; seuls les deux côtés sont tracés.
-    const dx=head.x-base.center.x,dy=head.y-base.center.y,len=Math.max(1,Math.hypot(dx,dy));
-    const ux=dx/len,uy=dy/len,px=-uy,py=ux;
-    const minLen=30;
-    const tip={x:base.center.x+ux*Math.max(len,minLen),y:base.center.y+uy*Math.max(len,minLen)};
-    const halfBase=Math.max(9,Math.min(14,rect.w*0.05));
-    const cx=rect.x+rect.w/2,cy=rect.y+rect.h/2;
-    const ix=cx-base.center.x,iy=cy-base.center.y,il=Math.max(1,Math.hypot(ix,iy));
-    const inset=5;
-    const mergedCenter={x:base.center.x+ix/il*inset,y:base.center.y+iy/il*inset};
-    const p1={x:mergedCenter.x+px*halfBase,y:mergedCenter.y+py*halfBase};
-    const p2={x:mergedCenter.x-px*halfBase,y:mergedCenter.y-py*halfBase};
-    const fill=document.createElementNS(ns,'polygon');
-    fill.setAttribute('points',`${p1.x},${p1.y} ${p2.x},${p2.y} ${tip.x},${tip.y}`);
-    fill.setAttribute('fill','#fff');fill.setAttribute('stroke','none');svg.appendChild(fill);
-    const side1=document.createElementNS(ns,'line');
-    side1.setAttribute('x1',String(p1.x));side1.setAttribute('y1',String(p1.y));side1.setAttribute('x2',String(tip.x));side1.setAttribute('y2',String(tip.y));
-    side1.setAttribute('stroke','#222');side1.setAttribute('stroke-width','2.6');side1.setAttribute('stroke-linecap','round');svg.appendChild(side1);
-    const side2=document.createElementNS(ns,'line');
-    side2.setAttribute('x1',String(p2.x));side2.setAttribute('y1',String(p2.y));side2.setAttribute('x2',String(tip.x));side2.setAttribute('y2',String(tip.y));
-    side2.setAttribute('stroke','#222');side2.setAttribute('stroke-width','2.6');side2.setAttribute('stroke-linecap','round');svg.appendChild(side2);
+  const rect=$('#bubbleLayer').getBoundingClientRect(),guides=layer.querySelector('.handleGuides');guides.replaceChildren();
+  const left={x:d.baseLeft.x*rect.width/100,y:d.baseLeft.y*rect.height/100},right={x:d.baseRight.x*rect.width/100,y:d.baseRight.y*rect.height/100};
+  const length=Math.hypot(right.x-left.x,right.y-left.y)||1,extra=Math.max(0,(56-length)/2),ux=(right.x-left.x)/length,uy=(right.y-left.y)/length;
+  // Offset the grips when the fixed join is small on screen. Dots show the true endpoints.
+  for(const h of layer.querySelectorAll('.tailHandle')){
+    const key=h.dataset.point,pt=key==='tip'?{x:d.tx,y:d.ty}:d[key],sign=key==='baseLeft'?-1:key==='baseRight'?1:0;
+    const x=clamp(pt.x*rect.width/100+sign*ux*extra,16,rect.width-16),y=clamp(pt.y*rect.height/100+sign*uy*extra,16,rect.height-16);
+    const hp={x:x/rect.width*100,y:y/rect.height*100};h.dataset.offsetX=hp.x-pt.x;h.dataset.offsetY=hp.y-pt.y;h.style.left=hp.x+'%';h.style.top=hp.y+'%';
+    guides.append(svgNode('line',{x1:pt.x*10,y1:pt.y*5.625,x2:hp.x*10,y2:hp.y*5.625,stroke:'#6943bd','stroke-width':1.5,'vector-effect':'non-scaling-stroke'}),svgNode('circle',{cx:pt.x*10,cy:pt.y*5.625,r:3*1000/rect.width,fill:'#6943bd'}));
   }
 }
-function dialogueTipPoint(d,speakerRect,bubbleRect,sceneRect){
-  if(d&&Number.isFinite(Number(d.tx))&&Number.isFinite(Number(d.ty))){
-    return{x:clamp(Number(d.tx)/100*sceneRect.width,3,sceneRect.width-3),y:clamp(Number(d.ty)/100*sceneRect.height,3,sceneRect.height-3)};
+function panelPointer(ev){const r=$('#bubbleLayer').getBoundingClientRect();return{x:(ev.clientX-r.left)/r.width*100,y:(ev.clientY-r.top)/r.height*100}}
+function setTailPoint(d,key,pt){
+  if(key==='tip'){d.tx=clamp(pt.x,0,100);d.ty=clamp(pt.y,0,100)}
+  else{
+    const desired=Math.atan2((pt.y-d.by-d.bh/2)/(d.bh/2),(pt.x-d.bx-d.bw/2)/(d.bw/2)),sign=key==='baseLeft'?-1:1;
+    let center=desired;for(let i=0;i<12;i++)center=desired+sign*baseHalfAngle(d,center);
+    placeBaseAtAngle(d,center);
   }
-  return speakerTipPoint(speakerRect,bubbleRect);
 }
-function renderTailHandle(d,tip,sceneRect){
-  const layer=$('#tailHandleLayer');if(!layer||!d||tailEditDialogueId!==d.id)return;
-  layer.classList.add('editing');
-  const h=document.createElement('button');h.type='button';h.className='tailHandle';h.title='Déplace ce point jusqu’à la bouche du personnage';h.setAttribute('aria-label','Poignée de la queue de bulle');h.style.left=tip.x+'px';h.style.top=tip.y+'px';h.dataset.dialogueId=d.id;
-  h.addEventListener('pointerdown',startTailDrag);layer.appendChild(h);
-  const badge=document.createElement('div');badge.className='tailEditBadge';badge.textContent='🎯 Clique près de la bouche ou déplace le point jaune';layer.appendChild(badge);
-  layer.onclick=ev=>{if(ev.target!==layer)return;const r=$('#scene').getBoundingClientRect();d.tx=clamp((ev.clientX-r.left)/r.width*100,0,100);d.ty=clamp((ev.clientY-r.top)/r.height*100,0,100);queueBubblePosition();scheduleSave()};
+function runBubbleGesture(ev,target,move){
+  if(activeBubbleGesture||!ev.isPrimary||ev.button!==0)return;
+  ev.preventDefault();ev.stopPropagation();const pointerId=ev.pointerId;
+  const onMove=e=>{if(e.pointerId!==pointerId)return;e.preventDefault();move(panelPointer(e));renderBubbles();scheduleSave()};
+  const finish=e=>{if(e&&e.pointerId!==pointerId)return;target.removeEventListener('pointermove',onMove);for(const type of ['pointerup','pointercancel','lostpointercapture'])target.removeEventListener(type,finish);activeBubbleGesture=null;if(target.hasPointerCapture(pointerId))target.releasePointerCapture(pointerId);scheduleSave()};
+  target.addEventListener('pointermove',onMove);for(const type of ['pointerup','pointercancel','lostpointercapture'])target.addEventListener(type,finish);
+  activeBubbleGesture=finish;target.setPointerCapture(pointerId);
 }
-function startTailDrag(ev){
-  ev.preventDefault();ev.stopPropagation();const handle=ev.currentTarget,dialogueId=handle.dataset.dialogueId,d=cur().dialogues.find(x=>x.id===dialogueId);if(!d)return;
-  const scene=$('#scene');try{handle.setPointerCapture(ev.pointerId)}catch(e){}
-  const move=mv=>{mv.preventDefault?.();const r=scene.getBoundingClientRect();d.tx=clamp((mv.clientX-r.left)/r.width*100,0,100);d.ty=clamp((mv.clientY-r.top)/r.height*100,0,100);queueBubblePosition();scheduleSave()};
-  const up=mv=>{try{handle.releasePointerCapture(mv.pointerId)}catch(e){};window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);queueBubblePosition();renderInspector();scheduleSave()};
-  window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',up,{once:true})
+function startHandleDrag(ev,d,key){const h=ev.currentTarget,offset={x:Number(h.dataset.offsetX)||0,y:Number(h.dataset.offsetY)||0};runBubbleGesture(ev,h,pt=>setTailPoint(d,key,{x:pt.x-offset.x,y:pt.y-offset.y}))}
+function translateBubble(d,origin,dx,dy){
+  d.bx=clamp(origin.bx+dx,0,Math.max(0,100-d.bw));d.by=clamp(origin.by+dy,0,Math.max(0,100-d.bh));
+  const mx=d.bx-origin.bx,my=d.by-origin.by;
+  for(const key of ['baseLeft','baseRight'])d[key]={x:origin[key].x+mx,y:origin[key].y+my};
+  // The mouth point remains exactly where the pupil put it.
 }
-function positionAllBubbles(){
-  const scene=$('#scene'),sceneRect=scene.getBoundingClientRect();if(!sceneRect.width||!sceneRect.height)return;const svg=$('#bubbleTailSvg');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);const tailLayer=$('#tailHandleLayer');if(tailLayer){tailLayer.innerHTML='';tailLayer.classList.remove('editing');tailLayer.onclick=null;}
-  const narr=$('#narrationPreview');let narrRect=null;if(narr&&narr.textContent.trim()&&narr.offsetParent!==null)narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
-  const people=[...document.querySelectorAll('.sceneEl')].map(x=>relRect(x.getBoundingClientRect(),sceneRect));const occupied=[];
-  for(const b of $$('#bubbleLayer .speechBubble')){
-    const spDom=$(`.sceneEl[data-id="${b.dataset.speakerId}"]`);if(!spDom)continue;const sp=relRect(spDom.getBoundingClientRect(),sceneRect);const br=b.getBoundingClientRect();const bw=br.width,bh=br.height;const otherPeople=people.filter(r=>r!==sp);const chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);const d=cur().dialogues.find(x=>x.id===b.dataset.dialogueId);if(d){d.bx=chosen.x/sceneRect.width*100;d.by=chosen.y/sceneRect.height*100}const head=dialogueTipPoint(d,sp,chosen,sceneRect);drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech');renderTailHandle(d,head,sceneRect)
-  }
+function startBubbleDrag(ev,d){
+  if(activeBubbleGesture||!ev.isPrimary||ev.button!==0)return;
+  const start=panelPointer(ev),origin={bx:d.bx,by:d.by,baseLeft:{...d.baseLeft},baseRight:{...d.baseRight}};
+  selectedId=d.speakerId;renderInspector();renderBubbles();
+  runBubbleGesture(ev,$('#bubbleLayer'),pt=>translateBubble(d,origin,pt.x-start.x,pt.y-start.y));
 }
 function startDrag(ev){
   ev.preventDefault();ev.stopPropagation();const id=ev.currentTarget.dataset.id;selectedId=id;const e=cur().elements.find(x=>x.id===id);if(!e)return;renderInspector();renderScene();
@@ -428,17 +476,16 @@ function renderBubbleEditor(){
   }
   const a=assetMap[e.assetId],d=dialogueForSpeaker(p,e.id);
   if(!d){host.innerHTML=`<div class="bubbleOwner">🧍 ${escapeHTML(a.label)}</div><button class="addBubbleBtn" id="addBubbleToSelected">💬 Ajouter une bulle à ce personnage</button>`+bubbleRosterHTML(p);$('#addBubbleToSelected').onclick=()=>{const nd={id:uid(),speakerId:e.id,text:'',type:'speech'};p.dialogues.push(nd);renderScene();renderInspector();scheduleSave();setTimeout(()=>$('#bubbleInput')?.focus(),0)};bindBubbleRoster();return}
-  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailEditBtn ${tailEditDialogueId===d.id?'active':''}" id="editTail">${tailEditDialogueId===d.id?'✓ Terminer le réglage':'🎯 Régler la queue'}</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser la queue</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint">🎯 <strong>Pour viser la bouche :</strong> clique sur « Régler la queue », puis clique directement à l’endroit voulu dans la vignette ou déplace le gros point jaune.</div>`+bubbleRosterHTML(p,e.id);
-  $('#bubbleInput').addEventListener('input',ev=>{d.text=ev.target.value;renderBubbles();renderThumbs();scheduleSave()});
+  host.innerHTML=`<div class="bubbleOwner">💬 Bulle de ${escapeHTML(a.label)}</div><textarea id="bubbleInput" placeholder="Écris ce que dit ou pense ce personnage...">${escapeHTML(d.text)}</textarea><div class="bubbleEditorActions"><button class="bubbleKindBtn ${d.type==='speech'?'active':''}" id="kindSpeech">💬 Dialogue</button><button class="bubbleKindBtn ${d.type==='thought'?'active':''}" id="kindThought">☁️ Pensée</button><button class="tailResetBtn" id="resetTail">↺ Réinitialiser la queue</button><button class="bubbleDeleteBtn" id="deleteBubble">Supprimer cette bulle</button></div><div class="tailHandleHint"><strong>Glisse la bulle</strong> pour la placer. Les poignées jaunes <strong>G / D</strong> règlent la petite jonction sur son contour, à largeur fixe ; la poignée bleue règle la <strong>pointe</strong>. La pointe reste en place quand tu déplaces la bulle. Flèches du clavier : réglage fin.</div>`+bubbleRosterHTML(p,e.id);
+  $('#bubbleInput').addEventListener('input',ev=>{d.text=ev.target.value;reflowBubbleText(d);renderBubbles();renderThumbs();scheduleSave()});
   $('#kindSpeech').onclick=()=>{d.type='speech';renderScene();renderInspector();scheduleSave()};$('#kindThought').onclick=()=>{d.type='thought';renderScene();renderInspector();scheduleSave()};
-  $('#editTail').onclick=()=>{tailEditDialogueId=tailEditDialogueId===d.id?null:d.id;renderScene();renderInspector();toast(tailEditDialogueId?'Mode réglage de la queue activé':'Réglage terminé')};
-  $('#resetTail').onclick=()=>{d.tx=null;d.ty=null;tailEditDialogueId=d.id;renderScene();renderInspector();scheduleSave();toast('Queue replacée automatiquement — ajuste-la si besoin')};
+  $('#resetTail').onclick=()=>{ensureBubbleGeometry(d);resetTailGeometry(d);renderBubbles();scheduleSave();toast('Queue réinitialisée — ajuste les trois poignées')};
   $('#deleteBubble').onclick=()=>{p.dialogues=p.dialogues.filter(x=>x.id!==d.id);renderAll();scheduleSave();toast('Bulle supprimée')};bindBubbleRoster()
 }
 function bubbleRosterHTML(p,current=''){
   if(!p.dialogues.length)return'';return `<div class="bubbleRoster"><div class="bubbleRosterTitle">Personnages qui parlent dans cette case</div>${p.dialogues.map(d=>{const e=p.elements.find(x=>x.id===d.speakerId),a=e&&assetMap[e.assetId];if(!e||!a)return'';return `<div class="bubbleRosterItem">${d.type==='thought'?'☁️':'💬'} ${escapeHTML(a.label)}${d.speakerId===current?' ✓':''}<button type="button" data-select-speaker="${d.speakerId}">Sélectionner</button></div>`}).join('')}</div>`
 }
-function bindBubbleRoster(){$$('[data-select-speaker]').forEach(b=>b.onclick=()=>{selectedId=b.dataset.selectSpeaker;tailEditDialogueId=null;renderScene();renderInspector()})}
+function bindBubbleRoster(){$$('[data-select-speaker]').forEach(b=>b.onclick=()=>{selectedId=b.dataset.selectSpeaker;renderScene();renderInspector()})}
 function renderInspector(){
   const p=cur(),host=$('#selectionTools');$('#inspectorPanelNum').textContent=`n° ${state.current+1} / 8`;$('#narrationInput').value=p.narration||'';renderBubbleEditor();
   const e=getSelected();if(!e){host.innerHTML='<div class="emptyInspector">Clique sur un personnage dans la vignette pour le modifier.</div>';return}const a=assetMap[e.assetId];const d=e.kind==='character'?dialogueForSpeaker(p,e.id):null;
@@ -455,61 +502,38 @@ function alignElementToGround(e){const scene=$('#scene').getBoundingClientRect()
 function renderThumbs(){
   const host=$('#thumbs');host.innerHTML='';state.panels.forEach((p,i)=>{const empty=!p.momentId&&!p.elements.length&&!p.narration&&!hasAnyTextBubble(p);const b=document.createElement('button');b.className='thumb'+(i===state.current?' active':'')+(empty?' empty':'');b.type='button';b.innerHTML=`<span class="thumbNum">${i+1}</span>`;const d=decors[p.decorId]||decors.village;const bg=document.createElement('img');bg.className='miniBg';bg.src=d.src;b.appendChild(bg);p.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='miniEl';im.src=a.src;im.style.left=e.x+'%';im.style.top=Math.max(15,e.y-5)+'%';im.style.width=e.w+'%';im.style.transform=e.flip?'scaleX(-1)':'';b.appendChild(im)});b.addEventListener('click',()=>{state.current=i;selectedId=null;renderAll();scheduleSave()});host.appendChild(b)})
 }
-function renderAll(){renderMomentSelect();renderDecorLibrary();renderScene();renderInspector();renderThumbs();$('#panelNum').textContent=state.current+1;$('#momentHint').textContent=momentTips[cur().momentId]||momentTips['']}
+function renderAll(){if(activeBubbleGesture)activeBubbleGesture();renderMomentSelect();renderDecorLibrary();renderScene();renderInspector();renderThumbs();$('#panelNum').textContent=state.current+1;$('#momentHint').textContent=momentTips[cur().momentId]||momentTips['']}
 function changeMoment(id){const p=cur(),old=momentById(p.momentId),m=momentById(id),shouldReplace=!p.narration||p.narration===old.narration;p.momentId=id;if(shouldReplace)p.narration=m.narration;if(m.decors?.length&&!m.decors.includes(p.decorId))p.decorId=m.decors[0];renderAll();scheduleSave();switchTab('characters')}
-function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;tailEditDialogueId=null;renderAll();scheduleSave()}
+function changePanel(delta){state.current=(state.current+delta+8)%8;selectedId=null;renderAll();scheduleSave()}
 function clearCurrent(){if(!confirm('Effacer le contenu de cette vignette ?'))return;state.panels[state.current]=blankPanel();selectedId=null;renderAll();scheduleSave()}
 function alignAll(){cur().elements.forEach(e=>{selectedId=e.id;renderScene();alignElementToGround(e)});selectedId=null;renderAll();scheduleSave()}
-function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:22,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
+function newBD(){if(!confirm('Créer une nouvelle BD ? La BD enregistrée sur cet appareil sera effacée.'))return;state={version:23,current:0,panels:Array.from({length:8},blankPanel)};selectedId=null;try{localStorage.removeItem(STORAGE_KEY)}catch(e){}renderAll();save(false);toast('Nouvelle BD prête')}
 function staticScene(panel){
   const box=document.createElement('div');box.className='staticScene';box._panel=panel;
-  const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);
+  const bg=document.createElement('img');bg.className='sceneBg';bg.src=(decors[panel.decorId]||decors.village).src;box.appendChild(bg);const shade=document.createElement('div');shade.className='sceneShade';box.appendChild(shade);
   if(panel.narration){const n=document.createElement('div');n.className='staticNarration';n.textContent=panel.narration;box.appendChild(n)}
   panel.elements.slice().sort((a,b)=>a.z-b.z).forEach(e=>{const a=assetMap[e.assetId];if(!a)return;const im=document.createElement('img');im.className='staticEl';im.dataset.id=e.id;im.src=a.src;im.alt=a.label;im.style.left=e.x+'%';im.style.top=e.y+'%';im.style.width=e.w+'%';im.style.zIndex=String(10+e.z);im.style.transform=e.flip?'scaleX(-1)':'';box.appendChild(im)});
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('staticTailSvg');box.appendChild(svg);
-  panel.dialogues.filter(d=>String(d.text||'').trim()&&panel.elements.some(e=>e.id===d.speakerId)).forEach(d=>{const b=document.createElement('div');b.className='staticBubble '+(d.type==='thought'?'thought':'');b.dataset.speakerId=d.speakerId;b.dataset.dialogueId=d.id;b.textContent=d.text;box.appendChild(b)});
+  const svg=svgNode('svg',{class:'bubbleLayer',viewBox:'0 0 1000 562.5'});box.appendChild(svg);
+  panel.dialogues.filter(d=>String(d.text||'').trim()&&panel.elements.some(e=>e.id===d.speakerId)).forEach(d=>svg.append(bubbleGraphic(d)));
+  renderNarrationGraphic(box,panel.narration);
   if(!panel.momentId&&!panel.elements.length&&!panel.narration&&!hasAnyTextBubble(panel)){const em=document.createElement('div');em.className='previewEmpty';em.textContent='Vignette à compléter';box.appendChild(em)}
   return box
 }
-function positionStaticBubbles(box){
-  const panel=box._panel,sceneRect=box.getBoundingClientRect();if(!panel||!sceneRect.width||!sceneRect.height)return;
-  const svg=box.querySelector('.staticTailSvg');if(!svg)return;svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${sceneRect.width} ${sceneRect.height}`);
-  const narr=box.querySelector('.staticNarration');let narrRect=null;if(narr&&narr.textContent.trim())narrRect=relRect(narr.getBoundingClientRect(),sceneRect);
-  const personMap=new Map([...box.querySelectorAll('.staticEl')].map(el=>[el.dataset.id,relRect(el.getBoundingClientRect(),sceneRect)]));
-  const occupied=[];
-  for(const b of box.querySelectorAll('.staticBubble')){
-    const sp=personMap.get(b.dataset.speakerId);if(!sp)continue;
-    const d=panel.dialogues.find(x=>x.id===b.dataset.dialogueId);
-    const br=b.getBoundingClientRect(),bw=br.width,bh=br.height;
-    let chosen;
-    if(d&&Number.isFinite(Number(d.bx))&&Number.isFinite(Number(d.by))){
-      chosen=clampCandidate({x:Number(d.bx)/100*sceneRect.width,y:Number(d.by)/100*sceneRect.height},bw,bh,sceneRect.width,sceneRect.height,0);
-    }else{
-      const otherPeople=[...personMap.entries()].filter(([id])=>id!==b.dataset.speakerId).map(([,r])=>r);
-      chosen=chooseBubbleRect(sceneRect,sp,bw,bh,narrRect,occupied,otherPeople);
-    }
-    b.style.left=chosen.x+'px';b.style.top=chosen.y+'px';occupied.push(chosen);
-    const head=dialogueTipPoint(d,sp,chosen,sceneRect);
-    drawTail(svg,chosen,head,b.classList.contains('thought')?'thought':'speech')
-  }
-}
-function scheduleStaticLayouts(root=document){
-  const run=()=>root.querySelectorAll('.staticScene').forEach(positionStaticBubbles);
-  requestAnimationFrame(()=>requestAnimationFrame(run));setTimeout(run,80);
-  root.querySelectorAll('.staticScene img').forEach(img=>{if(!img.complete)img.addEventListener('load',run,{once:true})})
-}
 function buildPreview(){
   const host=$('#previewGrid');host.innerHTML='';state.panels.forEach((p,i)=>{const card=document.createElement('div');card.className='previewPanel';card.appendChild(staticScene(p));const meta=document.createElement('div');meta.className='previewMeta';meta.textContent=`Vignette ${i+1} — ${momentById(p.momentId).label.replace('— Choisir un moment —','à compléter')}`;card.appendChild(meta);host.appendChild(card)});
-  $('#previewModal').classList.add('show');scheduleStaticLayouts($('#previewModal'))
+  $('#previewModal').classList.add('show')
 }
 function buildPrint(){const host=$('#printGrid');host.innerHTML='';state.panels.forEach(p=>{const card=document.createElement('div');card.className='printPanel';card.appendChild(staticScene(p));host.appendChild(card)})}
-function printBD(bw=false){
+async function printBD(bw=false){
   buildPrint();document.body.classList.toggle('printBW',bw);
-  const area=$('#printArea'),old=area.getAttribute('style')||'';area.style.cssText='display:block;position:fixed;left:-220vw;top:0;width:194mm;visibility:hidden;';
-  scheduleStaticLayouts(area);
-  setTimeout(()=>{area.setAttribute('style',old);window.print();setTimeout(()=>document.body.classList.remove('printBW'),700)},140)
+  // Wait for the actual assets, not an arbitrary timeout or a hidden layout pass.
+  await Promise.all([...$('#printArea').querySelectorAll('img')].map(img=>img.decode?.().catch(()=>{})));
+  if(document.fonts?.ready)await document.fonts.ready;
+  window.print();
 }
-function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>La bulle suit son personnage</h3><p>Chaque bulle reste liée à son personnage. Quand tu le déplaces, la bulle suit sa position. Pour régler précisément la queue, sélectionne le personnage puis <strong>fais glisser la poignée jaune jusqu’à sa bouche</strong>. L’aperçu et l’impression conservent exactement ce réglage.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
+window.addEventListener('afterprint',()=>document.body.classList.remove('printBW'));
+window.addEventListener('beforeprint',buildPrint);
+function showHelp(type){const title=$('#helpTitle'),content=$('#helpContent');if(type==='instructions'){title.textContent='Consignes';content.innerHTML=`<h3>Créer ta BD en 8 vignettes</h3><ol><li>Choisis un <strong>moment de la vie de Martin</strong>.</li><li>Choisis l’un des <strong>décors adaptés</strong>.</li><li>Ajoute quelques personnages et déplace-les dans la case.</li><li>Pour faire parler quelqu’un, <strong>sélectionne ce personnage</strong> puis ajoute sa bulle dans le panneau de droite.</li><li>Tu peux faire parler <strong>plusieurs personnages</strong> dans la même vignette : chacun garde sa propre bulle.</li><li>Écris le cartouche de narration puis passe à la vignette suivante. Ton travail est sauvegardé automatiquement sur cet appareil.</li></ol><p>Martin est simplement un <strong>enfant du village au Moyen Âge</strong> : ce n’est pas saint Martin.</p>`}else{title.textContent='Aide';content.innerHTML=`<h3>Plusieurs personnages peuvent parler</h3><p>Sélectionne un personnage, clique sur <strong>Faire parler ce personnage</strong> et écris son texte. Recommence avec un autre personnage.</p><h3>Place ta bulle à la main</h3><p>Chaque bulle indique qui parle. Fais glisser la bulle pour la placer. Sélectionne-la pour voir les trois poignées : les deux jaunes déplacent la petite base sur le contour, en gardant sa largeur fixe et la bleue place la pointe près de la bouche. Déplacer le personnage ne modifie pas la bulle. L’aperçu et l’impression utilisent exactement le même dessin.</p><h3>Premier plan / arrière-plan</h3><p>Ces boutons changent réellement l’ordre des personnages. <strong>Premier plan</strong> place le personnage devant tous les autres ; <strong>Arrière-plan</strong> derrière tous les autres.</p><h3>Dupliquer</h3><p>Dupliquer crée une copie du dessin sélectionné, <strong>sans copier sa bulle</strong>. C’est pratique pour former un groupe de villageois.</p><h3>Décors cohérents</h3><p>Les décors proposés dépendent du moment choisi : Noël reste à l’intérieur, la Toussaint au cimetière, le travail aux champs dans les champs, etc.</p>`}$('#helpModal').classList.add('show')}
 function speakText(text){if(!('speechSynthesis'in window)||!text)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);currentUtter=u;u.lang='fr-FR';u.rate=.92;window.speechSynthesis.speak(u)}
 function selectedDialogue(){const e=getSelected();return e?dialogueForSpeaker(cur(),e.id):null}
 
