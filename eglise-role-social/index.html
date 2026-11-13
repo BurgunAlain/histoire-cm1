@@ -1,1 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Jeu d’histoire CM1 sur les cérémonies et le rôle social de l’Église au Moyen Âge.">
+  <title>Le rôle de l’Église au Moyen Âge · Histoire CM1</title>
+  <link rel="stylesheet" href="./jeu.css">
+  <script src="./contenu.js" defer></script>
+  <script src="./jeu.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Histoire CM1 <span aria-hidden="true">◆</span> Moyen Âge <span aria-hidden="true">◆</span> Séance 8</p>
+        <h1>Le rôle de l’Église<br class="hero-break"> au Moyen Âge</h1>
+        <p>Observe les enluminures et découvre comment l’Église intervient dans la vie des chrétiens.</p>
+      </div>
+      <img src="./images/copie.webp" alt="" width="994" height="688">
+    </header>
 
+    <ol id="progress" class="progress" aria-label="Progression"></ol>
+    <section id="mission" class="board" aria-labelledby="mission-title"></section>
+    <noscript><p>Active JavaScript dans ton navigateur pour jouer.</p></noscript>
+    <footer class="footer">Enluminures du diaporama de la séance 8.</footer>
+  </main>
+
+  <dialog id="zoom" aria-labelledby="zoom-title">
+    <div class="zoom-top"><h2 id="zoom-title">Observer l’enluminure</h2><form method="dialog"><button type="submit">Fermer</button></form></div>
+    <img id="zoom-image" src="./images/copie.webp" alt="">
+  </dialog>
+</body>
+</html>
