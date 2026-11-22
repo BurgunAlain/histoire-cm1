@@ -57,7 +57,7 @@ const trace = [
 ];
 
 const missions = [
-  { title: 'À chaque activité son lieu', shortTitle: 'Les lieux', instruction: 'Observe les scènes. Sélectionne un lieu dans la banque, puis touche la case sous la scène correspondante. Tu peux consulter le guide de l’abbaye.', scenes: places },
-  { title: 'Reconstitue la journée du moine', shortTitle: 'La journée', instruction: 'Consulte l’emploi du temps, puis place les huit moments à la bonne heure. Réponds ensuite aux deux questions. Tu peux retirer une étiquette en touchant sa case.' },
+  { title: 'À chaque activité son lieu', shortTitle: 'Les lieux', instruction: 'Retrouve de mémoire le lieu de chaque scène. Sélectionne un lieu dans la banque, puis touche sa case. Si tu demandes de l’aide, tu devras recommencer toute la mission pour la valider.', scenes: places },
+  { title: 'Reconstitue la journée du moine', shortTitle: 'La journée', instruction: 'Retrouve de mémoire les huit moments à placer aux bonnes heures, puis réponds aux deux questions. Si tu demandes de l’aide, tu devras recommencer toute la mission pour la valider.' },
   { title: 'Ce que je retiens', shortTitle: 'La synthèse', instruction: 'Sélectionne un mot de la banque, puis touche le trou à compléter. Pour retirer un mot, touche-le dans le texte.' }
 ];

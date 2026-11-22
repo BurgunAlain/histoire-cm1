@@ -27,3 +27,10 @@ Les huit scènes ont été générées pour ce jeu à partir des activités déc
 Illustrations jeunesse chaleureuses, scènes médiévales lisibles, robes sombres,
 architecture romane, couleurs crème, brun, vert et or, sans texte.
 Elles servent d’illustrations pédagogiques.
+
+Mémorisation des missions 1 et 2
+Chaque mission commence par une phase de lecture des indications.
+Le bouton « Je suis prêt » retire ces indications et affiche les questions.
+« Demander de l’aide » permet de les relire, mais la tentative devient non validable.
+L’élève peut poursuivre pour s’entraîner, puis doit recommencer toute la mission.
+Une nouvelle tentative repart par la lecture et efface toutes les réponses.

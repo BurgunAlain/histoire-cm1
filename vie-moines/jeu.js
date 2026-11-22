@@ -124,10 +124,11 @@ function setStatus(message, type = '') {
 }
 
 function setAnswer(entry, value) {
+  if (attempt.phase !== 'answer' || attempt.passed) return;
   entry.value = value;
   entry.result = '';
   if (value !== null && value !== entry.answer) attempt.hadError = true;
-  if (!attempt.hadError || !document.querySelector('#feedback').classList.contains('error')) {
+  if (!attempt.usedHelp && (!attempt.hadError || !document.querySelector('#feedback').classList.contains('error'))) {
     setStatus('');
   }
   refreshAnswers();
@@ -404,25 +405,37 @@ function createControls() {
     button('Vérifier', 'primary', verify),
     button('Recommencer', 'secondary', () => renderMission(true))
   );
+  if (stage < 2) {
+    controls.append(button('Demander de l’aide', 'secondary', () => {
+      attempt.usedHelp = true;
+      attempt.phase = 'help';
+      attempt.selected = null;
+      renderAttempt(true);
+    }));
+  }
   area.append(feedback, controls);
   return area;
 }
 
 function verify() {
+  if (attempt.phase !== 'answer' || attempt.passed) return;
   if (attempt.entries.some(entry => entry.value === null)) {
     setStatus('Il reste des réponses à placer. Termine la mission avant de vérifier.', 'notice');
     return;
   }
 
   const allCorrect = attempt.entries.every(entry => entry.value === entry.answer);
-  if (!allCorrect || attempt.hadError) {
+  if (!allCorrect || attempt.hadError || attempt.usedHelp) {
     for (const entry of attempt.entries) {
       entry.result = entry.value === entry.answer ? 'correct' : 'incorrect';
     }
     refreshAnswers();
-    setStatus(allCorrect
+    const message = attempt.usedHelp
+      ? 'Tu as consulté l’aide. Clique sur « Recommencer » pour réussir toute la mission sans aide.'
+      : allCorrect
       ? 'Toutes tes réponses sont maintenant justes. Clique sur « Recommencer » pour réussir la mission sans erreur.'
-      : 'Les réponses à corriger sont en rouge. Tu peux les corriger, puis cliquer sur « Recommencer » pour réussir la mission sans erreur.', 'error');
+      : 'Les réponses à corriger sont en rouge. Tu peux les corriger, puis cliquer sur « Recommencer » pour réussir la mission sans erreur.';
+    setStatus(message, 'error');
     return;
   }
 
@@ -466,12 +479,32 @@ function renderMission(focusHeading = false) {
   const entries = stage < 2
     ? scenes.map(scene => ({ scene, answer: scene.answer, value: null }))
     : traceWords.map(answer => ({ answer, value: null }));
-  attempt = { entries, tokens: new Map(), hadError: false, passed: false, selected: null };
+  attempt = {
+    entries, tokens: new Map(), hadError: false, usedHelp: false,
+    passed: false, selected: null, phase: stage < 2 ? 'study' : 'answer'
+  };
+  renderAttempt(focusHeading);
+}
+
+function renderAttempt(focusHeading = false) {
+  stopSpeech();
+  if (zoom.open) zoom.close();
+  zoomImage.src = './images/abbaye.webp';
+  zoomImage.alt = '';
+  board.replaceChildren();
+  attempt.tokens = new Map();
   updateProgress();
+  const mission = missions[stage];
+  const studying = attempt.phase !== 'answer';
   const title = element('h2', '', mission.title);
   title.id = 'mission-title';
   title.tabIndex = -1;
-  const instructions = readRow(element('p', '', mission.instruction), 'Écouter la consigne', () => mission.instruction);
+  const instruction = studying
+    ? (stage === 0
+      ? 'Lis ou écoute les indications des huit lieux. Mémorise ce que les moines y font. Quand tu es prêt, les indications seront cachées et tu répondras de mémoire.'
+      : 'Lis ou écoute l’emploi du temps. Ouvre les moments de la journée pour découvrir les indications. Quand tu es prêt, l’emploi du temps sera caché et tu répondras de mémoire.')
+    : mission.instruction;
+  const instructions = readRow(element('p', '', instruction), 'Écouter la consigne', () => instruction);
   instructions.classList.add('instruction');
   const audioFeedback = element('p', 'status notice');
   audioFeedback.id = 'audio-feedback';
@@ -479,17 +512,44 @@ function renderMission(focusHeading = false) {
   audioFeedback.hidden = true;
   board.append(title, instructions, audioFeedback);
 
+  if (studying) {
+    if (attempt.usedHelp) {
+      const notice = element('p', 'status notice', 'Tu consultes l’aide. Tu peux continuer à t’entraîner, puis tu devras recommencer toute la mission pour la réussir sans aide.');
+      notice.setAttribute('role', 'status');
+      board.append(notice);
+    }
+    const study = element('div', 'study-content');
+    study.id = 'study-content';
+    const source = stage === 0 ? createGuide() : createSchedule();
+    source.open = true;
+    study.append(source);
+    const controls = element('div', 'controls study-controls');
+    controls.append(button(attempt.usedHelp ? 'Revenir aux questions' : 'Je suis prêt', 'primary', () => {
+      attempt.phase = 'answer';
+      renderAttempt(true);
+    }));
+    if (attempt.usedHelp) {
+      controls.append(button('Recommencer', 'secondary', () => renderMission(true)));
+    }
+    board.append(study, controls);
+    if (focusHeading) title.focus();
+    return;
+  }
+
   if (stage === 0) {
-    board.append(createGuide(), createBank('Les lieux de l’abbaye', places.map(place => place.answer)));
+    board.append(createBank('Les lieux de l’abbaye', places.map(place => place.answer)));
     const grid = element('div', 'grid places');
-    grid.append(...entries.map(createScene));
+    grid.append(...attempt.entries.map(createScene));
     board.append(grid);
   } else if (stage === 1) {
-    board.append(createSchedule(), createBank('Les moments de la journée', dayChallenges.map(item => item.answer)), createDay());
+    board.append(createBank('Les moments de la journée', dayChallenges.map(item => item.answer)), createDay());
   } else {
     board.append(createBank('Banque de mots', traceWords), createTrace());
   }
   board.append(createControls());
+  if (attempt.usedHelp) {
+    setStatus('Tu as consulté l’aide. Pour valider cette mission, tu devras cliquer sur « Recommencer » et réussir une nouvelle tentative sans aide.', 'notice');
+  }
   if (stage === 2) board.append(paperLinks());
   refreshAnswers();
   if (focusHeading) title.focus();
