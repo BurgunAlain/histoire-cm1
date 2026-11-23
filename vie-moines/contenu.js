@@ -16,8 +16,8 @@ const schedule = [
   { hours: '3 h 30 – 4 h 30', title: 'Laudes', place: 'Église', image: 'priere', kind: 'priere', text: 'À l’aube, les moines se lèvent à nouveau et rejoignent l’église. Les laudes sont une prière pour remercier Dieu pour le jour qui commence. La lumière du matin entre doucement dans l’église pendant qu’ils chantent.' },
   { hours: '4 h 30 – 6 h', title: 'Repos', place: 'Dortoir', image: 'repos', kind: 'repos', text: 'Les moines retournent dormir encore un peu avant le début de la journée.' },
   { hours: '6 h – 6 h 30', title: 'Prime', place: 'Église', image: 'priere', kind: 'priere', text: 'Les moines prient dans l’église pour commencer officiellement la journée. Ils chantent ensemble et se tiennent debout ou assis sur des bancs en bois.' },
-  { hours: '6 h 30 – 7 h', title: 'Réunion dans la salle capitulaire', place: 'Salle capitulaire', image: 'reunion', kind: 'communaute', text: 'Les moines s’installent en cercle dans la salle capitulaire. Ils écoutent un passage de la règle de Saint Benoît, puis l’abbé donne les consignes pour la journée. C’est un moment important de vie collective.' },
-  { hours: '7 h – 9 h', title: 'Travail', place: 'Dans ou autour de l’abbaye', image: 'copie', kind: 'travail', text: 'Certains moines travaillent dans les champs ou le potager. Ils plantent, arrosent et récoltent des légumes pour nourrir toute la communauté. D’autres fabriquent des objets ou entretiennent les bâtiments. Dans le scriptorium, les moines copient des livres à la main avec des plumes. Ils décorent les lettres avec des couleurs et parfois de l’or : ce sont des enluminures.' },
+  { hours: '6 h 30 – 7 h', title: 'Salle capitulaire', place: 'Salle capitulaire', image: 'reunion', kind: 'communaute', text: 'Les moines s’installent en cercle dans la salle capitulaire. Ils écoutent un passage de la règle de Saint Benoît, puis l’abbé donne les consignes pour la journée. C’est un moment important de vie collective.' },
+  { hours: '7 h – 9 h', title: 'Travail (plusieurs rôles)', place: 'Dans ou autour de l’abbaye', image: 'copie', kind: 'travail', text: 'Certains moines travaillent dans les champs ou le potager. Ils plantent, arrosent et récoltent des légumes pour nourrir toute la communauté. D’autres fabriquent des objets ou entretiennent les bâtiments. Dans le scriptorium, les moines copient des livres à la main avec des plumes. Ils décorent les lettres avec des couleurs et parfois de l’or : ce sont des enluminures.' },
   { hours: '9 h – 9 h 30', title: 'Tierce', place: 'Église', image: 'priere', kind: 'priere', text: 'Les moines arrêtent leur travail et se rendent à l’église. Ils prient ensemble pendant un court moment avant de reprendre leurs activités.' },
   { hours: '9 h 30 – 11 h 30', title: 'Travail', place: 'Dans ou autour de l’abbaye', image: 'copie', kind: 'travail', text: 'Les moines reprennent leur travail dans le calme. Certains lisent et étudient, d’autres travaillent à l’extérieur ou copient des manuscrits.' },
   { hours: '11 h 30 – 12 h 30', title: 'Sexte', place: 'Église', image: 'priere', kind: 'priere', text: 'À midi, les moines se rassemblent dans l’église pour prier. Ils chantent des psaumes et prennent un moment de recueillement au milieu de la journée.' },
@@ -32,16 +32,10 @@ const schedule = [
   { hours: '20 h – 1 h', title: 'Nuit', place: 'Dortoir', image: 'repos', kind: 'repos', text: 'Les moines retournent dormir dans le dortoir. Ils dorment habillés simplement, prêts à se lever dans la nuit pour prier à nouveau.' }
 ];
 
-const dayChallenges = [
-  { period: 0, answer: 'Matines' },
-  { period: 4, answer: 'Prime' },
-  { period: 5, answer: 'Réunion avec l’abbé' },
-  { period: 6, answer: 'Travail du matin' },
-  { period: 10, answer: 'Repas de midi' },
-  { period: 12, answer: 'None' },
-  { period: 16, answer: 'Méditation' },
-  { period: 18, answer: 'Nuit au dortoir' }
-];
+const dayChallenges = [0, 4, 5, 6, 10, 12, 16, 18].map(period => ({
+  period,
+  answer: schedule[period].title
+}));
 
 const rhythmQuestions = [
   { question: 'Qu’est-ce qui interrompt souvent le travail des moines ?', options: ['La prière', 'Le repas', 'Le sommeil'], answer: 'La prière' },
